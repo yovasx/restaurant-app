@@ -40,8 +40,9 @@ proyecto-docker/
 
 ### Opción A: Con Make (recomendado)
 ```bash
-# Clona o copia esta carpeta y entra a ella
-cd proyecto-docker
+#crea una carpeta donde ira el proyecto y entra 
+#en la consola (powershell/git bash) escribe:
+git clone https://github.com/yovasx/restaurant-app.git
 
 # Copia el archivo de entorno
 cp .env.example .env
