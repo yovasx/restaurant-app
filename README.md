@@ -68,6 +68,9 @@ sleep 15
 # 4. Instala dependencias de Composer
 docker compose exec app composer install
 
+#si falla al final pon:
+composer install --prefer-source --no-scripts  o   composer install --prefer-dist --no-scripts
+
 # 5. Genera la APP_KEY (CRÍTICO — sin esto Laravel da error 500)
 docker compose exec app php artisan key:generate
 
