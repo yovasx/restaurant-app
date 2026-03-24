@@ -1,0 +1,18 @@
+# Entorno — NUNCA al repositorio
+.env
+
+# Carpeta del proyecto Laravel (si es un submódulo aparte, ignórala)
+# src/
+
+# Docker volumes backup
+*.sql.gz
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

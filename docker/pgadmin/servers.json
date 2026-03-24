@@ -1,0 +1,15 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Laravel PostgreSQL",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "laravel_db",
+      "Username": "laravel_user",
+      "SSLMode": "prefer",
+      "PassFile": "/tmp/pgpassfile",
+      "Comment": "Servidor PostgreSQL del stack Laravel Docker"
+    }
+  }
+}

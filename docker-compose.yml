@@ -1,0 +1,177 @@
+version: "3.9"
+
+# =============================================================
+#  Stack: Laravel + PHP 8.3-FPM + Nginx + PostgreSQL 17 + pgAdmin 4 + Redis
+#  Autor: Docker Expert Setup
+#  Buenas prácticas: healthchecks, depends_on con condiciones,
+#  volúmenes nombrados, red interna dedicada, variables de entorno
+# =============================================================
+
+services:
+
+  # -----------------------------------------------------------
+  # PHP-FPM — Corazón de Laravel
+  # -----------------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html          # Código fuente de tu proyecto Laravel
+    environment:
+      # Estas variables sobreescriben el .env de Laravel SOLO dentro del contenedor
+      # El DB_HOST DEBE ser el nombre del servicio "postgres", NO "localhost"
+      - APP_ENV=${APP_ENV:-local}
+      #- APP_KEY=${APP_KEY}
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - APP_URL=${APP_URL:-http://localhost}
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres             # ← CRÍTICO: nombre del servicio, NO localhost
+      - DB_PORT=5432
+      - DB_DATABASE=${DB_DATABASE:-laravel_db}
+      - DB_USERNAME=${DB_USERNAME:-laravel_user}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+      - REDIS_HOST=redis             # ← igual: nombre del servicio
+      - REDIS_PORT=6379
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      postgres:
+        condition: service_healthy   # Espera que Postgres esté LISTO antes de arrancar
+      redis:
+        condition: service_healthy
+    networks:
+      - laravel_network
+    healthcheck:
+      test: ["CMD-SHELL", "php -v || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # -----------------------------------------------------------
+  # Nginx — Servidor web que enruta las peticiones a PHP-FPM
+  # -----------------------------------------------------------
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: laravel_nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"                    # Accede por http://localhost:8080
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      app:
+        condition: service_healthy
+    networks:
+      - laravel_network
+
+  # -----------------------------------------------------------
+  # PostgreSQL 17 — Base de datos principal
+  # -----------------------------------------------------------
+  postgres:
+    image: postgres:17.2             # Versión exacta, NO latest
+    container_name: laravel_postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"                  # Expuesto para herramientas externas (TablePlus, DBeaver)
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-laravel_db}
+      POSTGRES_USER: ${DB_USERNAME:-laravel_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+      PGDATA: /var/lib/postgresql/data/pgdata   # Subdirectorio evita errores de inicialización
+    volumes:
+      - postgres_data:/var/lib/postgresql/data   # Datos persistentes entre reinicios
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - laravel_network
+    healthcheck:
+      # Verifica que Postgres esté aceptando conexiones con el usuario correcto
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-laravel_user} -d ${DB_DATABASE:-laravel_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # -----------------------------------------------------------
+  # pgAdmin 4 — Interfaz gráfica para gestionar PostgreSQL
+  # -----------------------------------------------------------
+  pgadmin:
+    image: dpage/pgadmin4:8.14       # Versión exacta, NO latest
+    container_name: laravel_pgadmin
+    restart: unless-stopped
+    ports:
+      - "5050:80"                    # Accede por http://localhost:5050
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin123}
+      PGADMIN_CONFIG_SERVER_MODE: "False"       # Modo local (sin login de servidor)
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json:ro  # Servidor preconfigurado
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - laravel_network
+
+  # -----------------------------------------------------------
+  # Redis — Cache, Sesiones y Colas de Laravel
+  # -----------------------------------------------------------
+  redis:
+    image: redis:7.4-alpine          # Redis 7.4, versión estable
+    container_name: laravel_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    networks:
+      - laravel_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # -----------------------------------------------------------
+  # Node.js — Para compilar assets de Laravel (Vite/Mix)
+  # (Servicio de un solo uso — corre y termina)
+  # -----------------------------------------------------------
+  node:
+    image: node:22-alpine
+    container_name: laravel_node
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+    command: sh -c "npm install && npm run dev"
+    networks:
+      - laravel_network
+    profiles:
+      - dev                          # Solo se levanta con: docker compose --profile dev up
+
+# =============================================================
+#  Volúmenes nombrados — Datos persistentes entre reinicios
+# =============================================================
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  redis_data:
+    driver: local
+  app_storage:
+    driver: local
+
+# =============================================================
+#  Red interna — Aísla los servicios del mundo exterior
+# =============================================================
+networks:
+  laravel_network:
+    driver: bridge
