@@ -57,7 +57,8 @@ make setup
 ### Opción B: Manual paso a paso
 ```bash
 # 1. Copia el .env
-cp .env.example .env
+#en la carpeta y en src
+cp .env.example .env 
 
 # 2. Construye e inicia los contenedores
 docker compose up -d --build
