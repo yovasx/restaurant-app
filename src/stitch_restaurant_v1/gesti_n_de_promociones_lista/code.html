@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gestión de Promociones - Apetito Moderno</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#fff8f2",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#f6f0ea",
+                        "surface-container-low": "#f9f2ec",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#ffdcc5",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#663100",
+                        "primary": "#9e2016",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#301400",
+                        "secondary": "#944a00",
+                        "on-tertiary-fixed-variant": "#7c2e00",
+                        "secondary-container": "#fc8f34",
+                        "outline": "#8d706c",
+                        "primary-fixed-dim": "#ffb4a9",
+                        "outline-variant": "#e1bfb9",
+                        "tertiary-fixed-dim": "#ffb595",
+                        "on-surface-variant": "#59413d",
+                        "tertiary": "#8e3600",
+                        "primary-container": "#c0392b",
+                        "on-background": "#1e1b18",
+                        "on-primary-container": "#ffe5e1",
+                        "surface-container-high": "#eee7e1",
+                        "surface-container-highest": "#e8e1dc",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#ffdad5",
+                        "surface-bright": "#fff8f2",
+                        "surface-container": "#f3ede7",
+                        "tertiary-fixed": "#ffdbcd",
+                        "on-tertiary-container": "#ffe6dc",
+                        "error": "#ba1a1a",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#ffb4a9",
+                        "surface-variant": "#e8e1dc",
+                        "surface-tint": "#b02d21",
+                        "on-tertiary-fixed": "#351000",
+                        "surface-dim": "#dfd9d3",
+                        "secondary-fixed-dim": "#ffb783",
+                        "on-primary-fixed-variant": "#8e130c",
+                        "tertiary-container": "#b54700",
+                        "background": "#fff8f2",
+                        "on-surface": "#1e1b18",
+                        "inverse-surface": "#33302c",
+                        "on-primary-fixed": "#410000",
+                        "on-secondary-fixed-variant": "#713700"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e1bfb9; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-screen w-72 z-50 bg-orange-50 dark:bg-stone-950 flex flex-col h-full py-6">
+<div class="px-8 mb-10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg overflow-hidden bg-primary-container flex items-center justify-center">
+<img alt="Restaurant Logo" class="w-full h-full object-cover" data-alt="Logo showing a stylized bull head and grill utensils in a luxury gold and red aesthetic for a premium steakhouse" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbUu4wsFzd6F2KYSBIfjKt93T3idp-YxDFPASO5M2tZEssi0JZnbb6Ww7KbHrHstCg_8m5omDImU-Gab3O62HDZx1sSWNF5uoVIOcPIc03olbsGljXPDInTLkhuUwjqA8-4HdPeEjFTFvDxlRWRPWdYGGSk9ND9IyzFyLptYHmh93MTYR4N58kgHezbkBewN-KWIeEUOpRpzeBatvI8YyOPn_GC455cC_wFSVKmcuFVxpFlbqadtMCZobX9hoXIZC0PenVa8rBemMl"/>
+</div>
+<div>
+<h2 class="text-lg font-bold text-stone-900 dark:text-stone-100 font-headline leading-tight">El Gaucho Grill</h2>
+<p class="text-xs text-stone-500 font-medium tracking-wide uppercase">Premium Steakhouse</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-4 text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 px-8 py-3 hover:bg-orange-100/50 dark:hover:bg-stone-800/50 transition-colors duration-300 font-['Plus_Jakarta_Sans'] text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- Active State for Promociones -->
+<a class="flex items-center gap-4 bg-white dark:bg-stone-900 text-red-700 dark:text-red-400 rounded-l-full shadow-sm ml-4 pl-4 py-3 scale-102 transition-all duration-300 font-['Plus_Jakarta_Sans'] text-sm font-semibold" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">campaign</span>
+<span>Active Promotions</span>
+</a>
+<a class="flex items-center gap-4 text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 px-8 py-3 hover:bg-orange-100/50 dark:hover:bg-stone-800/50 transition-colors duration-300 font-['Plus_Jakarta_Sans'] text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span>Menu Management</span>
+</a>
+<a class="flex items-center gap-4 text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 px-8 py-3 hover:bg-orange-100/50 dark:hover:bg-stone-800/50 transition-colors duration-300 font-['Plus_Jakarta_Sans'] text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-4 text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 px-8 py-3 hover:bg-orange-100/50 dark:hover:bg-stone-800/50 transition-colors duration-300 font-['Plus_Jakarta_Sans'] text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Staff</span>
+</a>
+</nav>
+<div class="px-8 mt-auto">
+<button class="w-full bg-primary text-white py-3 rounded-lg font-bold text-sm shadow-lg shadow-primary/20 hover:scale-105 transition-transform duration-300">
+                Create Promotion
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-72 flex-1 flex flex-col min-w-0">
+<!-- TopAppBar (Shared Component) -->
+<header class="bg-orange-50/80 dark:bg-stone-950/80 backdrop-blur-md docked full-width top-0 sticky z-40 flex justify-between items-center w-full px-10 py-4 font-['Plus_Jakarta_Sans'] tracking-tight">
+<div class="flex items-center gap-4">
+<h1 class="text-xl font-extrabold text-red-800 dark:text-red-500 tracking-tighter">Apetito Moderno</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">search</span>
+<input class="bg-orange-100/50 dark:bg-stone-900/50 border-none rounded-full pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary-container w-64 transition-all duration-300" placeholder="Buscar promociones..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-stone-600 dark:text-stone-400 hover:scale-102 hover:text-red-800 transition-all duration-300">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-stone-600 dark:text-stone-400 hover:scale-102 hover:text-red-800 transition-all duration-300">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full border-2 border-primary-container p-0.5">
+<img alt="Chef profile picture" class="w-full h-full rounded-full object-cover" data-alt="Professional portrait of a male chef wearing clean white kitchen uniform in a warm lit gourmet kitchen setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUXTi1yXu0kw2cUiSxhctxuCbti_AwrhyI_vhbLT70nzCFrYSTy8loHJcZ0coqcyeZPk5KCQtTnKW_pPsJ4Lv1A9YFT8gVHHlK8l2WYNkPqJtVpn1KFrgYiZnoUZUsE8M3M3Lr3bix9lHo3mZKw9A75VtnD3J96MttW3RoHXpnOjaLTQy2_p1opYAVsS4CRWJZfaLtxbULoHt7Y2P7x6N27ry68RY0iuzeo7h97sjnQpQ89yunGe8L1AoNF5ADbBFK-YkGiwDErzpF"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-10">
+<!-- List Section -->
+<div class="w-full">
+<div class="flex justify-between items-end mb-8">
+<div>
+<nav class="text-xs text-outline mb-2 flex gap-2">
+<span>Admin</span>
+<span>/</span>
+<span class="text-secondary font-semibold">Promociones</span>
+</nav>
+<h2 class="text-3xl font-extrabold text-on-surface tracking-tight">Gestión de Promociones</h2>
+</div>
+<button class="bg-primary hover:bg-primary-container text-white px-6 py-2.5 rounded-lg flex items-center gap-2 font-bold transition-all duration-300 shadow-md">
+<span class="material-symbols-outlined text-lg">add</span>
+                        Nueva Promoción
+                    </button>
+</div>
+<!-- Stats Overview (Asymmetric) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+<div class="col-span-1 bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+<p class="text-label text-outline-variant text-sm font-semibold uppercase tracking-wider mb-2">Activas</p>
+<div class="flex items-end gap-3">
+<span class="text-4xl font-extrabold text-primary">12</span>
+<span class="text-sm text-green-600 font-bold pb-1">+3 esta semana</span>
+</div>
+</div>
+<div class="col-span-1 md:col-span-2 bg-secondary text-on-secondary p-6 rounded-xl shadow-sm flex justify-between items-center relative overflow-hidden">
+<div class="relative z-10">
+<p class="text-sm font-semibold uppercase tracking-wider mb-2 opacity-80">Rendimiento Total</p>
+<h3 class="text-3xl font-extrabold">Bs. 14.280 generados</h3>
+</div>
+<span class="material-symbols-outlined text-8xl absolute -right-4 -bottom-4 opacity-20">trending_up</span>
+</div>
+</div>
+<!-- Promotions Table/List -->
+<div class="bg-surface-container-low rounded-xl overflow-hidden">
+<div class="px-6 py-4 bg-surface-container-high/50 flex justify-between items-center">
+<h3 class="font-bold text-on-surface-variant">Vigentes en La Paz</h3>
+<div class="flex gap-2">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg transition-colors"><span class="material-symbols-outlined text-on-surface-variant">filter_list</span></button>
+<button class="p-2 hover:bg-surface-container-highest rounded-lg transition-colors"><span class="material-symbols-outlined text-on-surface-variant">sort</span></button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-separate border-spacing-y-2 px-6">
+<thead>
+<tr class="text-outline text-xs font-bold uppercase tracking-widest">
+<th class="py-4 px-4">Nombre</th>
+<th class="py-4 px-4">Tipo</th>
+<th class="py-4 px-4">Valor</th>
+<th class="py-4 px-4">Vigencia</th>
+<th class="py-4 px-4">Estado</th>
+<th class="py-4 px-4 text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="space-y-4">
+<!-- Row 1 -->
+<tr class="bg-surface-container-lowest hover:bg-orange-50/50 transition-colors cursor-pointer group rounded-xl">
+<td class="py-4 px-4 rounded-l-xl">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">lunch_dining</span>
+</div>
+<span class="font-bold text-on-surface">Almuerzo Ejecutivo</span>
+</div>
+</td>
+<td class="py-4 px-4">
+<span class="bg-orange-100 text-secondary text-xs px-2.5 py-1 rounded-full font-bold">Porcentaje</span>
+</td>
+<td class="py-4 px-4 font-bold text-on-surface-variant">20% desc.</td>
+<td class="py-4 px-4 text-sm text-outline">Lun - Vie • 12:00 - 15:00</td>
+<td class="py-4 px-4">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</td>
+<td class="py-4 px-4 rounded-r-xl text-right">
+<button class="p-2 text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">edit</span></button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-surface-container-lowest hover:bg-orange-50/50 transition-colors cursor-pointer group rounded-xl">
+<td class="py-4 px-4 rounded-l-xl">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">wine_bar</span>
+</div>
+<span class="font-bold text-on-surface">Happy Hour Vinos</span>
+</div>
+</td>
+<td class="py-4 px-4">
+<span class="bg-tertiary-container/10 text-tertiary text-xs px-2.5 py-1 rounded-full font-bold">2x1</span>
+</td>
+<td class="py-4 px-4 font-bold text-on-surface-variant">Bs. 45</td>
+<td class="py-4 px-4 text-sm text-outline">Jueves • 18:00 - 20:00</td>
+<td class="py-4 px-4">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</td>
+<td class="py-4 px-4 rounded-r-xl text-right">
+<button class="p-2 text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">edit</span></button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="bg-surface-container-lowest hover:bg-orange-50/50 transition-colors cursor-pointer group rounded-xl">
+<td class="py-4 px-4 rounded-l-xl">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-outline">cake</span>
+</div>
+<span class="font-bold text-on-surface">Cumpleañero Gratis</span>
+</div>
+</td>
+<td class="py-4 px-4">
+<span class="bg-surface-container-highest text-outline text-xs px-2.5 py-1 rounded-full font-bold">Monto Fijo</span>
+</td>
+<td class="py-4 px-4 font-bold text-on-surface-variant">Bs. 80</td>
+<td class="py-4 px-4 text-sm text-outline">Todo el año</td>
+<td class="py-4 px-4">
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</td>
+<td class="py-4 px-4 rounded-r-xl text-right">
+<button class="p-2 text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">edit</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Map Indicator (Contextual Context) -->
+<div class="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-surface-container-lowest/80 backdrop-blur-md px-4 py-2.5 rounded-full shadow-xl border border-orange-100">
+<div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-outline">location_on</span>
+<span class="text-xs font-bold text-on-surface-variant tracking-tight" data-location="La Paz, Bolivia">La Paz, Bolivia</span>
+</div>
+</div>
+</body></html>

@@ -11,7 +11,13 @@ class Producto extends Model
         'precio',
         'stock',
         'categoria_id',
+        'foto',
+        'descripcion',
+        'usuario_id',
+        'activo',
     ];
+
+    protected $casts = ['activo' => 'boolean'];
 
     public function categoria()
     {

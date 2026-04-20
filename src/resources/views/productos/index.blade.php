@@ -1,6 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.restaurante')
 
 @section('title', 'Gestión de Menú')
+@section('page-title', 'Gestión de Menú')
 
 @section('content')
 <!-- Workspace Grid -->

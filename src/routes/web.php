@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\RestauranteController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,7 +19,10 @@ Route::get('/setup', function() {
     \Illuminate\Support\Facades\Artisan::call('config:clear');
     \Illuminate\Support\Facades\Artisan::call('view:clear');
     \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
-    
+    try {
+        \Illuminate\Support\Facades\Artisan::call('storage:link', ['--force' => true]);
+    } catch (\Exception $e) { /* symlink may already exist */ }
+
     return "¡Listo! La caché fue limpiada y la Base de Datos fue re-migrada e insertada (admin@admin.com creado). Ya puedes ir a la vista de Login presionando la flecha atrás del navegador, ingresar con Restaurante usando el correo 'admin@admin.com' y clave 'admin123'.";
 });
 
@@ -44,6 +48,17 @@ Route::middleware('auth:comensal')->group(function () {
 // Rutas de Restaurante / Usuario
 Route::middleware(['auth:usuario'])->group(function () {
     Route::resource('productos', ProductoController::class)->except(['show']);
+    Route::post('/productos/{producto}/toggle', [ProductoController::class, 'toggle'])->name('productos.toggle');
+    Route::get('/restaurante/panel', [RestauranteController::class, 'dashboard'])->name('restaurante.dashboard');
+    Route::get('/restaurante/configuracion', [RestauranteController::class, 'configuracion'])->name('restaurante.configuracion');
+    Route::post('/restaurante/configuracion', [RestauranteController::class, 'updateConfiguracion'])->name('restaurante.configuracion.update');
+    // Promociones
+    Route::resource('restaurante/promociones', \App\Http\Controllers\PromocionController::class)
+        ->names('restaurante.promociones')
+        ->parameters(['promociones' => 'promocion'])
+        ->except(['show']);
+    // Reseñas
+    Route::get('/restaurante/resenas', [\App\Http\Controllers\PromocionController::class, 'resenas'])->name('restaurante.resenas');
 });
 
 // Rutas de Administrador

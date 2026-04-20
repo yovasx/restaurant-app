@@ -6,56 +6,103 @@ use App\Http\Requests\StoreProductoRequest;
 use App\Http\Requests\UpdateProductoRequest;
 use App\Models\Categoria;
 use App\Models\Producto;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class ProductoController extends Controller
 {
     public function index()
     {
-        $productos = Producto::with('categoria')->paginate(10);
+        $usuario = Auth::guard('usuario')->user();
+        $productos = Producto::where('usuario_id', $usuario->id)
+            ->with('categoria')
+            ->paginate(10);
 
         return view('productos.index', compact('productos'));
     }
 
     public function create()
     {
-        $categorias = Categoria::orderBy('nombre_categoria')->get();
-
+        $categorias = Categoria::where('estado', 'activo')->orderBy('nombre_categoria')->get();
         return view('productos.create', compact('categorias'));
     }
 
-    public function store(StoreProductoRequest $request)
+    public function store(Request $request)
     {
-        Producto::create($request->validated());
+        $validated = $request->validate([
+            'nombre'       => 'required|string|max:255',
+            'precio'       => 'required|numeric|min:0',
+            'stock'        => 'required|integer|min:0',
+            'categoria_id' => 'nullable|exists:categorias,id',
+            'descripcion'  => 'nullable|string',
+            'foto'         => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120',
+        ]);
 
-        return redirect()->route('productos.index')
-            ->with('success', 'Producto creado con éxito.');
+        $fotoPath = null;
+        if ($request->hasFile('foto')) {
+            $fotoPath = $request->file('foto')->store('productos', 'public');
+        }
+
+        Producto::create([
+            'nombre'       => $validated['nombre'],
+            'precio'       => $validated['precio'],
+            'stock'        => $validated['stock'],
+            'categoria_id' => $validated['categoria_id'],
+            'descripcion'  => $validated['descripcion'],
+            'foto'         => $fotoPath,
+            'usuario_id'   => Auth::guard('usuario')->id(),
+        ]);
+
+        return redirect()->route('restaurante.dashboard')
+            ->with('success', 'Plato creado con éxito.');
     }
 
     public function show(Producto $producto)
     {
-        return redirect()->route('productos.index');
+        return redirect()->route('restaurante.dashboard');
     }
 
     public function edit(Producto $producto)
     {
-        $categorias = Categoria::orderBy('nombre_categoria')->get();
-
+        $categorias = Categoria::where('estado', 'activo')->orderBy('nombre_categoria')->get();
         return view('productos.edit', compact('producto', 'categorias'));
     }
 
-    public function update(UpdateProductoRequest $request, Producto $producto)
+    public function update(Request $request, Producto $producto)
     {
-        $producto->update($request->validated());
+        $validated = $request->validate([
+            'nombre'       => 'required|string|max:255',
+            'precio'       => 'required|numeric|min:0',
+            'stock'        => 'required|integer|min:0',
+            'categoria_id' => 'nullable|exists:categorias,id',
+            'descripcion'  => 'nullable|string',
+            'foto'         => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120',
+        ]);
 
-        return redirect()->route('productos.index')
-            ->with('success', 'Producto actualizado con éxito.');
+        if ($request->hasFile('foto')) {
+            $validated['foto'] = $request->file('foto')->store('productos', 'public');
+        } else {
+            unset($validated['foto']); // keep existing if no new upload
+        }
+
+        $producto->update($validated);
+
+        return redirect()->route('restaurante.dashboard')
+            ->with('success', 'Plato actualizado con éxito.');
     }
 
     public function destroy(Producto $producto)
     {
         $producto->delete();
+        return redirect()->route('restaurante.dashboard')
+            ->with('success', 'Plato eliminado correctamente.');
+    }
 
-        return redirect()->route('productos.index')
-            ->with('success', 'Producto eliminado correctamente.');
+    public function toggle(Producto $producto)
+    {
+        $producto->activo = !$producto->activo;
+        $producto->save();
+        $status = $producto->activo ? 'habilitado' : 'deshabilitado';
+        return back()->with('success', "Plato {$status} correctamente.");
     }
 }

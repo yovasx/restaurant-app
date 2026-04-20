@@ -32,11 +32,12 @@ class AuthController extends Controller
             if (Auth::guard('usuario')->attempt($credentials, $request->boolean('remember'))) {
                 $request->session()->regenerate();
                 
-                if (Auth::guard('usuario')->user()->rol_id == 1) {
+                $rol = Auth::guard('usuario')->user()->rol_id;
+                if ($rol == 1) {
                     return redirect()->route('admin.dashboard');
                 }
-                
-                return redirect()->intended('productos');
+                // Restaurante users (rol_id = 2)
+                return redirect()->route('restaurante.dashboard');
             }
         }
 
