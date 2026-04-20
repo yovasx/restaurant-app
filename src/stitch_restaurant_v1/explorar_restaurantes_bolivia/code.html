@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed": "#ffdcc5",
+              "on-error-container": "#93000a",
+              "on-tertiary-fixed": "#351000",
+              "tertiary-fixed": "#ffdbcd",
+              "on-surface": "#1e1b18",
+              "surface-bright": "#fff8f2",
+              "primary-fixed": "#ffdad5",
+              "primary": "#9e2016",
+              "on-secondary-fixed-variant": "#713700",
+              "inverse-surface": "#33302c",
+              "on-primary-fixed": "#410000",
+              "secondary-container": "#fc8f34",
+              "tertiary-fixed-dim": "#ffb595",
+              "surface-container-high": "#eee7e1",
+              "tertiary": "#8e3600",
+              "secondary-fixed-dim": "#ffb783",
+              "primary-container": "#c0392b",
+              "on-primary-container": "#ffe5e1",
+              "background": "#fff8f2",
+              "on-error": "#ffffff",
+              "surface-dim": "#dfd9d3",
+              "on-tertiary-container": "#ffe6dc",
+              "on-secondary": "#ffffff",
+              "on-background": "#1e1b18",
+              "surface-tint": "#b02d21",
+              "on-tertiary": "#ffffff",
+              "inverse-on-surface": "#f6f0ea",
+              "surface-container-highest": "#e8e1dc",
+              "surface-container-lowest": "#ffffff",
+              "error-container": "#ffdad6",
+              "surface-variant": "#e8e1dc",
+              "on-secondary-fixed": "#301400",
+              "on-secondary-container": "#663100",
+              "surface": "#fff8f2",
+              "error": "#ba1a1a",
+              "outline-variant": "#e1bfb9",
+              "outline": "#8d706c",
+              "secondary": "#944a00",
+              "surface-container-low": "#f9f2ec",
+              "on-tertiary-fixed-variant": "#7c2e00",
+              "on-surface-variant": "#59413d",
+              "inverse-primary": "#ffb4a9",
+              "primary-fixed-dim": "#ffb4a9",
+              "on-primary": "#ffffff",
+              "tertiary-container": "#b54700",
+              "surface-container": "#f3ede7",
+              "on-primary-fixed-variant": "#8e130c"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-overlay {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(8px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<header class="bg-[#FFF8F2] dark:bg-stone-950 docked full-width top-0 sticky z-50 no-border">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black text-[#C0392B] dark:text-[#E74C3C] tracking-tighter">GastroGuía</span>
+<nav class="hidden md:flex items-center gap-6 font-['Plus_Jakarta_Sans'] font-bold text-lg tracking-tight">
+<a class="text-[#C0392B] border-b-2 border-[#C0392B] pb-1" href="#">Inicio</a>
+<a class="text-stone-600 dark:text-stone-400 hover:text-[#C0392B] transition-colors duration-300" href="#">Explorar</a>
+<a class="text-stone-600 dark:text-stone-400 hover:text-[#C0392B] transition-colors duration-300" href="#">Reservas</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center bg-surface-container rounded-full px-4 py-2 hover:bg-stone-100 transition-colors duration-300">
+<span class="material-symbols-outlined text-on-surface-variant mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 font-medium" placeholder="Buscar sabores..." type="text"/>
+</div>
+<button class="material-symbols-outlined p-2 text-stone-600 hover:bg-stone-100 rounded-full transition-transform active:scale-90" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined p-2 text-stone-600 hover:bg-stone-100 rounded-full transition-transform active:scale-90" data-icon="account_circle">account_circle</button>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 py-12">
+<!-- Hero / Section Header -->
+<header class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-2">
+<span class="font-label text-sm font-semibold uppercase tracking-widest text-secondary">Cerca de ti</span>
+<h1 class="font-headline text-5xl font-extrabold tracking-tight text-on-surface">Descubre Joyas <br class="hidden md:block"/><span class="text-primary italic">Gastronómicas</span></h1>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-5 py-3 bg-surface-container-low rounded-xl font-semibold text-on-surface-variant hover:bg-surface-container-high transition-all active:scale-95">
+<span class="material-symbols-outlined text-lg" data-icon="filter_list">filter_list</span>
+                    Filtros
+                </button>
+<button class="flex items-center gap-2 px-5 py-3 bg-surface-container-low rounded-xl font-semibold text-on-surface-variant hover:bg-surface-container-high transition-all active:scale-95">
+<span class="material-symbols-outlined text-lg" data-icon="sort">sort</span>
+                    Ordenar
+                </button>
+</div>
+</header>
+<!-- Restaurant Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+<!-- Card 1 -->
+<article class="group cursor-pointer">
+<div class="relative mb-4 aspect-[4/3] overflow-hidden rounded-[12px]">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Interior of a luxury mediterranean restaurant with warm hanging lights, rustic wooden tables, and high-end table settings in warm golden hour light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDn4ENe4GoGMSG9yZhDw_bycsEcmGi4tw_yO9MRsA4ZOuqIrLeSFd5h-XrmLQwNadqJX-jalrZJlvI8i9azRJePexAsgRnwHOrKmjqqD16zDyg4CiCrJDSej9vffOeJB2Nb2erUbebhMoHLC-S7a5zdUIboYkXUc8WDdlCHMeStjgZa_WDrcRt64ZlSCqhj0xnLHBZ-vaZQn6-8I38mdhMik-hyEONWzo2A0cXZiu4-jUA5y4fh6q01kRpTuzJDosedgH0J6zXl73ev"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="glass-overlay px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-primary">Promoción</span>
+</div>
+<div class="absolute top-4 right-4 glass-overlay px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-on-surface">4.9</span>
+</div>
+<div class="absolute bottom-4 left-4 glass-overlay px-3 py-1 rounded-full">
+<span class="text-[10px] font-bold text-on-surface uppercase tracking-tighter">Abierto</span>
+</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">La Terraza del Sol</h3>
+<p class="font-label text-sm text-on-surface-variant font-medium uppercase tracking-wide">Cocina Mediterránea • Calacoto • 0.5 km</p>
+</div>
+<span class="bg-secondary-fixed text-on-secondary-fixed px-3 py-1 rounded-lg text-xs font-bold">Bs.Bs.Bs.</span>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="group cursor-pointer">
+<div class="relative mb-4 aspect-[4/3] overflow-hidden rounded-[12px]">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Close-up of vibrant gourmet tacos on a stone plate with fresh cilantro and lime, dark textured background, professional food photography style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_xNGWrmbO2cVIZRrssSaJM9J72dx_hJZlI1pimH_EaF9WKmiyPi-7vTUqYLdmlvD72haG3xDEud4Gpr8-BC0h_ww3Y_-yib9ziCY1deeULp55rhgcP7bUHS19JdENSOyDySU-mISpz3dR3Ibaib3icoBbV7yZXDoWkljspixTevh-3yM39Pf0SYn6r1IZTR69jREz4BwyWvRlb5B-e-mQcemvdH8jdl0aUV_gqQ_juYzlcME0W_S5_RQOAftDuCuuonNkDvwpFqyL"/>
+<div class="absolute top-4 right-4 glass-overlay px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-on-surface">4.7</span>
+</div>
+<div class="absolute bottom-4 left-4 bg-on-surface/80 backdrop-blur-md px-3 py-1 rounded-full">
+<span class="text-[10px] font-bold text-white uppercase tracking-tighter">Cerrado</span>
+</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">Cantina Nahuatl</h3>
+<p class="font-label text-sm text-on-surface-variant font-medium uppercase tracking-wide">Mexicana de Autor • Sopocachi • 1.2 km</p>
+</div>
+<span class="bg-secondary-fixed text-on-secondary-fixed px-3 py-1 rounded-lg text-xs font-bold">Bs.Bs.</span>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="group cursor-pointer">
+<div class="relative mb-4 aspect-[4/3] overflow-hidden rounded-[12px]">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Artisanal neapolitan pizza with bubbling cheese and fresh basil coming out of a traditional wood-fired brick oven, warm sparks and orange glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjhFeNiuJ9FryqzaCQKQz6569SRwm72_N0IfGotNE2B58xZKPoRCslJ5TXpJvaKM2XHqYW-NpPUFKNslxSJdprjJ6yeZAoDzGCu8o_Kgh5GfzCM7LideftlTpdRkNkUyLt4PmpLvtIihhJf4C5j5DeFuZ6WFIInc_LrAjhy-BTem1ctGx_fi3VCd3WhclX6Ld73MFY2De2zmKEXhgEVvrIgADzEz1mOuHMtDeK_JRjYfAPt8Kr0E3R-evPjorfelzW59oSVbNMPolV"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="glass-overlay px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-primary">Nuevo</span>
+</div>
+<div class="absolute top-4 right-4 glass-overlay px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-on-surface">5.0</span>
+</div>
+<div class="absolute bottom-4 left-4 glass-overlay px-3 py-1 rounded-full">
+<span class="text-[10px] font-bold text-on-surface uppercase tracking-tighter">Abierto</span>
+</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">Il Forno Antico</h3>
+<p class="font-label text-sm text-on-surface-variant font-medium uppercase tracking-wide">Italiana Tradicional • San Miguel • 0.3 km</p>
+</div>
+<span class="bg-secondary-fixed text-on-secondary-fixed px-3 py-1 rounded-lg text-xs font-bold">Bs.Bs.</span>
+</div>
+</article>
+<!-- Card 4 -->
+<article class="group cursor-pointer">
+<div class="relative mb-4 aspect-[4/3] overflow-hidden rounded-[12px]">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Chef plating a delicate salmon dish with edible flowers in a minimalist modern kitchen, soft natural lighting and shallow depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE2XQl0c14mr8DjrB4DmBcvgZw6RdP3WqLzmKyNOzvhOQR9B6zDGzrj6znWtk48-ZEcC6sWBNXlvSQyW_LYDFrGPxIgrE0i3o6uxIDcsBQE95lfgs5mO2bv82L5YUsoOFm0m_0wDrgqKtCSYHmphCHvl5KaUmd5DWCe2rPa1mDUWFZNdO2d8aREtWbjbjQi_sF9DB7S8PvzIBE2aWWAplueaVGe2pk3ial_IDdLUbQIgeDwc1vGR7tReHw1e1TUPin4JFnnptSkV08"/>
+<div class="absolute top-4 right-4 glass-overlay px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-on-surface">4.8</span>
+</div>
+<div class="absolute bottom-4 left-4 glass-overlay px-3 py-1 rounded-full">
+<span class="text-[10px] font-bold text-on-surface uppercase tracking-tighter">Abierto</span>
+</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">Vanguardia Gastronómica</h3>
+<p class="font-label text-sm text-on-surface-variant font-medium uppercase tracking-wide">Fusión Molecular • Achumani • 2.1 km</p>
+</div>
+<span class="bg-secondary-fixed text-on-secondary-fixed px-3 py-1 rounded-lg text-xs font-bold">Bs.Bs.Bs.Bs.</span>
+</div>
+</article>
+<!-- Card 5 -->
+<article class="group cursor-pointer">
+<div class="relative mb-4 aspect-[4/3] overflow-hidden rounded-[12px]">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Colorful assortment of fresh sushi rolls and nigiri presented on a black slate platter with ginger and wasabi, moody dramatic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6TsppyA6-svLNfnQM64bfR69hDQ9BaVN4xLST4NMr4jYK6_CayBwSi9DfkzfyCKjfaXgNiiOXvf1z_XQs5vYS4W86HM3VfFHXgW1V5DwIubg7O11nhHxIsbgr1Oe0NceIywdtxTSlWyHN_mRgTGTHE41Xe5f7aJcNb6anPrJvXlyCpIlz4eS7unQMtLddqBwTZzOY-itqxrr6vf0aF76yZtrGMAgnM6WI11CrMatXD1q4DbtFfzZ94qcOOg2nX2WoPIebxUlADTx1"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="glass-overlay px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-primary">Promo -20%</span>
+</div>
+<div class="absolute top-4 right-4 glass-overlay px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-on-surface">4.6</span>
+</div>
+<div class="absolute bottom-4 left-4 glass-overlay px-3 py-1 rounded-full">
+<span class="text-[10px] font-bold text-on-surface uppercase tracking-tighter">Abierto</span>
+</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">Sakura Zen</h3>
+<p class="font-label text-sm text-on-surface-variant font-medium uppercase tracking-wide">Japonesa • Miraflores • 1.8 km</p>
+</div>
+<span class="bg-secondary-fixed text-on-secondary-fixed px-3 py-1 rounded-lg text-xs font-bold">Bs.Bs.</span>
+</div>
+</article>
+<!-- Card 6 -->
+<article class="group cursor-pointer">
+<div class="relative mb-4 aspect-[4/3] overflow-hidden rounded-[12px]">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Juicy charcoal-grilled prime steak with salt flakes and rosemary on a rustic wooden board, dark background with smoke wisps" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARyh813Jffz_OYwQQyjLzIwMz5rrBx2NAgrX92DoGRRRd0pimY7yL1rhx73mlLkicIyf2Uu5tEp6VsaEqa42H20ihMEjI9OjvB_NuJWIooeHaFoqh_Lbkp8t9KkVzTJ7cicWaL1afGwOI9CixfQk8eX9LptdDeuo3ZWwYkuVMmzc4jqW80T3EJkj6Gk5P6-l13b3eg1PGl38OSZPE_8IfHQyj67hyDb0bTZueHsRLjK4TC212Tv7QppbXxVZtHRJTA_1wF-jPCQ248"/>
+<div class="absolute top-4 right-4 glass-overlay px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-on-surface">4.9</span>
+</div>
+<div class="absolute bottom-4 left-4 glass-overlay px-3 py-1 rounded-full">
+<span class="text-[10px] font-bold text-on-surface uppercase tracking-tighter">Abierto</span>
+</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">Brasa &amp; Raíz</h3>
+<p class="font-label text-sm text-on-surface-variant font-medium uppercase tracking-wide">Parrilla Urbana • Mallasa • 4.5 km</p>
+</div>
+<span class="bg-secondary-fixed text-on-secondary-fixed px-3 py-1 rounded-lg text-xs font-bold">Bs.Bs.Bs.</span>
+</div>
+</article>
+</div>
+<!-- Load More Section -->
+<div class="mt-20 flex justify-center">
+<button class="px-8 py-4 bg-primary text-white font-bold rounded-xl shadow-lg hover:bg-primary-container transition-all hover:scale-105 active:scale-95 flex items-center gap-3">
+                Cargar más experiencias
+                <span class="material-symbols-outlined" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-safe pt-3 bg-white/80 dark:bg-stone-900/80 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.05)] rounded-t-2xl">
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 hover:text-[#9E2016] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Inter'] text-[10px] font-semibold uppercase tracking-widest mt-1">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#C0392B] dark:text-[#E74C3C] scale-110" href="#">
+<span class="material-symbols-outlined" data-icon="search" data-weight="fill" style="font-variation-settings: 'FILL' 1;">search</span>
+<span class="font-['Inter'] text-[10px] font-semibold uppercase tracking-widest mt-1">Explorar</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 hover:text-[#9E2016] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="font-['Inter'] text-[10px] font-semibold uppercase tracking-widest mt-1">Reservas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 hover:text-[#9E2016] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Inter'] text-[10px] font-semibold uppercase tracking-widest mt-1">Perfil</span>
+</a>
+</nav>
+<!-- SideNavBar (Desktop Only Example - suppressed to favor list focus but structural shell ready) -->
+<aside class="hidden lg:flex flex-col h-screen w-64 border-r border-stone-200 dark:border-stone-800 bg-[#FFF8F2] dark:bg-stone-900 fixed left-0 top-0 pt-20 z-40" style="display: none;">
+<div class="px-6 mb-10">
+<h2 class="font-black text-[#C0392B] mb-2 uppercase text-xs tracking-[0.2em]">Filtros Rápidos</h2>
+</div>
+<nav class="flex flex-col gap-2">
+<div class="bg-[#C0392B] text-white rounded-lg shadow-sm mx-2 py-3 px-4 flex items-center gap-3 cursor-pointer">
+<span class="material-symbols-outlined text-xl" data-icon="restaurant">restaurant</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm">Todos</span>
+</div>
+<div class="text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 mx-2 rounded-lg py-3 px-4 flex items-center gap-3 cursor-pointer hover:translate-x-1 transition-transform">
+<span class="material-symbols-outlined text-xl" data-icon="local_offer">local_offer</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm">Ofertas</span>
+</div>
+<div class="text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 mx-2 rounded-lg py-3 px-4 flex items-center gap-3 cursor-pointer hover:translate-x-1 transition-transform">
+<span class="material-symbols-outlined text-xl" data-icon="star">star</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm">Populares</span>
+</div>
+</nav>
+</aside>
+</body></html>

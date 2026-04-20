@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#ffdbcd",
+                    "surface-container-lowest": "#ffffff",
+                    "outline-variant": "#e1bfb9",
+                    "background": "#fff8f2",
+                    "primary": "#9e2016",
+                    "secondary-container": "#fc8f34",
+                    "primary-fixed-dim": "#ffb4a9",
+                    "on-error": "#ffffff",
+                    "tertiary": "#8e3600",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb595",
+                    "on-tertiary-container": "#ffe6dc",
+                    "surface-container": "#f3ede7",
+                    "secondary-fixed-dim": "#ffb783",
+                    "inverse-on-surface": "#f6f0ea",
+                    "surface-container-high": "#eee7e1",
+                    "surface-tint": "#b02d21",
+                    "on-primary-container": "#ffe5e1",
+                    "primary-container": "#c0392b",
+                    "on-secondary-fixed-variant": "#713700",
+                    "tertiary-container": "#b54700",
+                    "on-error-container": "#93000a",
+                    "surface-container-low": "#f9f2ec",
+                    "on-primary-fixed-variant": "#8e130c",
+                    "inverse-surface": "#33302c",
+                    "surface-container-highest": "#e8e1dc",
+                    "on-secondary-fixed": "#301400",
+                    "on-secondary-container": "#663100",
+                    "on-primary-fixed": "#410000",
+                    "surface-variant": "#e8e1dc",
+                    "surface-bright": "#fff8f2",
+                    "on-tertiary-fixed-variant": "#7c2e00",
+                    "on-surface": "#1e1b18",
+                    "outline": "#8d706c",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed": "#ffdcc5",
+                    "on-tertiary-fixed": "#351000",
+                    "on-tertiary": "#ffffff",
+                    "inverse-primary": "#ffb4a9",
+                    "surface": "#fff8f2",
+                    "error-container": "#ffdad6",
+                    "surface-dim": "#dfd9d3",
+                    "primary-fixed": "#ffdad5",
+                    "error": "#ba1a1a",
+                    "on-surface-variant": "#59413d",
+                    "on-background": "#1e1b18",
+                    "secondary": "#944a00"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "16px",
+                    "xl": "24px",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full flex justify-between items-center px-6 py-4 bg-orange-50/80 backdrop-blur-md dark:bg-stone-900/80 shadow-sm z-50">
+<div class="flex items-center gap-2">
+<span class="text-2xl font-black text-red-800 dark:text-red-600 font-['Plus_Jakarta_Sans'] tracking-tight">Sommelier</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-orange-100/50 transition-colors duration-300">
+<span class="material-symbols-outlined text-stone-500">notifications</span>
+</button>
+<button class="p-2 rounded-full hover:bg-orange-100/50 transition-colors duration-300">
+<span class="material-symbols-outlined text-stone-500">more_vert</span>
+</button>
+</div>
+</header>
+<!-- Content Separation Logic -->
+<div class="h-[72px]"></div>
+<main class="max-w-3xl mx-auto px-6 py-12">
+<!-- Header Section -->
+<section class="mb-12">
+<h1 class="text-4xl font-extrabold text-on-surface mb-2 tracking-tight">Ajustes de Perfil</h1>
+<p class="text-on-surface-variant font-medium">Gestiona tu identidad gastronómica en La Paz.</p>
+</section>
+<!-- Profile Hero Card (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<div class="md:col-span-1 bg-surface-container-lowest rounded-xl p-8 flex flex-col items-center justify-center shadow-sm relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-50"></div>
+<div class="relative w-32 h-32 mb-4">
+<img alt="Avatar" class="w-full h-full rounded-full object-cover border-4 border-surface-container shadow-lg" data-alt="close-up portrait of a friendly bolivian man in his 30s with a warm smile, natural outdoor lighting with soft focus city background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCty5PPvcXQ7AVtTc_zRg-ET8QACj7h33iiUEmp-57oL16S8BhJirAar4-_mke-ODuiZz363H6fcRtWaDtRCWJ95cQ48BAroJhwAkw9neEVGfe6FUKHVJArwwXASzgOMOuo1GsI1ujbxG_rjtNlF5ZEmtRumJrrj6pRYl0HffMcUql7yPRJXCMITyfIkacuxvyYOVICf_3U3lH6-GY2mwVGBfWjBvQy_eyTG-SUht-ZdaFNBL4wtp-9thEq49yLTveExHaeGxHDZa7s"/>
+<button class="absolute bottom-1 right-1 bg-primary text-white p-2 rounded-full shadow-md hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+<p class="text-xs font-bold uppercase tracking-widest text-primary-container mb-1">Comensal Gourmet</p>
+<h2 class="text-xl font-bold text-on-surface">Alejandro Silva</h2>
+</div>
+<div class="md:col-span-2 bg-surface-container-low rounded-xl p-8 flex flex-col justify-between border-l-4 border-primary">
+<div>
+<h3 class="text-lg font-bold text-on-surface mb-4">Ubicación Actual</h3>
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<span class="text-on-surface-variant font-medium">La Paz, Bolivia (Zona Sur)</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-lg p-4 flex justify-between items-center">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase tracking-tighter text-stone-400 font-bold">Nivel de Socio</span>
+<span class="text-on-surface font-semibold">Oro • 24 Reservas</span>
+</div>
+<span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+</div>
+</div>
+<!-- Settings Form -->
+<section class="space-y-8 bg-surface-container-low rounded-xl p-8 md:p-10">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Name -->
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Nombre Completo</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border-0 rounded-lg px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary transition-all" type="text" value="Alejandro Silva"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-stone-300">person</span>
+</div>
+</div>
+<!-- Email -->
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Correo Electrónico</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border-0 rounded-lg px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary transition-all" type="email" value="a.silva@sommelier.bo"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-stone-300">mail</span>
+</div>
+</div>
+<!-- Password -->
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Contraseña</label>
+<div class="flex gap-2">
+<div class="relative flex-grow">
+<input class="w-full bg-surface-container-highest border-0 rounded-lg px-4 py-3 text-on-surface-variant cursor-not-allowed" disabled="" type="password" value="••••••••••••"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-stone-400">lock</span>
+</div>
+<button class="bg-surface-container-lowest text-primary font-bold px-4 py-3 rounded-lg hover:bg-white transition-colors text-sm shadow-sm">Cambiar</button>
+</div>
+</div>
+<!-- Phone -->
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Teléfono</label>
+<div class="flex gap-0 overflow-hidden rounded-lg">
+<div class="bg-surface-container-highest px-3 flex items-center text-on-surface-variant font-bold border-r border-outline-variant/20">
+                            +591
+                        </div>
+<input class="w-full bg-surface-container-lowest border-0 px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary transition-all" type="tel" value="76543210"/>
+</div>
+</div>
+</div>
+<!-- Preferences Toggle Section -->
+<div class="pt-8 border-t border-outline-variant/20">
+<h3 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-4">Preferencias de Comunicación</h3>
+<div class="space-y-4">
+<label class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-lg group cursor-pointer">
+<div class="flex flex-col">
+<span class="font-bold text-on-surface">Notificaciones Push</span>
+<span class="text-xs text-on-surface-variant">Alertas de reservas y eventos en La Paz.</span>
+</div>
+<div class="w-12 h-6 bg-primary rounded-full relative transition-colors duration-300">
+<div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+</div>
+</label>
+<label class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-lg group cursor-pointer">
+<div class="flex flex-col">
+<span class="font-bold text-on-surface">Newsletter Mensual</span>
+<span class="text-xs text-on-surface-variant">Resumen de nuevos restaurantes y catas de vino.</span>
+</div>
+<div class="w-12 h-6 bg-stone-200 rounded-full relative transition-colors duration-300">
+<div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+</div>
+</label>
+</div>
+</div>
+<!-- Save Button -->
+<div class="pt-6 flex justify-end">
+<button class="bg-primary text-white font-bold px-10 py-4 rounded-lg shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all duration-300">
+                    Guardar Cambios
+                </button>
+</div>
+</section>
+<!-- Footer Visual Decor -->
+<div class="mt-12 opacity-30 flex justify-center">
+<span class="material-symbols-outlined text-6xl text-stone-300">restaurant_menu</span>
+</div>
+</main>
+<!-- BottomNavBar (Visible on mobile only based on responsive logic) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pt-3 pb-8 bg-white/90 backdrop-blur-xl rounded-t-[32px] shadow-[0_-4px_24px_rgba(0,0,0,0.04)]">
+<div class="flex flex-col items-center justify-center text-stone-400 px-6 py-2">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-['Inter'] text-[10px] font-semibold tracking-wider uppercase">Descubrir</span>
+</div>
+<div class="flex flex-col items-center justify-center text-stone-400 px-6 py-2">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-['Inter'] text-[10px] font-semibold tracking-wider uppercase">Reservas</span>
+</div>
+<div class="flex flex-col items-center justify-center text-stone-400 px-6 py-2">
+<span class="material-symbols-outlined">restaurant</span>
+<span class="font-['Inter'] text-[10px] font-semibold tracking-wider uppercase">Pedidos</span>
+</div>
+<!-- ACTIVE TAB: PERFIL -->
+<div class="flex flex-col items-center justify-center bg-red-50 text-red-700 rounded-2xl px-6 py-2 transition-all duration-300">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-['Inter'] text-[10px] font-semibold tracking-wider uppercase">Perfil</span>
+</div>
+</nav>
+</body></html>

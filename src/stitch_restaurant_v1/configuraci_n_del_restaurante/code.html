@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Perfil del Restaurante - Sommelier</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#ffdbcd",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#e1bfb9",
+                        "background": "#fff8f2",
+                        "primary": "#9e2016",
+                        "secondary-container": "#fc8f34",
+                        "primary-fixed-dim": "#ffb4a9",
+                        "on-error": "#ffffff",
+                        "tertiary": "#8e3600",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb595",
+                        "on-tertiary-container": "#ffe6dc",
+                        "surface-container": "#f3ede7",
+                        "secondary-fixed-dim": "#ffb783",
+                        "inverse-on-surface": "#f6f0ea",
+                        "surface-container-high": "#eee7e1",
+                        "surface-tint": "#b02d21",
+                        "on-primary-container": "#ffe5e1",
+                        "primary-container": "#c0392b",
+                        "on-secondary-fixed-variant": "#713700",
+                        "tertiary-container": "#b54700",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f9f2ec",
+                        "on-primary-fixed-variant": "#8e130c",
+                        "inverse-surface": "#33302c",
+                        "surface-container-highest": "#e8e1dc",
+                        "on-secondary-fixed": "#301400",
+                        "on-secondary-container": "#663100",
+                        "on-primary-fixed": "#410000",
+                        "surface-variant": "#e8e1dc",
+                        "surface-bright": "#fff8f2",
+                        "on-tertiary-fixed-variant": "#7c2e00",
+                        "on-surface": "#1e1b18",
+                        "outline": "#8d706c",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#ffdcc5",
+                        "on-tertiary-fixed": "#351000",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#ffb4a9",
+                        "surface": "#fff8f2",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#dfd9d3",
+                        "primary-fixed": "#ffdad5",
+                        "error": "#ba1a1a",
+                        "on-surface-variant": "#59413d",
+                        "on-background": "#1e1b18",
+                        "secondary": "#944a00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "16px",
+                        "xl": "24px",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-active {
+            @apply bg-primary-container text-on-primary-container shadow-md;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e8e1dc; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen">
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-orange-50/80 backdrop-blur-md dark:bg-stone-900/80 shadow-sm dark:shadow-none">
+<div class="flex items-center gap-4">
+<span class="text-2xl font-black text-red-800 dark:text-red-600 font-['Plus_Jakarta_Sans'] tracking-tight">Sommelier</span>
+<div class="hidden md:block bg-orange-100/50 dark:bg-stone-800/50 h-6 w-[1px]"></div>
+<span class="hidden md:block text-stone-500 font-medium font-['Plus_Jakarta_Sans']">Panel de Control</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-stone-500 hover:bg-orange-100/50 rounded-full transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-stone-500 hover:bg-orange-100/50 rounded-full transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-primary-fixed overflow-hidden">
+<img alt="Chef Profile" class="w-full h-full object-cover" data-alt="portrait of a professional chef in white uniform smiling warmly in a kitchen setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaoK23XpUVj9sXw4lTVZQmKk7teGWuvXUJIhvQ9WFUCRU9ZitqwftnCinO9x9zUurAKxJt6HMjoM5hUhKZmRvvE1JjPJeA_4AptHA1gYHfvoMn2QmA-fYpxGq65TxrHJCDWeLdHGLMYWUK13QaewqGGvZnn0MjLZG9YPWgbSJdC8W3JosSW74FcbvxpqTaKtxjzsBoiswejixDAO2fct9dBgRT1HDWD9GsVMLoFaszUYy4EukJT5qgZDPeJ4WUwBK8BWsiyQoUKuhH"/>
+</div>
+</div>
+</header>
+<div class="flex pt-20 h-screen overflow-hidden">
+<aside class="hidden md:flex flex-col w-72 bg-surface-container-low p-6 space-y-2">
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-stone-500 font-medium hover:bg-orange-100/50 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-stone-500 font-medium hover:bg-orange-100/50 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
+<span>Menú Digital</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-stone-500 font-medium hover:bg-orange-100/50 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span>Reservas</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400 rounded-2xl px-4 py-3 transition-all duration-300 font-bold" href="#">
+<div class="flex items-center gap-3 w-full">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span>Perfil</span>
+</div>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-stone-500 font-medium hover:bg-orange-100/50 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span>Estadísticas</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-outline-variant/30">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-stone-400 font-medium hover:text-red-700 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Cerrar Sesión</span>
+</a>
+</div>
+</aside>
+<main class="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 pb-32 md:pb-8">
+<div class="max-w-5xl mx-auto space-y-8">
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="text-4xl font-extrabold font-headline text-primary tracking-tight">Gestión de Perfil</h1>
+<p class="text-on-surface-variant font-body mt-2">Configura la identidad pública de tu restaurante en La Paz.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2 rounded-lg bg-surface-container-highest text-on-surface font-semibold hover:bg-surface-variant transition-all">
+                            Descartar
+                        </button>
+<button class="px-8 py-2 rounded-lg bg-primary text-white font-semibold shadow-lg shadow-primary/20 hover:scale-105 transition-all bg-gradient-to-br from-primary to-primary-container">
+                            Guardar Cambios
+                        </button>
+</div>
+</section>
+<div class="relative group h-64 rounded-xl overflow-hidden bg-surface-container-highest">
+<img alt="Cover Photo" class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" data-alt="wide shot of a luxury modern restaurant interior in La Paz with wooden accents and warm ambient lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwO-HIp8O7B_KLeIaB89TApE8g_7lv-c5Bh6f-FjEBdTLcvIPEl_mdmnSkb9A-Ki5BARFTe0pPLYc56qQsb9su2O-z7Ms9Rbcfc1iMAoXni7AUEx6PbHGrTNIXe7UzqNpVHYywaVRMHK0bMm0va11NpZzw1AolNDW0TH0RrXPz21p0x8c29wg-JiIyWechHjOAM8On6EZkm-YFoaasttEDrXb0HxWwWa_m5SZinSoqtZ5n2jH6XAe9BnLvsr46vaucMI_EYFvbcgN2"/>
+<div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="bg-white/90 backdrop-blur-md px-4 py-2 rounded-lg flex items-center gap-2 text-primary font-bold">
+<span class="material-symbols-outlined" data-icon="cloud_upload">cloud_upload</span>
+                            Cambiar Foto de Portada
+                        </button>
+</div>
+<div class="absolute bottom-4 left-6 flex items-center gap-2 text-white bg-black/40 backdrop-blur-sm px-3 py-1 rounded-full text-sm">
+<span class="material-symbols-outlined text-sm" data-icon="photo_camera">photo_camera</span>
+<span>Resolución sugerida: 1200 x 400px</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 space-y-6">
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-6">
+<h3 class="text-xl font-bold font-headline flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="info">info</span>
+                                Información General
+                            </h3>
+<div class="space-y-4">
+<div class="group">
+<label class="block text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-2">Nombre del Restaurante</label>
+<input class="w-full bg-surface-container-highest border-0 rounded-lg p-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all font-medium" type="text" value="La Casona de San Miguel"/>
+</div>
+<div class="group">
+<label class="block text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-2">Descripción</label>
+<textarea class="w-full bg-surface-container-highest border-0 rounded-lg p-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all font-medium leading-relaxed" rows="4">Cocina de autor inspirada en las raíces andinas, ubicada en el corazón de San Miguel. Ofrecemos una experiencia sensorial única con ingredientes locales y técnicas modernas.</textarea>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="group">
+<label class="block text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-2">Teléfono de Contacto</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-stone-500 font-semibold">+591</span>
+<input class="w-full bg-surface-container-highest border-0 rounded-lg p-4 pl-16 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all font-medium" type="tel" value="70612345"/>
+</div>
+</div>
+<div class="group">
+<label class="block text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-2">Moneda Principal</label>
+<input class="w-full bg-surface-container-low border-0 rounded-lg p-4 font-medium text-stone-400 cursor-not-allowed" readonly="" type="text" value="Bolivianos (Bs.)"/>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-6">
+<h3 class="text-xl font-bold font-headline flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="location_on">location_on</span>
+                                Ubicación Exacta
+                            </h3>
+<div class="space-y-4">
+<div class="group">
+<label class="block text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-2">Dirección Física</label>
+<input class="w-full bg-surface-container-highest border-0 rounded-lg p-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all font-medium" type="text" value="Av. Montenegro #123, San Miguel, La Paz"/>
+</div>
+<div class="h-[300px] rounded-lg overflow-hidden relative border border-outline-variant/20">
+<img alt="Map" class="w-full h-full object-cover" data-alt="stylized satellite map view of La Paz city center with a red pin marker" data-location="La Paz, Bolivia" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDunCoGyPcGUs1pwt-h8lD6z8_qlIC1vAj_IG5EdPXdyv9JdlBcLH494vXoZvGS0wV8HCR3ikJCE4Ig7r2op0xDbuHKVAOaByTpN9rinJPI34AI_6EL4jHsUpaR5Cx0jUndNZxV9MQJ6Yh0LOZ1Gw5auo7yMLHkEu-dmH7dVeDy9vgPl9kFcyHFTkQkxDBHLajNmmnk5IONVxPYSAAY2YSaV2HQFvVKWh-Ky8wMf4Chp4o5WFAEyGbnSVNdr6MP9tUK8H2V6Y0nYHXE"/>
+<div class="absolute inset-0 bg-black/5"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full">
+<span class="material-symbols-outlined text-primary text-5xl drop-shadow-lg" data-icon="location_on" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Latitud</label>
+<input class="w-full bg-surface-container-low border-0 rounded-lg p-2 text-sm font-mono" readonly="" type="text" value="-16.5412"/>
+</div>
+<div>
+<label class="block text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Longitud</label>
+<input class="w-full bg-surface-container-low border-0 rounded-lg p-2 text-sm font-mono" readonly="" type="text" value="-68.0825"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-6">
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-6 sticky top-28">
+<h3 class="text-xl font-bold font-headline flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="schedule">schedule</span>
+                                Horarios de Atención
+                            </h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low group hover:bg-orange-50 transition-colors">
+<span class="font-semibold text-on-surface">Lunes - Viernes</span>
+<div class="flex items-center gap-2">
+<select class="bg-transparent border-0 text-primary font-bold p-0 focus:ring-0 text-sm">
+<option>12:00</option>
+<option>11:00</option>
+</select>
+<span class="text-stone-400">—</span>
+<select class="bg-transparent border-0 text-primary font-bold p-0 focus:ring-0 text-sm">
+<option>23:00</option>
+<option>00:00</option>
+</select>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low group hover:bg-orange-50 transition-colors">
+<span class="font-semibold text-on-surface">Sábado</span>
+<div class="flex items-center gap-2">
+<select class="bg-transparent border-0 text-primary font-bold p-0 focus:ring-0 text-sm">
+<option>12:00</option>
+</select>
+<span class="text-stone-400">—</span>
+<select class="bg-transparent border-0 text-primary font-bold p-0 focus:ring-0 text-sm">
+<option>01:00</option>
+</select>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-red-50/50 group border border-red-100 transition-colors">
+<span class="font-semibold text-red-800">Domingo</span>
+<span class="text-red-700 text-xs font-bold uppercase tracking-wider">Cerrado</span>
+</div>
+<button class="w-full mt-4 flex items-center justify-center gap-2 py-3 text-secondary font-bold hover:bg-orange-100/50 rounded-lg transition-all">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                                    Añadir Horario Especial
+                                </button>
+</div>
+<div class="pt-6 border-t border-outline-variant/30">
+<h4 class="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-4">Estado del Local</h4>
+<div class="flex items-center gap-4 bg-green-50 p-4 rounded-xl">
+<div class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold text-green-900 leading-none">Visible y Activo</p>
+<p class="text-xs text-green-700 mt-1">Los clientes pueden reservar ahora.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-stone-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pt-3 pb-8 bg-white/90 backdrop-blur-xl dark:bg-stone-950/90 shadow-[0_-4px_24px_rgba(0,0,0,0.04)] rounded-t-[32px]">
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-600 px-6 py-2 hover:scale-110 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-['Inter'] text-[10px] font-semibold tracking-wider uppercase mt-1">Descubrir</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-600 px-6 py-2 hover:scale-110 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-['Inter'] text-[10px] font-semibold tracking-wider uppercase mt-1">Reservas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-600 px-6 py-2 hover:scale-110 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
+<span class="font-['Inter'] text-[10px] font-semibold tracking-wider uppercase mt-1">Pedidos</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400 rounded-2xl px-6 py-2 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-['Inter'] text-[10px] font-semibold tracking-wider uppercase mt-1">Perfil</span>
+</a>
+</nav>
+</body></html>
