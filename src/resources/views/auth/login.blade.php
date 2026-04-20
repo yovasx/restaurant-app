@@ -151,9 +151,13 @@
             </form>
             
             <div class="mt-6 text-center" id="register-link-container">
-                <p class="text-sm text-stone-500">
-                    ¿No tienes una cuenta? 
+                <p class="text-sm text-stone-500" id="register-text">
+                    ¿No tienes una cuenta de Comensal? 
                     <a class="text-primary font-bold hover:underline ml-1" href="{{ route('register.comensal') }}">Regístrate gratis</a>
+                </p>
+                <p class="text-sm text-stone-500 hidden" id="register-rest-text">
+                    ¿Tu restaurante no está registrado? 
+                    <a class="text-primary font-bold hover:underline ml-1" href="{{ route('register.restaurante') }}">Únete aquí</a>
                 </p>
             </div>
         </div>
@@ -188,11 +192,13 @@
         if (role === 'comensal') {
             btnComensal.className = "flex-1 py-2 px-4 rounded-lg bg-surface-container-lowest text-primary font-bold shadow-sm flex items-center justify-center gap-2 transition-all";
             btnUsuario.className = "flex-1 py-2 px-4 rounded-lg text-on-surface-variant font-semibold hover:bg-surface-container-highest flex items-center justify-center gap-2 transition-all";
-            if (registerDiv) registerDiv.style.display = 'block';
+            document.getElementById('register-text').classList.remove('hidden');
+            document.getElementById('register-rest-text').classList.add('hidden');
         } else {
             btnUsuario.className = "flex-1 py-2 px-4 rounded-lg bg-surface-container-lowest text-primary font-bold shadow-sm flex items-center justify-center gap-2 transition-all";
             btnComensal.className = "flex-1 py-2 px-4 rounded-lg text-on-surface-variant font-semibold hover:bg-surface-container-highest flex items-center justify-center gap-2 transition-all";
-            if (registerDiv) registerDiv.style.display = 'none';
+            document.getElementById('register-text').classList.add('hidden');
+            document.getElementById('register-rest-text').classList.remove('hidden');
         }
     }
 </script>

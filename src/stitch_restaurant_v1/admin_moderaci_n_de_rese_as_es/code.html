@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sommelier Admin - Moderación de Reseñas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#ffdad5",
+                        "on-tertiary-fixed-variant": "#7c2e00",
+                        "surface-container-highest": "#e8e1dc",
+                        "on-secondary-container": "#663100",
+                        "surface-bright": "#fff8f2",
+                        "surface-container-high": "#eee7e1",
+                        "on-primary": "#ffffff",
+                        "secondary": "#944a00",
+                        "primary-fixed-dim": "#ffb4a9",
+                        "secondary-fixed-dim": "#ffb783",
+                        "surface-tint": "#b02d21",
+                        "tertiary": "#8e3600",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#b54700",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#fc8f34",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#351000",
+                        "on-secondary-fixed-variant": "#713700",
+                        "on-primary-fixed": "#410000",
+                        "surface": "#fff8f2",
+                        "inverse-surface": "#33302c",
+                        "background": "#fff8f2",
+                        "surface-dim": "#dfd9d3",
+                        "outline": "#8d706c",
+                        "on-surface": "#1e1b18",
+                        "inverse-on-surface": "#f6f0ea",
+                        "primary": "#9e2016",
+                        "outline-variant": "#e1bfb9",
+                        "secondary-fixed": "#ffdcc5",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#8e130c",
+                        "inverse-primary": "#ffb4a9",
+                        "tertiary-fixed-dim": "#ffb595",
+                        "tertiary-fixed": "#ffdbcd",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#59413d",
+                        "on-background": "#1e1b18",
+                        "on-secondary-fixed": "#301400",
+                        "surface-container-low": "#f9f2ec",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#e8e1dc",
+                        "primary-container": "#c0392b",
+                        "on-primary-container": "#ffe5e1",
+                        "on-tertiary-container": "#ffe6dc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #FFF8F2; }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-[#FFF8F2] dark:bg-stone-950 flex flex-col py-8 space-y-2">
+<div class="px-8 mb-10">
+<h1 class="text-2xl font-black text-[#C0392B] tracking-tight font-headline">Sommelier</h1>
+<p class="text-stone-500 text-xs font-medium uppercase tracking-widest">Consola de Gestión</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-stone-500 dark:text-stone-400 py-3 px-10 flex items-center gap-4 hover:bg-white/50 transition-all duration-300 font-medium font-headline" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Tablero</span>
+</a>
+<a class="text-stone-500 dark:text-stone-400 py-3 px-10 flex items-center gap-4 hover:bg-white/50 transition-all duration-300 font-medium font-headline" href="#">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
+<span>Restaurantes</span>
+</a>
+<!-- Active State: Reviews -->
+<a class="bg-white dark:bg-stone-800 text-[#C0392B] dark:text-red-400 font-bold rounded-l-full ml-4 py-3 px-6 shadow-sm flex items-center gap-4 font-headline" href="#">
+<span class="material-symbols-outlined" data-icon="rate_review" style="font-variation-settings: 'FILL' 1;">rate_review</span>
+<span>Reseñas</span>
+</a>
+<a class="text-stone-500 dark:text-stone-400 py-3 px-10 flex items-center gap-4 hover:bg-white/50 transition-all duration-300 font-medium font-headline" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Comensales</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full bg-primary-container text-on-primary-container py-4 rounded-xl font-bold shadow-lg hover:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                Añadir Nuevo Lugar
+            </button>
+</div>
+</aside>
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 right-0 z-40 bg-[#FFF8F2] dark:bg-stone-950 flex justify-between items-center px-6 py-3 ml-64 w-[calc(100%-16rem)] shadow-sm">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg focus:ring-2 focus:ring-primary-container text-sm" placeholder="Buscar reseñas, usuarios o restaurantes..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="text-stone-600 hover:text-[#C0392B] transition-colors"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+<button class="text-stone-600 hover:text-[#C0392B] transition-colors"><span class="material-symbols-outlined" data-icon="settings">settings</span></button>
+</div>
+<div class="h-8 w-px bg-stone-200"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-bold text-on-surface">Admin User</p>
+<p class="text-[10px] text-stone-500 uppercase tracking-tighter">Editor Jefe</p>
+</div>
+<img alt="Admin profile photo" class="w-10 h-10 rounded-full border-2 border-white shadow-sm" data-alt="professional headshot of a middle-aged male administrator in a clean modern office setting with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiyYw9LYuMvJXAOndlKd77KTwmEC7SpNh4I1_MBpwCRLr1CNXd33C6m0YPRxgyK95oocmMA21aS2FPZRQGOf5JWbsrDT9GRroIlRZypH40heAHdHYpeB258XrVeEg5MdL3jNF7IvFBGHW0JMQJPRMbvpEXW_a7MqAH1rpZ9KIl4vxAmpJLYpSZ2CKv4RcO4v5Y5Oln_2k0aJcf0a-K6VbWRBtCJ4Gi5wNubOqU8loLFBBfwBmdXX-fGd5M0sA7hjGsBaEet0BwJ-jj"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-8 pb-12 min-h-screen">
+<!-- Header Section -->
+<section class="mb-10 flex justify-between items-end">
+<div>
+<h2 class="text-4xl font-extrabold font-headline tracking-tight text-on-surface">Moderación de Reseñas</h2>
+<p class="text-stone-500 mt-1 font-medium italic">Curando la voz culinaria de La Paz, Bolivia.</p>
+</div>
+<div class="flex gap-3">
+<button class="bg-surface-container-lowest px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 hover:bg-stone-50 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                    Todos los Estados
+                </button>
+<button class="bg-surface-container-lowest px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 hover:bg-stone-50 transition-colors shadow-sm text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="pending">pending</span>
+                    Pendiente (12)
+                </button>
+</div>
+</section>
+<!-- Moderation Bento/Grid Content -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Statistics Card (Small) -->
+<div class="col-span-12 lg:col-span-4 bg-primary text-white rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between shadow-xl">
+<div class="relative z-10">
+<h3 class="text-lg font-bold opacity-80 uppercase tracking-widest text-xs">Puntaje de Calidad</h3>
+<p class="text-5xl font-black mt-2">94%</p>
+<p class="text-sm mt-4 opacity-90 max-w-[200px]">La tasa de aprobación de reseñas ha subido un 4% desde el mes pasado en la región de La Paz.</p>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[160px]" data-icon="verified">verified</span>
+</div>
+</div>
+<!-- Table Container (Large) -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-low rounded-2xl p-2 shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-separate border-spacing-y-2">
+<thead>
+<tr class="text-stone-400 uppercase text-[10px] font-bold tracking-[0.2em]">
+<th class="px-6 py-4">Usuario</th>
+<th class="px-6 py-4">Restaurante</th>
+<th class="px-6 py-4">Calificación</th>
+<th class="px-6 py-4">Estado</th>
+<th class="px-6 py-4 text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="text-sm">
+<!-- Review Item 1 -->
+<tr class="bg-surface-container-lowest group hover:shadow-md transition-shadow">
+<td class="px-6 py-5 rounded-l-xl">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full" data-alt="portrait of a young woman with a friendly smile, natural lighting, bokeh city background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaUBi9k7EEMunebkqIVx4gqjlwJSUdA5543jKpSQ6n1pvwvtdI2ZFrla3P_kcykqIIRGWd6q6yk9mXVUt3FqapWQ4C_CdN9G4emrJDiijlDhDrL0xOurfQ6aIjMNl4HUMCwgswit7vVpYnxj8aISgz-T2ALbFo6ru6kCXhGMrl1Bm9pR3YJ567XxiCjFHNY_8Ng1eSteOJjAypKpvsDng6tg7fVBr5yRDGyKSXKLhOjp6cvyeSo6yMhzCWjie-cr37x_yQ7vzdB1qW"/>
+<div>
+<p class="font-bold">Sofia Méndez</p>
+<p class="text-[10px] text-stone-400">@sofia_foodie</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="font-semibold text-on-surface">Gustu</p>
+<p class="text-[10px] text-stone-400">Calacoto, La Paz</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="bg-amber-100 text-amber-700 px-2 py-1 rounded text-[10px] font-bold uppercase">Pendiente</span>
+</td>
+<td class="px-6 py-5 rounded-r-xl text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 hover:bg-green-50 text-green-600 transition-colors" title="Aprobar"><span class="material-symbols-outlined" data-icon="check">check</span></button>
+<button class="p-2 hover:bg-red-50 text-[#C0392B] transition-colors" title="Rechazar"><span class="material-symbols-outlined" data-icon="close">close</span></button>
+<button class="p-2 hover:bg-stone-100 text-stone-500 transition-colors" title="Ver"><span class="material-symbols-outlined" data-icon="visibility">visibility</span></button>
+</div>
+</td>
+</tr>
+<!-- Review Item 2 -->
+<tr class="bg-surface-container-lowest group hover:shadow-md transition-shadow">
+<td class="px-6 py-5 rounded-l-xl">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full" data-alt="man in a casual denim shirt against a neutral background, professional lighting, clean minimal aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUFkLvfIfAs4G41bq8nm1OAOnj3hWLvK0sFay76AZUAXuOB2PwTL9PEj1Id_f2oBymI3sqdxa9_cXT5SK2MvilxtaanxCXQBok5SMSb7mdiHcDn-Tg8W5TExHqhj76qBWCwXkw-ctSDtQYBSj2yW4UT4lS4_h7qc6Ub1ScgAuDZFWNO6JGy9pNq_agRBWHMxk8gk34maHqfUNu265mF_i_Yiz7zgkkHsdafFu0CnXDrgq0PMnnzjayYzA5WU5eWdW_d1JzoqsOaZYr"/>
+<div>
+<p class="font-bold">Marco Quispe</p>
+<p class="text-[10px] text-stone-400">@m_quispe</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="font-semibold text-on-surface">Ali Pacha</p>
+<p class="text-[10px] text-stone-400">El Centro, La Paz</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="bg-amber-100 text-amber-700 px-2 py-1 rounded text-[10px] font-bold uppercase">Pendiente</span>
+</td>
+<td class="px-6 py-5 rounded-r-xl text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 hover:bg-green-50 text-green-600 transition-colors" title="Aprobar"><span class="material-symbols-outlined" data-icon="check">check</span></button>
+<button class="p-2 hover:bg-red-50 text-[#C0392B] transition-colors" title="Rechazar"><span class="material-symbols-outlined" data-icon="close">close</span></button>
+<button class="p-2 hover:bg-stone-100 text-stone-500 transition-colors" title="Ver"><span class="material-symbols-outlined" data-icon="visibility">visibility</span></button>
+</div>
+</td>
+</tr>
+<!-- Review Item 3 -->
+<tr class="bg-surface-container-lowest group hover:shadow-md transition-shadow">
+<td class="px-6 py-5 rounded-l-xl">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full" data-alt="portrait of a mature woman with glasses, soft studio lighting, elegant and intellectual appearance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRgPdcgawJDCtkZVkmjjkbrEiNFATPlNyZ-iZRlzcA5Y1krP6aZOUEm-Y2nQrhe5B4hxUwRsSqxA8dK7r2GUsLTk55mK2nSRQNUlazgDNN6ra26Mmx-46w6_ImPNk0DfMWubaL-7qJ6o2xk4xQF64fEg39PxggmiVh7yLEKFeLz7d6GoSsCBHLdxN2TkQ0kqgnBI7BHtWueyfHiWR3_r5Jxkv1zbA-hiry-DLCxGxqq1JQCloxkm3lNENlxks_x5f4C-gQ_S0ltNet"/>
+<div>
+<p class="font-bold">Elena Rivas</p>
+<p class="text-[10px] text-stone-400">@erivas_bolivia</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="font-semibold text-on-surface">Popular</p>
+<p class="text-[10px] text-stone-400">El Centro, La Paz</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" style="font-variation-settings: 'FILL' 0;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="bg-amber-100 text-amber-700 px-2 py-1 rounded text-[10px] font-bold uppercase">Pendiente</span>
+</td>
+<td class="px-6 py-5 rounded-r-xl text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 hover:bg-green-50 text-green-600 transition-colors" title="Aprobar"><span class="material-symbols-outlined" data-icon="check">check</span></button>
+<button class="p-2 hover:bg-red-50 text-[#C0392B] transition-colors" title="Rechazar"><span class="material-symbols-outlined" data-icon="close">close</span></button>
+<button class="p-2 hover:bg-stone-100 text-stone-500 transition-colors" title="Ver"><span class="material-symbols-outlined" data-icon="visibility">visibility</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Focused Detail Card (Asymmetric) -->
+<div class="col-span-12 lg:col-span-12 mt-4">
+<div class="bg-surface-container-highest rounded-3xl overflow-hidden flex flex-col md:flex-row h-auto md:h-80 shadow-inner">
+<div class="w-full md:w-1/3 relative h-64 md:h-full">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="close-up of a beautifully plated gourmet dish with vibrant colors, microgreens, and delicate sauces on a dark plate, dramatic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1yZGMxJ4gH02du9CJ0Py8FpClWNcAYnPMpEgqLIxq29Hv8ig0gqsdY3a_7UiiMjANc8nfipOXhdUYS1aQ83HCTJXSh6cRPK37XZ4ext4CQtTqSiU-IXw7VOfTyqNsnns4XsFxGIi9vqS_iyAEbZRCBkcvMWujoTAQyhAA4juWB8HAg9-GvAQew5fsSkOseyeCA_eupqSQcsHM1PkXCp4Ox9KljZGmC8cVL9Bc8CzuCK20-1vYkPXnsMxCREAURnGURAa3CfjUw5dd"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8">
+<div>
+<span class="bg-primary px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase mb-2 inline-block">Reseña Marcada</span>
+<h4 class="text-white text-2xl font-black font-headline">Experiencia Gustu</h4>
+</div>
+</div>
+</div>
+<div class="flex-1 p-8 md:p-10 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<div>
+<p class="text-stone-400 text-xs font-bold uppercase tracking-widest mb-1">Revisión de Comentario Completo</p>
+<p class="text-xl font-medium italic text-on-surface leading-relaxed">
+                                        "El carpaccio de llama fue una absoluta revelación. Sin embargo, el servicio se sintió un poco apresurado hacia el final de nuestro menú degustación. Espero que esto se solucione ya que la comida es de nivel de 5 estrellas."
+                                    </p>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-2xl flex flex-col items-center">
+<p class="text-3xl font-black text-primary">5.0</p>
+<p class="text-[10px] font-bold text-stone-400 uppercase">Calificación</p>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between border-t border-stone-200/50 pt-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-stone-400" data-icon="calendar_month">calendar_month</span>
+<span class="text-stone-500 text-sm">24 de Octubre, 2023 • 18:42</span>
+</div>
+<div class="flex gap-4">
+<button class="text-stone-500 text-sm font-bold hover:text-on-surface transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="chat">chat</span>
+                                    Responder al Usuario
+                                </button>
+<button class="bg-[#C0392B] text-white px-8 py-3 rounded-full font-bold shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="done_all">done_all</span>
+                                    Aprobar y Publicar
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Regional Stats (Asymmetric small grid item) -->
+<div class="col-span-12 lg:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+<div class="bg-surface-container-low p-6 rounded-2xl flex items-center gap-5">
+<div class="bg-primary/10 p-4 rounded-xl text-primary">
+<span class="material-symbols-outlined text-3xl" data-icon="restaurant_menu">restaurant_menu</span>
+</div>
+<div>
+<p class="text-2xl font-black text-on-surface">452</p>
+<p class="text-xs text-stone-500 font-medium uppercase tracking-tighter">Total de Restaurantes</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-2xl flex items-center gap-5">
+<div class="bg-primary/10 p-4 rounded-xl text-primary">
+<span class="material-symbols-outlined text-3xl" data-icon="reviews">reviews</span>
+</div>
+<div>
+<p class="text-2xl font-black text-on-surface">1.2k</p>
+<p class="text-xs text-stone-500 font-medium uppercase tracking-tighter">Reseñas Mensuales</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-2xl flex items-center gap-5">
+<div class="bg-primary/10 p-4 rounded-xl text-primary">
+<span class="material-symbols-outlined text-3xl" data-icon="location_on">location_on</span>
+</div>
+<div>
+<p class="text-2xl font-black text-on-surface">La Paz</p>
+<p class="text-xs text-stone-500 font-medium uppercase tracking-tighter">Región Actual</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
