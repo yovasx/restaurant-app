@@ -4,6 +4,7 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RestauranteController;
+use App\Http\Controllers\ComensalController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -34,15 +35,20 @@ Route::post('register/restaurante', [AuthController::class, 'registerRestaurante
 
 // Rutas protegidas para comensal
 Route::middleware('auth:comensal')->group(function () {
-    Route::get('/inicio', function () {
-        return view('comensal.inicio');
-    })->name('comensal.inicio');
+    Route::get('/inicio', [ComensalController::class, 'index'])->name('comensal.inicio');
+    Route::get('/explorar', [ComensalController::class, 'explorar'])->name('comensal.explorar');
 
     Route::get('/perfil', function () {
         return view('comensal.perfil');
     })->name('comensal.perfil');
     
     Route::post('/perfil/update', [AuthController::class, 'updatePerfilComensal'])->name('comensal.perfil.update');
+
+    // API endpoint to get nearby restaurants (Haversine) - expects ?lat=&lng=
+    Route::get('/restaurantes/nearby', [ComensalController::class, 'nearby'])->name('restaurantes.nearby');
+
+    // Restaurant detail view for comensal (only numeric id to avoid route collisions)
+    Route::get('/restaurante/{id}', [ComensalController::class, 'show'])->whereNumber('id')->name('restaurante.show');
 });
 
 // Rutas de Restaurante / Usuario

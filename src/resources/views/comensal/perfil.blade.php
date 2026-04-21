@@ -113,7 +113,8 @@
             </div>
 
             <!-- Save Button -->
-            <div class="pt-6 flex justify-end">
+            <div class="pt-6 flex justify-between items-center">
+                <a href="{{ route('comensal.inicio') }}" class="inline-block bg-white border border-stone-200 text-stone-700 px-6 py-3 rounded-lg shadow-sm hover:bg-stone-50">Volver al inicio</a>
                 <button type="submit" class="bg-[#9e2016] text-white font-bold px-10 py-4 rounded-lg shadow-xl shadow-red-900/20 hover:scale-[1.02] active:scale-95 transition-all duration-300">
                     Guardar Cambios
                 </button>

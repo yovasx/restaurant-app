@@ -80,6 +80,13 @@
 <body class="bg-background text-on-background min-h-screen flex overflow-hidden">
 
 <!-- SideNavBar Component -->
+@php
+    $showRestaurantLayout = auth()->guard('usuario')->check() && (
+        request()->is('restaurante*') || request()->is('productos*') || request()->routeIs('restaurante.*') || request()->routeIs('productos.*') || request()->routeIs('admin.*')
+    );
+@endphp
+
+@if($showRestaurantLayout)
 <aside class="hidden lg:flex flex-col h-screen w-64 border-r border-stone-200 dark:border-stone-800 bg-[#FFF8F2] dark:bg-stone-900 py-6 shrink-0">
     <div class="px-6 mb-8">
         <h1 class="font-black text-[#C0392B] text-2xl tracking-tighter">GastroGuía</h1>
@@ -117,10 +124,12 @@
         @endauth
     </div>
 </aside>
+@endif
 
 <!-- Main Content Area -->
 <main class="flex-1 flex flex-col h-screen overflow-y-auto bg-surface-container-low">
     <!-- TopAppBar Component -->
+    @if($showRestaurantLayout)
     <header class="sticky top-0 z-50 bg-[#FFF8F2] dark:bg-stone-950 w-full shadow-sm">
         <div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
             <div class="flex items-center gap-4 lg:hidden">
@@ -142,6 +151,7 @@
             </div>
         </div>
     </header>
+    @endif
 
     <!-- Dashboard Canvas -->
     <div class="p-6 max-w-7xl mx-auto w-full space-y-8">
