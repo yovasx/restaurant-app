@@ -17,10 +17,16 @@ mkdir -p storage/logs bootstrap/cache vendor || true
 # Crear fichero de log si no existe
 touch storage/logs/laravel.log || true
 
-# Intentar ajustar propietario/permiso (no fallar si no permitido)
-if id www-data >/dev/null 2>&1; then
+# Soporte para UID/GID del host (evita problemas de permisos cuando montas código desde host)
+HOST_UID=${HOST_UID:-}
+HOST_GID=${HOST_GID:-}
+if [ -n "$HOST_UID" ]; then
+  echo "[entrypoint] ajustando propietario a $HOST_UID:${HOST_GID:-$HOST_UID}"
+  chown -R "$HOST_UID":"${HOST_GID:-$HOST_UID}" storage bootstrap/cache || true
+elif id www-data >/dev/null 2>&1; then
   chown -R www-data:www-data storage bootstrap/cache || true
 fi
+
 chmod -R 775 storage bootstrap/cache || true
 chmod 664 storage/logs/laravel.log || true || true
 
@@ -44,6 +50,13 @@ if command -v php >/dev/null 2>&1; then
   php artisan config:clear || true
   php artisan route:clear || true
   php artisan view:clear || true
+fi
+
+# Ejecutar migraciones si se solicita
+MIGRATE_ON_START=${MIGRATE_ON_START:-0}
+if [ "$MIGRATE_ON_START" = "1" ]; then
+  echo "[entrypoint] ejecutando migraciones: php artisan migrate --force"
+  php artisan migrate --force || true
 fi
 
 echo "[entrypoint] listo — ejecutando: $@"
