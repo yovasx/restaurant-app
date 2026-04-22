@@ -46,16 +46,13 @@ Route::middleware('auth:comensal')->group(function () {
 
     // API endpoint to get nearby restaurants (Haversine) - expects ?lat=&lng=
     Route::get('/restaurantes/nearby', [ComensalController::class, 'nearby'])->name('restaurantes.nearby');
-
-    // Restaurant detail view for comensal (only numeric id to avoid route collisions)
-    Route::get('/restaurante/{id}', [ComensalController::class, 'show'])->whereNumber('id')->name('restaurante.show');
 });
 
 // Rutas de Restaurante / Usuario
 Route::middleware(['auth:usuario'])->group(function () {
+    Route::get('/restaurante/panel', [RestauranteController::class, 'dashboard'])->name('restaurante.dashboard');
     Route::resource('productos', ProductoController::class)->except(['show']);
     Route::post('/productos/{producto}/toggle', [ProductoController::class, 'toggle'])->name('productos.toggle');
-    Route::get('/restaurante/panel', [RestauranteController::class, 'dashboard'])->name('restaurante.dashboard');
     Route::get('/restaurante/configuracion', [RestauranteController::class, 'configuracion'])->name('restaurante.configuracion');
     Route::post('/restaurante/configuracion', [RestauranteController::class, 'updateConfiguracion'])->name('restaurante.configuracion.update');
     // Promociones
@@ -65,6 +62,12 @@ Route::middleware(['auth:usuario'])->group(function () {
         ->except(['show']);
     // Reseñas
     Route::get('/restaurante/resenas', [\App\Http\Controllers\PromocionController::class, 'resenas'])->name('restaurante.resenas');
+});
+
+// Rutas protegidas para comensal (Detalle de restaurante)
+Route::middleware('auth:comensal')->group(function () {
+    // Restaurant detail view for comensal (strictly numeric id to avoid route collisions)
+    Route::get('/restaurante/{id}', [ComensalController::class, 'show'])->where('id', '[0-9]+')->name('restaurante.show');
 });
 
 // Rutas de Administrador
