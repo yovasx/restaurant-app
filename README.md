@@ -214,24 +214,5 @@ docker compose exec app composer dump-autoload
 - Verifica que el nombre del servidor en pgAdmin sea `postgres` (no localhost)
 
 ---
-
-## 🗑 Limpiar todo y empezar de cero
-
-```bash
-# Elimina contenedores Y volúmenes (borra la base de datos también)
-make fresh
-
-# Luego vuelve a hacer setup
-make setup
-```
-
----
-
-## 🔒 Para producción
-
-Antes de ir a producción, actualiza el `.env`:
-- `APP_ENV=production`
-- `APP_DEBUG=false`  
-- Cambia todas las contraseñas
-- Activa `opcache.enable=1` en `docker/php/php.ini`
-- Elimina la exposición del puerto 5432 en `docker-compose.yml`
+### por si la pagina no es encontrada (error 500)
+docker exec laravel_app sh -c "composer install && php artisan key:generate && php artisan optimize:clear && chown -R www-data:www-data storage bootstrap/cache && chmod -R 777 storage bootstrap/cache"
