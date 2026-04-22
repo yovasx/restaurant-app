@@ -82,6 +82,19 @@ docker compose exec app php artisan migrate
 docker compose exec app php artisan storage:link
 ```
 
+### Docker: permisos y migraciones al iniciar
+
+Si ejecutas la app con Docker y montas el código desde el host, puedes pasar el UID/GID del usuario del host para evitar problemas de permisos:
+
+```bash
+# ejemplo en Linux
+HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose up -d --build
+```
+
+También puedes habilitar la ejecución automática de migraciones al inicio exportando `MIGRATE_ON_START=1`.
+
+Las variables disponibles para el servicio `app` son: `HOST_UID`, `HOST_GID`, `MIGRATE_ON_START`.
+
 ---
 
 ## 🆕 Crear un proyecto Laravel nuevo desde cero

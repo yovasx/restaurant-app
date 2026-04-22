@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sommelier Admin - Gestión de Comensales</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary-fixed": "#ffdad5",
+            "on-tertiary-fixed-variant": "#7c2e00",
+            "surface-container-highest": "#e8e1dc",
+            "on-secondary-container": "#663100",
+            "surface-bright": "#fff8f2",
+            "surface-container-high": "#eee7e1",
+            "on-primary": "#ffffff",
+            "secondary": "#944a00",
+            "primary-fixed-dim": "#ffb4a9",
+            "secondary-fixed-dim": "#ffb783",
+            "surface-tint": "#b02d21",
+            "tertiary": "#8e3600",
+            "on-error": "#ffffff",
+            "tertiary-container": "#b54700",
+            "on-tertiary": "#ffffff",
+            "error": "#ba1a1a",
+            "secondary-container": "#fc8f34",
+            "surface-container": "#f3ede7",
+            "on-tertiary-fixed": "#351000",
+            "on-secondary-fixed-variant": "#713700",
+            "on-primary-fixed": "#410000",
+            "surface": "#fff8f2",
+            "inverse-surface": "#33302c",
+            "background": "#fff8f2",
+            "surface-dim": "#dfd9d3",
+            "outline": "#8d706c",
+            "on-surface": "#1e1b18",
+            "inverse-on-surface": "#f6f0ea",
+            "primary": "#9e2016",
+            "outline-variant": "#e1bfb9",
+            "secondary-fixed": "#ffdcc5",
+            "error-container": "#ffdad6",
+            "on-error-container": "#93000a",
+            "on-primary-fixed-variant": "#8e130c",
+            "inverse-primary": "#ffb4a9",
+            "tertiary-fixed-dim": "#ffb595",
+            "tertiary-fixed": "#ffdbcd",
+            "surface-container-lowest": "#ffffff",
+            "on-surface-variant": "#59413d",
+            "on-background": "#1e1b18",
+            "on-secondary-fixed": "#301400",
+            "surface-container-low": "#f9f2ec",
+            "on-secondary": "#ffffff",
+            "surface-variant": "#e8e1dc",
+            "primary-container": "#c0392b",
+            "on-primary-container": "#ffe5e1",
+            "on-tertiary-container": "#ffe6dc"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Plus Jakarta Sans"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+  </style>
+</head>
+<body class="bg-background text-on-background selection:bg-primary-fixed">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-[#FFF8F2] dark:bg-stone-950 flex flex-col py-8 space-y-2 border-r-0 shadow-none">
+<div class="px-8 mb-10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="restaurant_menu">restaurant_menu</span>
+</div>
+<div>
+<h1 class="text-2xl font-black text-[#C0392B] tracking-tight">Sommelier</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-stone-500 font-bold">Consola de Gestión</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center text-stone-500 dark:text-stone-400 py-3 px-10 font-['Plus_Jakarta_Sans'] font-medium text-base hover:bg-white/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="dashboard">dashboard</span>
+        Dashboard
+      </a>
+<a class="flex items-center text-stone-500 dark:text-stone-400 py-3 px-10 font-['Plus_Jakarta_Sans'] font-medium text-base hover:bg-white/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="restaurant">restaurant</span>
+        Restaurantes
+      </a>
+<a class="flex items-center text-stone-500 dark:text-stone-400 py-3 px-10 font-['Plus_Jakarta_Sans'] font-medium text-base hover:bg-white/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="rate_review">rate_review</span>
+        Reseñas
+      </a>
+<a class="flex items-center bg-white dark:bg-stone-800 text-[#C0392B] dark:text-red-400 font-bold rounded-l-full ml-4 py-3 px-6 shadow-sm font-['Plus_Jakarta_Sans'] text-base transition-transform active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="group" style="font-variation-settings: 'FILL' 1;">group</span>
+        Comensales
+      </a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full py-4 bg-primary text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+        Añadir Local
+      </button>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center w-full px-8 py-4 z-40 bg-[#FFF8F2] dark:bg-stone-950 shadow-sm dark:shadow-none sticky top-0">
+<div class="flex items-center gap-4 bg-stone-100/50 rounded-full px-4 py-2 w-96">
+<span class="material-symbols-outlined text-stone-400" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-stone-400" placeholder="Buscar comensales por nombre o email..." type="text"/>
+</div>
+<div class="flex items-center gap-6">
+<button class="relative text-stone-600 hover:text-[#C0392B] transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+<button class="text-stone-600 hover:text-[#C0392B] transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="flex items-center gap-3 pl-6 border-l border-stone-200">
+<img alt="Admin profile photo" class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm" data-alt="Professional headshot of a middle-aged male administrator in a clean modern office setting with warm lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIav5fYzzMoicehf3JFR0zJtK3Fujbwv4B2se5gHgUn8Wj0GW4KevZ1NP_9seHfUjvYigkkKuGqxrO5rXcG0KYTTQg0ZOc41wqxiJG5eAWE4XdoB2jXLyugZYE_DqEsf5jtWsJ8HhuWImH7ek66W_55h_D4Yd0idz2NEExBIz9N1O0gsTqJMG8dKtmLcsTQGaGT0Rdj2CVeCJcSJ5MXPDwCu-EyyeZl5dZqaP68O76IvrD4W7mu5BWTETfHDgYLeEkNP1y7YqIIKW9"/>
+<div class="hidden lg:block">
+<p class="text-sm font-bold text-on-surface">Julian Rossi</p>
+<p class="text-[10px] text-stone-500 font-medium">Head Sommelier</p>
+</div>
+</div>
+</div>
+</header>
+<div class="p-10 max-w-7xl mx-auto space-y-12">
+<!-- Section Header -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="text-4xl font-black tracking-tight text-on-surface mb-2">Gestión de Comensales</h2>
+<p class="text-on-surface-variant font-medium">Revisa, modera y actualiza la información de los comensales registrados en la plataforma.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-3 rounded-full bg-surface-container-highest text-on-surface-variant font-bold text-sm flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+            Filtros
+          </button>
+<button class="px-6 py-3 rounded-full bg-primary text-white font-bold text-sm shadow-md flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+            Exportar CSV
+          </button>
+</div>
+</div>
+<!-- Main Layout: Bento Grid Style -->
+<div class="grid grid-cols-12 gap-8">
+<!-- User List Table Section -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-3xl shadow-sm overflow-hidden">
+<div class="p-6 border-b border-surface-container flex justify-between items-center bg-white">
+<h3 class="font-bold text-lg text-on-surface">Todos los Comensales</h3>
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-xs font-bold text-on-surface-variant">1,284 Total</span>
+</div>
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant text-[11px] uppercase tracking-widest font-bold">
+<th class="px-6 py-4">Comensal</th>
+<th class="px-6 py-4">Contacto</th>
+<th class="px-6 py-4">Estado</th>
+<th class="px-6 py-4 text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low">
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<img alt="Diner profile" class="w-10 h-10 rounded-full object-cover" data-alt="Portrait of a young woman with a friendly expression in a high-end restaurant background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCdiRoynMvH6v5zUh_M9nVprfURSGpJV5wXX7QjqGZ__iQFS-EsHRXyLH3DY7hezdkqn5cukBxG7AcvihS9jACiwtH3CosJdXMleTrfebzLqXSKyyEIjDYBvXPkQsKIthhxtzmC4fBH9sjS3biiSmCYmIq3uUv9iO4G_AKlc4BGNN5z-Cfsa5StUYqfmxbMGjhLyBWZ-bKtljQK24xf5MfLuJxo2nAImmQGYbdcr42EjfhA9N9gzO_nqGphV-rWQ0-qxQoICfsvPrO"/>
+<div>
+<p class="font-bold text-on-surface">Adriana Mendez</p>
+<p class="text-xs text-stone-400">ID: #92831</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="space-y-1">
+<p class="text-sm font-medium text-on-surface-variant">adriana.m@email.com</p>
+<p class="text-xs text-stone-500">+591 784 12093</p>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-black uppercase tracking-tight">Activo</span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-primary hover:bg-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-stone-400 hover:bg-stone-200 transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="block">block</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center font-bold text-secondary">RQ</div>
+<div>
+<p class="font-bold text-on-surface">Ricardo Quevedo</p>
+<p class="text-xs text-stone-400">ID: #92834</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="space-y-1">
+<p class="text-sm font-medium text-on-surface-variant">quevedo.r@outlook.com</p>
+<p class="text-xs text-stone-500">+591 602 44102</p>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-black uppercase tracking-tight">Activo</span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-primary hover:bg-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-stone-400 hover:bg-stone-200 transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="block">block</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group bg-red-50/20">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<img alt="Diner profile" class="w-10 h-10 rounded-full object-cover filter grayscale opacity-60" data-alt="Portrait of a young man with a neutral expression in a sunlit urban environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaTWZKp71SpKr-DskMS0SiXu43vDk40cEhfkX__lMFxlpYAjI8J0ovLKZrVo-Mq72x8kGo3s2WWdjIALIffn3nBB91MUvM7VsImCOmi5ZE0OT0ka_6Tztz6bOyn3mYVueHkrtBU5TlPh9fmdTn-aKo4SqIwqGH4rnnqq3vrogJeWvDlJV5hQ5igaaFZ7lwJFglOdEQB3LTM1tqdoKsl7g9oDPv9s2itmsFoon4gqEMeDHUV1c1-OPyoi2typvruaL16HLwRIqQBxa9"/>
+<div>
+<p class="font-bold text-on-surface text-stone-500">Luis Fernando Paz</p>
+<p class="text-xs text-stone-400">ID: #92855</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="space-y-1">
+<p class="text-sm font-medium text-on-surface-variant">luis.paz@gmail.com</p>
+<p class="text-xs text-stone-500">+591 711 00219</p>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-[10px] font-black uppercase tracking-tight">Baneado</span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-primary hover:bg-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<img alt="Diner profile" class="w-10 h-10 rounded-full object-cover" data-alt="Close up portrait of a woman with curly hair looking directly at the camera with a soft warm lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNYj8Pr8o0cnx7GcJakYTxyAEBJZMih347wIcZlVJWJILrY_Qd_aRujCIv2gQq6xBEW3knxfiM5T7-IBO19P27SVPOcBdhhd1_L0TTpnrwgRgf-PbFUlLmMs5nfJhpH3IgYNpePE8BgdWRhQZRLLrDZRoB8YIqKPzScibWGqzkrbrcR_4Cqy5T6c0dmySfOFt8Gd0QQMloe71vu2U_OYQgDjh3X3mSCcrS3_gaKDngE_aqe8uQdbK_zLdiSj-OyCuhPAVK9ebcv3zX"/>
+<div>
+<p class="font-bold text-on-surface">Camila Torres</p>
+<p class="text-xs text-stone-400">ID: #92889</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="space-y-1">
+<p class="text-sm font-medium text-on-surface-variant">torres_c@domain.bo</p>
+<p class="text-xs text-stone-500">+591 755 88210</p>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-black uppercase tracking-tight">Activo</span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-primary hover:bg-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-stone-400 hover:bg-stone-200 transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="block">block</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="p-6 flex justify-center border-t border-surface-container">
+<nav class="flex items-center gap-1">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg text-stone-400 hover:bg-stone-100">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-xs font-bold">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg text-xs font-medium text-on-surface-variant hover:bg-stone-100">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg text-xs font-medium text-on-surface-variant hover:bg-stone-100">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg text-stone-400 hover:bg-stone-100">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</nav>
+</div>
+</div>
+<!-- Edit Form Section -->
+<div class="col-span-12 lg:col-span-4 space-y-8">
+<div class="bg-surface-container-lowest rounded-3xl shadow-sm p-8 sticky top-28">
+<div class="mb-8">
+<h3 class="text-xl font-extrabold text-on-surface mb-1">Editar Perfil del Comensal</h3>
+<p class="text-sm text-on-surface-variant">Actualizar credenciales y estado de Adriana Mendez.</p>
+</div>
+<form class="space-y-6">
+<div class="space-y-2">
+<label class="text-[11px] font-black uppercase tracking-widest text-stone-400">Nombre Completo</label>
+<input class="w-full bg-surface-container-low border-0 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-fixed outline-none text-on-surface font-medium" type="text" value="Adriana Mendez"/>
+</div>
+<div class="space-y-2">
+<label class="text-[11px] font-black uppercase tracking-widest text-stone-400">Correo Electrónico</label>
+<input class="w-full bg-surface-container-low border-0 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-fixed outline-none text-on-surface font-medium" type="email" value="adriana.m@email.com"/>
+</div>
+<div class="space-y-2">
+<label class="text-[11px] font-black uppercase tracking-widest text-stone-400">Contraseña</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-0 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-fixed outline-none text-on-surface font-medium pr-12" type="password" value="********"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400" type="button">
+<span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span>
+</button>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-[11px] font-black uppercase tracking-widest text-stone-400">Teléfono (+591)</label>
+<input class="w-full bg-surface-container-low border-0 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-fixed outline-none text-on-surface font-medium" type="text" value="784 12093"/>
+</div>
+<div class="space-y-4 pt-2">
+<label class="text-[11px] font-black uppercase tracking-widest text-stone-400 block">Estado de la Cuenta</label>
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-2xl">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+<span class="text-sm font-bold text-on-surface">Cuenta Activa</span>
+</div>
+<!-- Custom Toggle Switch -->
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-stone-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+<div class="flex gap-4 pt-6">
+<button class="flex-1 py-4 bg-surface-container text-on-surface font-bold rounded-xl hover:bg-surface-container-high transition-colors" type="button">
+                  Descartar
+                </button>
+<button class="flex-[1.5] py-4 bg-primary-container text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all" type="button">
+                  Guardar Cambios
+                </button>
+</div>
+</form>
+</div>
+<!-- Quick Stats Card -->
+<div class="bg-surface-container-low rounded-3xl p-6 border border-surface-container">
+<h4 class="text-xs font-black uppercase tracking-widest text-stone-500 mb-4">Actividad del Comensal</h4>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white p-4 rounded-2xl shadow-sm">
+<p class="text-[10px] font-bold text-stone-400 uppercase tracking-tighter">Reservas</p>
+<p class="text-xl font-black text-on-surface">24</p>
+</div>
+<div class="bg-white p-4 rounded-2xl shadow-sm">
+<p class="text-[10px] font-bold text-stone-400 uppercase tracking-tighter">Reseñas</p>
+<p class="text-xl font-black text-on-surface">12</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#ffdad5",
+                        "on-tertiary-fixed-variant": "#7c2e00",
+                        "surface-container-highest": "#e8e1dc",
+                        "on-secondary-container": "#663100",
+                        "surface-bright": "#fff8f2",
+                        "surface-container-high": "#eee7e1",
+                        "on-primary": "#ffffff",
+                        "secondary": "#944a00",
+                        "primary-fixed-dim": "#ffb4a9",
+                        "secondary-fixed-dim": "#ffb783",
+                        "surface-tint": "#b02d21",
+                        "tertiary": "#8e3600",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#b54700",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#fc8f34",
+                        "surface-container": "#f3ede7",
+                        "on-tertiary-fixed": "#351000",
+                        "on-secondary-fixed-variant": "#713700",
+                        "on-primary-fixed": "#410000",
+                        "surface": "#fff8f2",
+                        "inverse-surface": "#33302c",
+                        "background": "#fff8f2",
+                        "surface-dim": "#dfd9d3",
+                        "outline": "#8d706c",
+                        "on-surface": "#1e1b18",
+                        "inverse-on-surface": "#f6f0ea",
+                        "primary": "#9e2016",
+                        "outline-variant": "#e1bfb9",
+                        "secondary-fixed": "#ffdcc5",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#8e130c",
+                        "inverse-primary": "#ffb4a9",
+                        "tertiary-fixed-dim": "#ffb595",
+                        "tertiary-fixed": "#ffdbcd",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#59413d",
+                        "on-background": "#1e1b18",
+                        "on-secondary-fixed": "#301400",
+                        "surface-container-low": "#f9f2ec",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#e8e1dc",
+                        "primary-container": "#c0392b",
+                        "on-primary-container": "#ffe5e1",
+                        "on-tertiary-container": "#ffe6dc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .brand-font { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background selection:bg-primary-fixed">
+<!-- SideNavBar Component -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-[#FFF8F2] dark:bg-stone-950 flex flex-col py-8 space-y-2 z-50">
+<div class="px-8 mb-10">
+<h1 class="text-2xl font-black text-[#C0392B] tracking-tight">Sommelier</h1>
+<p class="text-stone-500 text-xs font-medium uppercase tracking-widest">Consola de Gestión</p>
+</div>
+<nav class="flex-grow">
+<a class="flex items-center text-stone-500 dark:text-stone-400 py-3 px-10 hover:bg-white/50 dark:hover:bg-stone-800/50 hover:text-[#C0392B] transition-all duration-300 font-['Plus_Jakarta_Sans'] font-medium text-base" href="#">
+<span class="material-symbols-outlined mr-4">dashboard</span>
+            Panel
+        </a>
+<!-- Active State: Restaurants -->
+<a class="flex items-center bg-white dark:bg-stone-800 text-[#C0392B] dark:text-red-400 font-bold rounded-l-full ml-4 py-3 px-6 shadow-sm font-['Plus_Jakarta_Sans'] text-base" href="#">
+<span class="material-symbols-outlined mr-4">restaurant</span>
+            Restaurantes
+        </a>
+<a class="flex items-center text-stone-500 dark:text-stone-400 py-3 px-10 hover:bg-white/50 dark:hover:bg-stone-800/50 hover:text-[#C0392B] transition-all duration-300 font-['Plus_Jakarta_Sans'] font-medium text-base" href="#">
+<span class="material-symbols-outlined mr-4">rate_review</span>
+            Reseñas
+        </a>
+<a class="flex items-center text-stone-500 dark:text-stone-400 py-3 px-10 hover:bg-white/50 dark:hover:bg-stone-800/50 hover:text-[#C0392B] transition-all duration-300 font-['Plus_Jakarta_Sans'] font-medium text-base" href="#">
+<span class="material-symbols-outlined mr-4">group</span>
+            Comensales
+        </a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full bg-primary text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined">add_circle</span>
+            Añadir Local
+        </button>
+</div>
+</aside>
+<!-- TopAppBar Component -->
+<header class="fixed top-0 right-0 z-40 bg-[#FFF8F2] dark:bg-stone-950 flex justify-between items-center px-6 py-3 ml-64 w-[calc(100%-16rem)] shadow-sm dark:shadow-none">
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-stone-400">
+<span class="material-symbols-outlined text-xl">search</span>
+</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full text-sm focus:ring-2 focus:ring-primary w-64 transition-all" placeholder="Buscar locales..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex gap-4">
+<button class="text-stone-600 dark:text-stone-400 hover:text-[#C0392B] transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-stone-600 dark:text-stone-400 hover:text-[#C0392B] transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<div class="h-10 w-10 rounded-full overflow-hidden border-2 border-primary/20">
+<img alt="Foto de perfil del administrador" class="h-full w-full object-cover" data-alt="professional portrait of a restaurant administrator in a clean white shirt with soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNTcyboQZ1QB7PYiwam2pafPlRtPVu6W7ZhvXygUHtNlh7bZKhpye76TGr_xsldQDWLM9Esj9MxP1FKb8jt-qLSdHsgsBz2t1Jibq5O9ze5j0azbHOyjIYG64WYDn_sPgTOq6e5_z85d7udFuqtm-tfBRoD0VLMwtzDsKicqjA2pWYrHAsZkm38iISfFyQQasmS5XFKmfbzYRuM2-BTf9uQXCYKCKgN5SnwQhXBV1ga0lf-GKOAAZZLZvnW6PhCMWrtfQbM7ySq4iM"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 p-8 min-h-screen bg-surface-container-low">
+<div class="max-w-7xl mx-auto">
+<div class="flex justify-between items-end mb-10">
+<div>
+<h2 class="text-4xl font-extrabold text-on-surface tracking-tight mb-2">Directorio de Locales</h2>
+<p class="text-on-surface-variant font-medium">Curando las mejores experiencias gastronómicas en La Paz.</p>
+</div>
+<div class="flex gap-3">
+<span class="px-4 py-2 bg-surface-container-highest rounded-lg text-sm font-semibold text-secondary flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">filter_alt</span>
+                    Zona: Todas
+                </span>
+<span class="px-4 py-2 bg-surface-container-highest rounded-lg text-sm font-semibold text-secondary flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">sort</span>
+                    Recientes
+                </span>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-8">
+<!-- Restaurant List Table View -->
+<section class="col-span-12 xl:col-span-8">
+<div class="bg-surface-container-lowest rounded-3xl overflow-hidden shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50">
+<th class="px-6 py-5 text-sm font-bold uppercase tracking-wider text-on-surface-variant">Restaurante</th>
+<th class="px-6 py-5 text-sm font-bold uppercase tracking-wider text-on-surface-variant">Zona</th>
+<th class="px-6 py-5 text-sm font-bold uppercase tracking-wider text-on-surface-variant">Estado</th>
+<th class="px-6 py-5 text-sm font-bold uppercase tracking-wider text-on-surface-variant text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-high">
+<!-- Row 1 -->
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="h-12 w-12 rounded-xl overflow-hidden shadow-sm">
+<img class="h-full w-full object-cover" data-alt="interior of a modern fine dining restaurant with warm pendant lights and minimalist wooden tables" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUFQt7n7ZjEHSjptu2aQSlYxZEt3vufvAQO-1oYjmrYi2bTaEzdHF5Oh5zrlPZ7Up4jA0_XYMy1BeeLA04ojgT96di-qAa5SJ9w00kkegoQxF2dxDcc6fVw_CIZPdougzVQ9AZpoQy7Yz1KQkszYK7Fqajuu39kfdiPbrWOkOXZNEIgIFHhzuH6IsTeXClboUDX93KRwu_dwZ7sF31jdC09B8_9w_17BMhRVj0iikNT-zEp28lhSflZgDIP6K6RlhsQbD6Qa2uKaz8"/>
+</div>
+<div>
+<div class="font-bold text-on-surface text-lg">Gusto</div>
+<div class="text-xs text-on-surface-variant font-medium">Fine Dining • Exclusivo</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-primary-fixed text-on-primary-fixed-variant rounded-full text-xs font-bold uppercase tracking-tighter">Sopocachi</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">Activo</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-lg bg-surface-container-high text-secondary hover:bg-secondary hover:text-white transition-all" title="Ver">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="p-2 rounded-lg bg-primary-fixed text-primary hover:bg-primary hover:text-white transition-all" title="Editar">
+<span class="material-symbols-outlined text-xl">edit_square</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="h-12 w-12 rounded-xl overflow-hidden shadow-sm">
+<img class="h-full w-full object-cover" data-alt="close up of a sophisticated cocktail on a dark marble bar top with dim atmospheric lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQkVC36OG8Sl0OB8OkjAEFu4AMHaZ4PRbzoqHEflohxD0HUDhyLLQ8jidnrqYvcNCSz2D6sv6G10Ai6--1CTlgCDMdbuEWs3GZjt30Aml-saaYT6mzlg6Ur08S2Oym5FgOQPSwm6q4gYkRo3TkW5NX5EZzTyFBCItc_QL5xkf3Ugn8sB7qf4YzKpB0CpF-84sIdOW4PV17rNqnWxicFJYl7lJ6jHIpvcpPs310lSi3o4hew_Z5YZSb9VDj9QMBYJLt3DmtssyWMEfC"/>
+</div>
+<div>
+<div class="font-bold text-on-surface text-lg">Ancestral</div>
+<div class="text-xs text-on-surface-variant font-medium">Parrilla • Contemporáneo</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed-variant rounded-full text-xs font-bold uppercase tracking-tighter">Calacoto</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">Activo</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-lg bg-surface-container-high text-secondary hover:bg-secondary hover:text-white transition-all" title="Ver">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="p-2 rounded-lg bg-primary-fixed text-primary hover:bg-primary hover:text-white transition-all" title="Editar">
+<span class="material-symbols-outlined text-xl">edit_square</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 (Inactive) -->
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4 opacity-50">
+<div class="h-12 w-12 rounded-xl overflow-hidden shadow-sm grayscale">
+<img class="h-full w-full object-cover" data-alt="rustic coffee shop interior with plants and vintage furniture during daytime" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7nlwQeUILb735GHXkJOdS3plQnzaQ3QOJvtQMBlzUNl40CDVglyCGhN6r3jjmAf6318XFt4oiJhboRP3JwyB72N_RnblXATxQyYv0OZfVWTSLWjSpHOQ5hOO25ipOMzeNVGtOVspca1ppXkQWhV75wN0omBppMCnyh99KatKtaBk3IO_8dF_ESH9jBqS_4Ytk5LDFy3GyjbY7T1CdLnXmxlHyZinkmZPPT2mtWb5y7X0iJ0qtGMh3Sj-B_6ko39SD81lq7FHZb07M"/>
+</div>
+<div>
+<div class="font-bold text-on-surface text-lg">Typica</div>
+<div class="text-xs text-on-surface-variant font-medium">Café • Especialidad</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-surface-container-highest text-on-surface-variant rounded-full text-xs font-bold uppercase tracking-tighter">Sopocachi</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant/40">Inactivo</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-lg bg-surface-container-high text-secondary hover:bg-secondary hover:text-white transition-all" title="Ver">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="p-2 rounded-lg bg-primary-fixed text-primary hover:bg-primary hover:text-white transition-all" title="Editar">
+<span class="material-symbols-outlined text-xl">edit_square</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Edit View Form -->
+<section class="col-span-12 xl:col-span-4">
+<div class="bg-surface-container-lowest rounded-3xl p-8 shadow-xl border-t-4 border-primary">
+<div class="flex justify-between items-start mb-8">
+<h3 class="text-2xl font-bold text-on-surface">Editar Restaurante</h3>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<form class="space-y-6">
+<!-- Cover Photo Upload -->
+<div class="relative group">
+<div class="h-40 w-full rounded-2xl overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="vibrant gourmet dish beautifully plated on a dark ceramic plate with microgreens and colorful sauces" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB4WXM0e6JZEGvu2hnHR3_5K6TKXe21gEtGGagVXYdPkxuNqx1XTaB3nCYTqGko22BmF9NqE7WJsViENUCEuJGPsFbufJT2YlZPiNuFHp7KqYo4He4lmA9Iv9QjHf3_vhtsWKs5B4DvVe2o9gc1rCGTp6BnHDaBz3RPzeJ2h8g4I7ZqYCECyGWZaEgPsoLAcwRBaKXMRpWrM0Ph-HXW__62wPE-ap3fFI1QCG-oZjSbrZusiTZFzEaGbAMhn6pLSU8dpwy90rBGWjm"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
+<span class="material-symbols-outlined text-white text-3xl">photo_camera</span>
+</div>
+</div>
+<label class="block mt-2 text-xs font-bold text-secondary tracking-widest uppercase">Foto de Portada</label>
+</div>
+<!-- Identity -->
+<div class="grid grid-cols-2 gap-4">
+<div class="col-span-2">
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Nombre del Restaurante</label>
+<input class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" value="Gusto"/>
+</div>
+<div class="col-span-2">
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Descripción</label>
+<textarea class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" rows="3">Alta cocina galardonada enfocada en la biodiversidad boliviana y técnicas ancestrales.</textarea>
+</div>
+</div>
+<!-- Location -->
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Latitud</label>
+<input class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" value="-16.5126"/>
+</div>
+<div>
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Longitud</label>
+<input class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" value="-68.1287"/>
+</div>
+</div>
+<!-- Schedule -->
+<div class="grid grid-cols-2 gap-4 p-4 bg-surface-container-low rounded-2xl">
+<div>
+<label class="block text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Hora de Apertura</label>
+<input class="w-full bg-transparent border-none p-0 text-lg font-extrabold text-on-surface focus:ring-0" type="time" value="12:00"/>
+</div>
+<div>
+<label class="block text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Hora de Cierre</label>
+<input class="w-full bg-transparent border-none p-0 text-lg font-extrabold text-on-surface focus:ring-0" type="time" value="23:30"/>
+</div>
+</div>
+<!-- Status & Pricing -->
+<div class="flex items-center justify-between p-4 bg-primary-fixed/30 rounded-2xl">
+<div class="flex items-center gap-3">
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-white rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-primary after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-checked:after:bg-white"></div>
+</div>
+<span class="text-sm font-bold text-on-primary-fixed-variant">En línea</span>
+</div>
+<div class="text-right">
+<span class="text-[10px] font-bold text-secondary uppercase tracking-widest block">Precio Promedio</span>
+<span class="text-lg font-black text-primary">280 BS</span>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex gap-4 pt-4">
+<button class="flex-1 px-6 py-4 rounded-xl font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors" type="button">Descartar</button>
+<button class="flex-1 bg-primary text-white px-6 py-4 rounded-xl font-extrabold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform" type="submit">Actualizar Local</button>
+</div>
+</form>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Contextual Status Bar -->
+<div class="fixed bottom-6 right-6 flex items-center gap-2 bg-surface-container-lowest py-3 px-5 rounded-full shadow-2xl border border-primary/10 z-50">
+<div class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+<span class="text-xs font-bold text-on-surface">Sincronización en Vivo Activa</span>
+<div class="h-4 w-px bg-surface-container-highest mx-2"></div>
+<span class="text-xs font-medium text-on-surface-variant">24 Locales en Línea</span>
+</div>
+</body></html>

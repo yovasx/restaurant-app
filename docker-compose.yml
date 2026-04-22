@@ -21,6 +21,7 @@ services:
     working_dir: /var/www/html
     volumes:
       - ./src:/var/www/html          # Código fuente de tu proyecto Laravel
+      - app_storage:/var/www/html/storage
     environment:
       # Estas variables sobreescriben el .env de Laravel SOLO dentro del contenedor
       # El DB_HOST DEBE ser el nombre del servicio "postgres", NO "localhost"
@@ -39,6 +40,11 @@ services:
       - CACHE_DRIVER=redis
       - SESSION_DRIVER=redis
       - QUEUE_CONNECTION=redis
+      # Opcionales para evitar problemas de permisos al montar desde host
+      - HOST_UID=${HOST_UID:-1000}
+      - HOST_GID=${HOST_GID:-1000}
+      # Poner MIGRATE_ON_START=1 para ejecutar migraciones al iniciar
+      - MIGRATE_ON_START=${MIGRATE_ON_START:-0}
     depends_on:
       postgres:
         condition: service_healthy   # Espera que Postgres esté LISTO antes de arrancar

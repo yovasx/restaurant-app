@@ -9,3 +9,107 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+@layer base {
+    :root {
+        --page-bg: #FDFDFC;
+        --page-bg-dark: #0a0a0a;
+        --panel-bg: #ffffff;
+        --panel-bg-dark: #161615;
+        --panel-alt-bg: #fff2f2;
+        --panel-alt-bg-dark: #1D0002;
+        --text-primary: #1b1b18;
+        --text-muted: #706f6c;
+        --text-muted-dark: #A1A09A;
+        --text-brand: #f53003;
+        --text-brand-dark: #FF4433;
+        --border-light: #e3e3e0;
+        --border-soft: #19140035;
+        --shadow-soft: 0px 0px 1px 0px rgba(0,0,0,0.03), 0px 1px 2px 0px rgba(0,0,0,0.06);
+        --shadow-soft-dark: inset 0px 0px 0px 1px rgba(255,250,237,0.18);
+    }
+
+    body.page-shell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        width: 100%;
+        padding: 1.5rem;
+        background-color: var(--page-bg);
+        color: var(--text-primary);
+        font-family: var(--font-sans);
+    }
+}
+
+@layer utilities {
+    .page-card {
+        background-color: var(--panel-bg);
+    }
+
+    .page-side {
+        background-color: var(--panel-alt-bg);
+    }
+
+    .bg-panel {
+        background-color: var(--panel-bg);
+    }
+
+    .bg-panel-dark {
+        background-color: var(--panel-bg-dark);
+    }
+
+    .bg-panel-alt {
+        background-color: var(--panel-alt-bg);
+    }
+
+    .bg-panel-alt-dark {
+        background-color: var(--panel-alt-bg-dark);
+    }
+
+    .text-muted {
+        color: var(--text-muted);
+    }
+
+    .text-muted-dark {
+        color: var(--text-muted-dark);
+    }
+
+    .text-brand {
+        color: var(--text-brand);
+    }
+
+    .text-brand-dark {
+        color: var(--text-brand-dark);
+    }
+
+    .border-soft {
+        border-color: var(--border-soft);
+    }
+
+    .shadow-soft {
+        box-shadow: var(--shadow-soft);
+    }
+
+    .shadow-soft-dark {
+        box-shadow: var(--shadow-soft-dark);
+    }
+
+    .button-primary {
+        background-color: var(--text-primary);
+        color: #ffffff;
+    }
+
+    .button-secondary {
+        border: 1px solid var(--border-light);
+        background-color: transparent;
+        color: var(--text-primary);
+    }
+
+    .alert-success {
+        background-color: #e6fffa;
+        color: #064e3b;
+        border-color: #a7f3d0;
+    }
+}

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#ffdcc5",
+                        "outline-variant": "#e1bfb9",
+                        "primary": "#9e2016",
+                        "inverse-on-surface": "#f6f0ea",
+                        "on-surface": "#1e1b18",
+                        "outline": "#8d706c",
+                        "surface-dim": "#dfd9d3",
+                        "background": "#fff8f2",
+                        "inverse-surface": "#33302c",
+                        "surface": "#fff8f2",
+                        "on-tertiary-container": "#ffe6dc",
+                        "surface-variant": "#e8e1dc",
+                        "primary-container": "#c0392b",
+                        "on-primary-container": "#ffe5e1",
+                        "surface-container-low": "#f9f2ec",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#301400",
+                        "on-background": "#1e1b18",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#59413d",
+                        "tertiary-fixed": "#ffdbcd",
+                        "tertiary-fixed-dim": "#ffb595",
+                        "on-primary-fixed-variant": "#8e130c",
+                        "inverse-primary": "#ffb4a9",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#eee7e1",
+                        "surface-bright": "#fff8f2",
+                        "on-secondary-container": "#663100",
+                        "surface-container-highest": "#e8e1dc",
+                        "on-tertiary-fixed-variant": "#7c2e00",
+                        "primary-fixed": "#ffdad5",
+                        "on-primary-fixed": "#410000",
+                        "on-secondary-fixed-variant": "#713700",
+                        "surface-container": "#f3ede7",
+                        "on-tertiary-fixed": "#351000",
+                        "secondary-container": "#fc8f34",
+                        "tertiary-container": "#b54700",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "tertiary": "#8e3600",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#b02d21",
+                        "secondary-fixed-dim": "#ffb783",
+                        "secondary": "#944a00",
+                        "primary-fixed-dim": "#ffb4a9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "16px",
+                        "xl": "24px",
+                        "md": "8px",
+                        "card": "12px",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-screen w-64 z-50 bg-[#FFF8F2] dark:bg-stone-900 flex flex-col p-6 space-y-2">
+<div class="mb-6">
+<h1 class="text-lg font-black text-[#C0392B] dark:text-red-400">Bistro Sommelier</h1>
+<p class="text-stone-500 text-xs font-medium">Management Portal</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center text-stone-600 dark:text-stone-400 px-4 py-3 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm">Overview</span>
+</a>
+<a class="flex items-center text-[#C0392B] dark:text-red-400 font-bold bg-[#C0392B]/5 rounded-lg px-4 py-3" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="campaign">campaign</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm">Promotions</span>
+</a>
+<a class="flex items-center text-stone-600 dark:text-stone-400 px-4 py-3 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm">Menu Editor</span>
+</a>
+<a class="flex items-center text-stone-600 dark:text-stone-400 px-4 py-3 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="bar_chart">bar_chart</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm">Analytics</span>
+</a>
+<a class="flex items-center text-stone-600 dark:text-stone-400 px-4 py-3 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6">
+<button class="w-full bg-[#C0392B] text-white py-3 rounded-md font-jakarta font-bold text-sm hover:bg-[#9e2016] transition-colors shadow-lg shadow-red-900/10">
+                Launch Promotion
+            </button>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 w-full z-40 bg-[#FFF8F2]/80 dark:bg-stone-950/80 backdrop-blur-md border-b border-stone-200/20 dark:border-stone-800/20 flex justify-between items-center px-8 h-16 ml-64">
+<div class="flex items-center space-x-4">
+<a class="text-stone-500 hover:text-[#C0392B] transition-colors flex items-center gap-2 group" href="#">
+<span class="material-symbols-outlined text-xl group-hover:-translate-x-1 transition-transform" data-icon="arrow_back">arrow_back</span>
+<span class="font-jakarta font-semibold text-sm">Back to Promotions</span>
+</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="text-stone-500 hover:text-[#C0392B] transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="flex items-center gap-3 pl-6 border-l border-stone-200/20">
+<div class="text-right">
+<p class="text-xs font-jakarta font-bold text-on-surface">Admin User</p>
+<p class="text-[10px] text-stone-500">Super Admin</p>
+</div>
+<img alt="User profile avatar" class="w-10 h-10 rounded-full border-2 border-[#C0392B]/20" data-alt="Professional headshot of a restaurant manager in a clean white shirt with soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDx2ojr-a2JMpuXEnmDgM1dFC6nK5pRYAcK592rpxtpTDg7W3PACpto_K0rt9RTxgVBkI2gnq_8WikLaTktlB2b0DYnW7t4gAdw_elmdgv4DwwyVmTiSsYpBiEvlJhlxOtEKQiCkRBSlND3tj5HvW_JbKFY1dnxE192DXkhAzDsjUH0s1Vlnksu4aTZt_gSigWeXUrGHI5LHLIoi0P6a_2iwwCbEXV-iGnaw5HOPD_8vEobXm4_pgwnRVt2aB2BfJcUXf8PNe58UTQf"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-8 pb-12 max-w-7xl mx-auto">
+<header class="mb-10">
+<h2 class="text-4xl font-extrabold font-jakarta text-on-surface tracking-tight mb-2">Editar Promoción</h2>
+<p class="text-on-surface-variant font-medium">Configura los detalles y visibilidad de tu oferta culinaria.</p>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Editor Form -->
+<div class="lg:col-span-7 space-y-6">
+<section class="bg-surface-container-lowest rounded-card p-8 shadow-sm border border-stone-100/50">
+<form class="space-y-6">
+<!-- Nombre -->
+<div class="space-y-2">
+<label class="text-xs font-jakarta font-bold uppercase tracking-wider text-stone-500">Nombre de la Promoción</label>
+<input class="w-full bg-surface-container-highest border-0 rounded-md focus:ring-2 focus:ring-primary-container p-4 text-on-surface placeholder:text-stone-400 transition-all font-medium" placeholder="Ej: Noches de Pasta 2x1" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Tipo -->
+<div class="space-y-2">
+<label class="text-xs font-jakarta font-bold uppercase tracking-wider text-stone-500">Tipo</label>
+<select class="w-full bg-surface-container-highest border-0 rounded-md focus:ring-2 focus:ring-primary-container p-4 text-on-surface appearance-none transition-all font-medium">
+<option>Porcentaje (%)</option>
+<option>2x1</option>
+<option>Monto Fijo (BS)</option>
+</select>
+</div>
+<!-- Valor -->
+<div class="space-y-2">
+<label class="text-xs font-jakarta font-bold uppercase tracking-wider text-stone-500">Valor</label>
+<input class="w-full bg-surface-container-highest border-0 rounded-md focus:ring-2 focus:ring-primary-container p-4 text-on-surface transition-all font-medium" placeholder="0" type="number"/>
+</div>
+</div>
+<!-- Condiciones -->
+<div class="space-y-2">
+<label class="text-xs font-jakarta font-bold uppercase tracking-wider text-stone-500">Condiciones</label>
+<textarea class="w-full bg-surface-container-highest border-0 rounded-md focus:ring-2 focus:ring-primary-container p-4 text-on-surface transition-all font-medium resize-none" placeholder="Describe los términos, productos aplicables y restricciones..." rows="4"></textarea>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Fecha Inicio -->
+<div class="space-y-2">
+<label class="text-xs font-jakarta font-bold uppercase tracking-wider text-stone-500">Fecha Inicio</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" data-icon="calendar_today">calendar_today</span>
+<input class="w-full bg-surface-container-highest border-0 rounded-md focus:ring-2 focus:ring-primary-container py-4 pl-12 pr-4 text-on-surface transition-all font-medium" type="date"/>
+</div>
+</div>
+<!-- Fecha Fin -->
+<div class="space-y-2">
+<label class="text-xs font-jakarta font-bold uppercase tracking-wider text-stone-500">Fecha Fin</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" data-icon="event_busy">event_busy</span>
+<input class="w-full bg-surface-container-highest border-0 rounded-md focus:ring-2 focus:ring-primary-container py-4 pl-12 pr-4 text-on-surface transition-all font-medium" type="date"/>
+</div>
+</div>
+</div>
+<!-- Toggles -->
+<div class="pt-4 space-y-4">
+<div class="flex items-center justify-between p-4 rounded-lg bg-surface-container-low border border-stone-100">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#C0392B]" data-icon="campaign">campaign</span>
+<div>
+<p class="font-jakarta font-bold text-sm text-on-surface">Destacar en Banner Principal</p>
+<p class="text-xs text-stone-500">Aparecerá en la parte superior de la App</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#C0392B]"></div>
+</label>
+</div>
+<div class="flex items-center justify-between p-4 rounded-lg bg-surface-container-low border border-stone-100">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-green-600" data-icon="check_circle">check_circle</span>
+<div>
+<p class="font-jakarta font-bold text-sm text-on-surface">Estado: Activa</p>
+<p class="text-xs text-stone-500">Los clientes pueden ver esta promo</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#C0392B]"></div>
+</label>
+</div>
+</div>
+</form>
+</section>
+<div class="flex items-center justify-end gap-4 pt-4">
+<button class="px-8 py-3 text-[#C0392B] font-jakarta font-bold hover:bg-[#C0392B]/5 rounded-md transition-colors">
+                        Descartar
+                    </button>
+<button class="px-10 py-3 bg-gradient-to-r from-primary to-primary-container text-white font-jakarta font-extrabold rounded-md shadow-lg shadow-red-900/20 hover:scale-105 transition-transform">
+                        Guardar Cambios
+                    </button>
+</div>
+</div>
+<!-- Preview Card -->
+<div class="lg:col-span-5">
+<div class="sticky top-24 space-y-6">
+<label class="text-xs font-jakarta font-bold uppercase tracking-wider text-stone-500 ml-1">Vista Previa (App Cliente)</label>
+<div class="relative overflow-hidden rounded-xl shadow-2xl aspect-[4/5] group">
+<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Exquisite plate of truffle pasta with fresh herbs and parmesan shavings, gourmet presentation, warm golden hour lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAak8DFOUTjvibgvfEghr5SeXXJFLLO4CvpzHxWwtPJ5OP_YNd-56GPmxS4PmQz9cAcRot1eMZ5uwy4T8lXvvqTDZ95Erujf-5eVsAI08njAqjgT0gBAjy9K-VfzddDiFw_aog8c-zRvKskg_hrEUSVUChgSWUW8p6UvQoiZki-166AbpW-WPVAyMw45Tz2EmyYDUFoOD232eRl1VxsqFWSlKFhhajkO-kPPGhW44msi2W2tQ1RI9PxW3ILCSob7rIXcPsGPkKMFVbM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+<div class="absolute top-6 right-6 backdrop-blur-md bg-white/10 px-4 py-2 rounded-full border border-white/20">
+<span class="text-white font-jakarta font-bold text-sm">2x1 HOY</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-8">
+<div class="inline-block bg-[#C0392B] text-white px-3 py-1 rounded-md text-[10px] font-jakarta font-black tracking-widest uppercase mb-4">
+                                Promoción Destacada
+                            </div>
+<h3 class="text-3xl font-jakarta font-extrabold text-white mb-2 leading-tight">Noches de Pasta Italiana</h3>
+<p class="text-white/80 text-sm font-medium line-clamp-2">Disfruta de nuestra selección premium de pastas hechas a mano. Válido de Lunes a Jueves desde las 19:00.</p>
+<div class="mt-6 flex items-center justify-between">
+<div class="flex items-center gap-2 text-white/60">
+<span class="material-symbols-outlined text-sm" data-icon="timer">timer</span>
+<span class="text-xs">Finaliza en 4 días</span>
+</div>
+<button class="bg-white text-black px-6 py-2 rounded-full font-jakarta font-bold text-xs hover:bg-stone-100 transition-colors">
+                                    Ver Menú
+                                </button>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-card border border-stone-100">
+<div class="flex items-start gap-4">
+<div class="p-3 bg-[#C0392B]/10 rounded-full">
+<span class="material-symbols-outlined text-[#C0392B]" data-icon="lightbulb">lightbulb</span>
+</div>
+<div>
+<h4 class="font-jakarta font-bold text-sm text-on-surface mb-1">Tip de Sommelier</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                                    Las promociones con imágenes de platos principales tienden a convertir un 40% mejor que las genéricas. Asegúrate de que la foto se vea apetitosa.
+                                </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

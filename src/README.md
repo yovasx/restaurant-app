@@ -56,3 +56,41 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Despliegue en servidor
+
+Sugerencias rápidas para desplegar en un servidor Linux (ej. Debian/Ubuntu):
+
+- Ajustar permisos:
+```bash
+sudo chown -R www-data:www-data storage bootstrap/cache
+sudo chmod -R 775 storage bootstrap/cache
+```
+
+- Instalar dependencias y reconstruir autoload:
+```bash
+composer install --no-dev --optimize-autoloader --no-interaction
+composer dump-autoload --optimize
+```
+
+- Limpiar y cachear:
+```bash
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan optimize
+```
+
+- He añadido un script de ayuda `deploy.sh` en la raíz. Ejecútalo en el servidor (ajusta `WEBUSER`/`WEBGROUP` si es necesario):
+```bash
+chmod +x deploy.sh
+WEBUSER=www-data WEBGROUP=www-data ./deploy.sh
+```
+
+- Notas:
+	- Ejecuta `composer install` después de `git pull` si `composer.json` o `composer.lock` cambió.
+	- No ejecutes `git pull` como `root`. Usa un usuario de despliegue o pipeline CI/CD.
+	- Si usas SELinux, aplica `sudo chcon -R -t httpd_sys_rw_content_t storage bootstrap/cache`.

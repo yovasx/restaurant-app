@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed": "#ffdcc5",
+              "on-error-container": "#93000a",
+              "on-tertiary-fixed": "#351000",
+              "tertiary-fixed": "#ffdbcd",
+              "on-surface": "#1e1b18",
+              "surface-bright": "#fff8f2",
+              "primary-fixed": "#ffdad5",
+              "primary": "#9e2016",
+              "on-secondary-fixed-variant": "#713700",
+              "inverse-surface": "#33302c",
+              "on-primary-fixed": "#410000",
+              "secondary-container": "#fc8f34",
+              "tertiary-fixed-dim": "#ffb595",
+              "surface-container-high": "#eee7e1",
+              "tertiary": "#8e3600",
+              "secondary-fixed-dim": "#ffb783",
+              "primary-container": "#c0392b",
+              "on-primary-container": "#ffe5e1",
+              "background": "#fff8f2",
+              "on-error": "#ffffff",
+              "surface-dim": "#dfd9d3",
+              "on-tertiary-container": "#ffe6dc",
+              "on-secondary": "#ffffff",
+              "on-background": "#1e1b18",
+              "surface-tint": "#b02d21",
+              "on-tertiary": "#ffffff",
+              "inverse-on-surface": "#f6f0ea",
+              "surface-container-highest": "#e8e1dc",
+              "surface-container-lowest": "#ffffff",
+              "error-container": "#ffdad6",
+              "surface-variant": "#e8e1dc",
+              "on-secondary-fixed": "#301400",
+              "on-secondary-container": "#663100",
+              "surface": "#fff8f2",
+              "error": "#ba1a1a",
+              "outline-variant": "#e1bfb9",
+              "outline": "#8d706c",
+              "secondary": "#944a00",
+              "surface-container-low": "#f9f2ec",
+              "on-tertiary-fixed-variant": "#7c2e00",
+              "on-surface-variant": "#59413d",
+              "inverse-primary": "#ffb4a9",
+              "primary-fixed-dim": "#ffb4a9",
+              "on-primary": "#ffffff",
+              "tertiary-container": "#b54700",
+              "surface-container": "#f3ede7",
+              "on-primary-fixed-variant": "#8e130c"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<header class="bg-[#FFF8F2] dark:bg-stone-950 docked full-width top-0 sticky z-50 no-border">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
+<div class="text-2xl font-black text-[#C0392B] dark:text-[#E74C3C] tracking-tighter">GastroGuía</div>
+<nav class="hidden md:flex space-x-8">
+<a class="font-['Plus_Jakarta_Sans'] font-bold text-lg tracking-tight text-[#C0392B] border-b-2 border-[#C0392B] pb-1" href="#">Inicio</a>
+<a class="font-['Plus_Jakarta_Sans'] font-bold text-lg tracking-tight text-stone-600 dark:text-stone-400 hover:text-[#C0392B]" href="#">Explorar</a>
+<a class="font-['Plus_Jakarta_Sans'] font-bold text-lg tracking-tight text-stone-600 dark:text-stone-400 hover:text-[#C0392B]" href="#">Reservas</a>
+</nav>
+<div class="flex items-center space-x-4">
+<button class="p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors duration-300 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[#C0392B] dark:text-[#E74C3C]">notifications</span>
+</button>
+<button class="p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors duration-300 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[#C0392B] dark:text-[#E74C3C]">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pb-24">
+<!-- Full-width Hero Header -->
+<section class="relative h-[409px] md:h-[512px] w-full overflow-hidden">
+<img alt="Restaurante Interior" class="w-full h-full object-cover" data-alt="Interior of a luxury mediterranean restaurant with rustic wooden tables, warm ambient lighting, and lush indoor plants in an editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpfLk9oXWbDyhJi_UDV95cZE4B1RjracLeEjii9clWLlc_ikTpMzWe6jmkfKyVK6lEHOCm3XcRVfr4SCqN6HlGvRAIr6ZJN2cwpnZO9DNa4Yyix2MUrS745vtmQ9bai9z9d9Svh-_1q-jUVRVOquBo1dmp4c6xIw9Adll-0g0UG4QytC1Ei6CsbWzSY061CHoUZ8dYtHBbLDV1Uz1PIVdpUVgvTjGXO1P_yIinsokC40cGrTpCC4hR8w8F5VwFhhlnKBXvS9ARxR7t"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<!-- Floating Back Button -->
+<button class="absolute top-6 left-6 glass-panel p-3 rounded-full text-on-surface shadow-lg hover:scale-105 transition-transform">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+</section>
+<!-- Restaurant Info Block -->
+<section class="max-w-7xl mx-auto px-6 -mt-24 relative z-10">
+<div class="bg-surface-container-lowest p-8 md:p-10 rounded-xl shadow-[0_24px_48px_-12px_rgba(0,0,0,0.08)] flex flex-col md:flex-row md:items-end justify-between gap-6 border-none">
+<div class="space-y-4">
+<div class="flex items-center gap-2">
+<span class="bg-secondary-container/20 text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">ALTA COCINA</span>
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-bold">4.9 (120+)</span>
+</div>
+</div>
+<h1 class="text-4xl md:text-5xl font-headline font-extrabold text-on-surface tracking-tight">La Brasa de Oro</h1>
+<div class="flex flex-wrap gap-y-2 gap-x-6 text-on-surface-variant font-medium">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<span>Abierto · 13:00 - 23:00</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">call</span>
+<span>+591 2 123 4567</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<span>Av. Montenegro, San Miguel</span>
+</div>
+</div>
+</div>
+<div>
+<button class="w-full md:w-auto px-10 py-4 bg-primary text-white font-bold rounded-lg shadow-lg hover:translate-y-[-2px] active:scale-95 transition-all duration-300 bg-gradient-to-br from-primary to-primary-container">
+                        Reservar Mesa
+                    </button>
+</div>
+</div>
+</section>
+<!-- Tab Navigation -->
+<section class="max-w-7xl mx-auto px-6 mt-12">
+<div class="flex gap-8 border-none overflow-x-auto pb-2 scrollbar-hide">
+<button class="pb-4 text-lg font-headline font-bold text-primary border-b-4 border-primary whitespace-nowrap">Menú</button>
+<button class="pb-4 text-lg font-headline font-bold text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap">Promociones</button>
+<button class="pb-4 text-lg font-headline font-bold text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap">Reseñas</button>
+</div>
+</section>
+<!-- Menu Items Section -->
+<section class="max-w-7xl mx-auto px-6 mt-10">
+<div class="flex justify-between items-center mb-8">
+<h2 class="text-2xl font-headline font-bold tracking-tight">Platos Sugeridos</h2>
+<div class="flex items-center gap-2 text-primary font-semibold cursor-pointer group">
+<span>Ver carta completa</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+</div>
+<!-- Grid: Bento Style / Asymmetric -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Main Featured Item -->
+<div class="md:col-span-7 group relative overflow-hidden rounded-xl bg-surface-container-low transition-all duration-300 hover:shadow-xl">
+<div class="aspect-[16/9] overflow-hidden">
+<img alt="Chuletón al Carbón" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Premium dry-aged ribeye steak on a dark stone plate with rosemary garnish and dramatic firelight in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBL_Kbw6KNF-F2-vkFA8Ez2G5NuNdLa3jrkwNNEgAj9LzoX7yeCbjqMU6gVErii6tPMJGGnkd_speTN-oiRfHBxydpnk87Ym4vI5k0DUBakovfzWPXRd6e3fSqWw1iJFBdGxHB1BQTQPet8nXmIKDAAAyo0E7ClGSDPzglqeHjs8pMs3c6mE9QC4lRqmK7r1RQDaYJ0eixNeP04GocOmspW719e31cCzqlC2n4Uvt44kulh6PgHnCkuZFTdntWWbN42HgFPHg2GKeL9"/>
+</div>
+<div class="absolute top-4 right-4 glass-panel px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="text-[10px] font-bold text-on-surface uppercase tracking-tighter">Disponible</span>
+</div>
+<div class="p-8">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-2xl font-headline font-extrabold">Chuletón de Ávila (1kg)</h3>
+<span class="text-2xl font-headline font-black text-primary">450 Bs.</span>
+</div>
+<p class="text-on-surface-variant line-clamp-2 max-w-lg mb-6 leading-relaxed">Carne madurada 45 días, asada a la brasa de encina con cristales de sal Maldon y guarnición de pimientos del piquillo.</p>
+<button class="flex items-center gap-2 font-bold text-on-surface hover:text-primary transition-colors group/btn">
+                            Añadir a la orden
+                            <span class="material-symbols-outlined bg-surface-container-highest p-2 rounded-full group-hover/btn:bg-primary group-hover/btn:text-white transition-all">add</span>
+</button>
+</div>
+</div>
+<!-- Secondary Items Column -->
+<div class="md:col-span-5 flex flex-col gap-6">
+<!-- Item 2 -->
+<div class="flex-1 flex gap-4 p-4 bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow group">
+<div class="w-32 h-32 rounded-lg overflow-hidden shrink-0">
+<img alt="Pulpo a la brasa" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Grilled octopus tentacle over mashed potatoes with smoked paprika garnish, warm editorial food photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJfUS9HdWOyJOdTEPsLpAI1qSwYSl0LWwJahchjyot_OXt_7NOL1_4OvTQOvZzShR-mRmZjxS5nIUQZKPVcG6u0ffdiLAOxdmmc2TnBYTB-YO2ZJn9EVtWFn2rVzAzM83_fk-T7NPITE7YMupdV0ureQ6fPAonm5_wR5tqiizdc5fxnAzFFEBu2VOeU_WHi02QtswPENZm-uKw4RlRWSXVnAuvaXSmFZMJL9za0Epduvr7O4a-5vLJ3CK1GqiH4d1t6P59EsL1bqKn"/>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<span class="text-[9px] font-bold text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full uppercase tracking-tighter">Últimas unidades</span>
+<h3 class="font-headline font-bold text-lg mt-1">Pulpo de Roca</h3>
+<p class="text-xs text-on-surface-variant line-clamp-2 mt-1">Con espuma de patata trufada y aceite de pimentón de la Vera.</p>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-black text-on-surface">165 Bs.</span>
+<button class="material-symbols-outlined text-primary">add_circle</button>
+</div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex-1 flex gap-4 p-4 bg-surface-container-lowest rounded-xl shadow-sm opacity-75 grayscale group">
+<div class="w-32 h-32 rounded-lg overflow-hidden shrink-0 relative">
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+<span class="text-white font-bold text-[10px] uppercase tracking-widest border border-white/50 px-2 py-1">Agotado</span>
+</div>
+<img alt="Salmón Glaseado" class="w-full h-full object-cover" data-alt="Miso glazed salmon fillet with asparagus tips and sesame seeds, soft focus professional restaurant photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2xFyuf9gXAiSK4jEJgoOdzl2vWPMZOL2NaEMu9UV0gzvuRbNgfSjlQQ4zdqNugIqW8ipiVg0WLSmtv2f5LLBS0SbR-hpBJMkNOoCNVLzc0eiClPnZJqwQ4-6HMMfwQF29B4GfQ67LZGbyWRVTXpIWuZ8Y_a8ZQ5wdxdL6llhZLYFrdBd30ocrgEwapd3rCBR0WpQJ_RjH-9vwi1CKNzi9Dx5MAk4wIE83X9sYpGjgKS6o5bJsTSVei6FQFvVH-WjF18Y0RoQMo4gl"/>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<h3 class="font-headline font-bold text-lg mt-1 text-on-surface-variant">Salmón al Miso</h3>
+<p class="text-xs text-on-surface-variant line-clamp-2 mt-1">Glaseado con soja y miel, acompañado de espárragos trigueros.</p>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-black text-on-surface-variant">145 Bs.</span>
+<span class="material-symbols-outlined text-stone-300">block</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Another Row: Grid Items -->
+<div class="md:col-span-4 group bg-surface-container-lowest rounded-xl overflow-hidden hover:translate-y-[-4px] transition-transform duration-300">
+<div class="aspect-[4/3] relative">
+<img alt="Croquetas" class="w-full h-full object-cover" data-alt="Traditional creamy ham croquettes on a wooden board, close up shot with warm golden hour lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwMf_jcT6Uf-lneU_kf6193vzJ2Tdan6_Y19e2NbGwkuVkn8TV-4mdrIWopsB87peoAZtcnH9lHxZrrNLnO6dV7j3L7rPwi867rT6AH_rCprMjDUOrF1W7M4lhixik_dqf15tNKmi1ev8KQ_d3OaLcUgDdcqu7M93xKoDTuDcOz7tAJzyVHrfdJBNTjfz_4XjzqZqGUlvwceVfvPlxMGPEqcLIn0qO_sgPs3-4CI1nrHzq6OJ_8dUF2BTifLUZE8gyO2hHGQ42pTbg"/>
+<span class="absolute top-3 left-3 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded">POPULAR</span>
+</div>
+<div class="p-6">
+<h3 class="font-headline font-bold text-xl">Croquetas de Jamón Ibérico</h3>
+<div class="flex justify-between items-center mt-4">
+<span class="font-black text-lg">95 Bs.</span>
+<button class="bg-surface-container-highest p-2 rounded-lg hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</div>
+</div>
+<div class="md:col-span-4 group bg-surface-container-lowest rounded-xl overflow-hidden hover:translate-y-[-4px] transition-transform duration-300">
+<div class="aspect-[4/3] relative">
+<img alt="Tarta de Queso" class="w-full h-full object-cover" data-alt="Burnt basque cheesecake slice with a creamy interior and caramelized top, artistic minimal presentation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwlGM9Q_5GP2xeI-HdTPq_-D88zX72aAjDVbGrFjNnssgs1Vexi6Bmi1vdv_IMRV5ZocEWRzhj-MRVkuL1nDo26LA-BIDfr4yuCf3qIpJdok0J0R2X6RiDai9Pkeg2We7YxoAM52Pk9tqAdhzC7xjoNKr5S8WJNE1WJ1gn1hGnAhIMLdEOBoLtlrKtVTE5Aa0Mt8EbOrn8-TluAmbqq4B9eIBbF-WjCzvYiBNy-2zMhnvMb45wcBXObu3wVIob_F93GNqJ54Y7gUIr"/>
+</div>
+<div class="p-6">
+<h3 class="font-headline font-bold text-xl">Tarta de Queso Fluida</h3>
+<div class="flex justify-between items-center mt-4">
+<span class="font-black text-lg">60 Bs.</span>
+<button class="bg-surface-container-highest p-2 rounded-lg hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</div>
+</div>
+<div class="md:col-span-4 group bg-surface-container-lowest rounded-xl overflow-hidden hover:translate-y-[-4px] transition-transform duration-300">
+<div class="aspect-[4/3] relative">
+<img alt="Vino Tinto" class="w-full h-full object-cover" data-alt="Pouring dark red wine into a crystal glass in a dimly lit, elegant wine cellar environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXXo0yogPjUWXnlKVYHfWmrgBLeUOv2wT05etZtTKdWu6psJwxJr0cX0AJdLQMsMtfVx134WrPSOIdsRIFCEfs60qEc5Lpe0KgX4uihDN7Pqv2ggYQQKWOQg5oB-WpcHF5D4xXSOLGrCIuWDjldXLsZTdsZ69Xmpev2y7zdCnCmPyI4m4zYma10T8I2HczkmPMWozGVcvFvrKIXRJr4DJmYkpcldDa5FOdKoWhqJwcRvm2kiM2-_YhdofXAD9rR5ZxBxqK8JqeOZpK"/>
+</div>
+<div class="p-6">
+<h3 class="font-headline font-bold text-xl">Reserva del Duero</h3>
+<div class="flex justify-between items-center mt-4">
+<span class="font-black text-lg">260 Bs.</span>
+<button class="bg-surface-container-highest p-2 rounded-lg hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">wine_bar</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-safe pt-3 bg-white/80 dark:bg-stone-900/80 backdrop-blur-md rounded-t-2xl shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+<div class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 hover:text-[#9E2016] transition-all tap-highlight-transparent active:scale-90">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Inter'] text-[10px] font-semibold uppercase tracking-widest mt-1">Inicio</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#C0392B] dark:text-[#E74C3C] scale-110 tap-highlight-transparent active:scale-90">
+<span class="material-symbols-outlined">search</span>
+<span class="font-['Inter'] text-[10px] font-semibold uppercase tracking-widest mt-1">Explorar</span>
+</div>
+<div class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 hover:text-[#9E2016] transition-all tap-highlight-transparent active:scale-90">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span class="font-['Inter'] text-[10px] font-semibold uppercase tracking-widest mt-1">Reservas</span>
+</div>
+<div class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 hover:text-[#9E2016] transition-all tap-highlight-transparent active:scale-90">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Inter'] text-[10px] font-semibold uppercase tracking-widest mt-1">Perfil</span>
+</div>
+</nav>
+<!-- Floating Quick Reserve (Contextual) -->
+<div class="fixed bottom-24 md:bottom-8 right-6 z-40 hidden md:block">
+<button class="flex items-center gap-3 bg-surface-container-lowest glass-panel px-6 py-4 rounded-full shadow-2xl border border-primary/10 hover:scale-105 active:scale-95 transition-all">
+<span class="bg-primary text-white p-2 rounded-full material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+<div class="text-left pr-4">
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">¿Tienes hambre?</p>
+<p class="text-sm font-bold text-primary">Pedir ahora</p>
+</div>
+</button>
+</div>
+</body></html>
