@@ -38,7 +38,7 @@ proyecto-docker/
 
 ## 🚀 Primer uso — Setup completo
 
-### Opción A: Con Make (recomendado)
+### Opción A: 
 ```bash
 #crea una carpeta donde ira el proyecto y entra 
 #en la consola (powershell/git bash) escribe:
@@ -196,6 +196,9 @@ docker compose exec app composer dump-autoload
 - PHP-FPM no está listo. Espera unos segundos y recarga.
 - Revisa los logs: `make logs-app`
 
+### Error imagenes no cargan
+- docker compose up -d --no-deps --force-recreate nginx
+
 ### Error al conectar en pgAdmin
 - El servidor ya viene preconfigurado. Si pide contraseña, usa `secret`
 - Verifica que el nombre del servidor en pgAdmin sea `postgres` (no localhost)
@@ -213,12 +216,3 @@ make setup
 ```
 
 ---
-
-## 🔒 Para producción
-
-Antes de ir a producción, actualiza el `.env`:
-- `APP_ENV=production`
-- `APP_DEBUG=false`  
-- Cambia todas las contraseñas
-- Activa `opcache.enable=1` en `docker/php/php.ini`
-- Elimina la exposición del puerto 5432 en `docker-compose.yml`
