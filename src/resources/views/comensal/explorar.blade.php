@@ -15,23 +15,23 @@
 </style>
 
 <!-- Top Navigation Shell -->
-<nav class="bg-[#FFF8F2] dark:bg-stone-900 opacity-95 backdrop-blur-md shadow-sm dark:shadow-none flex justify-between items-center w-full px-6 py-4 sticky top-0 z-50">
+<nav class="bg-surface/95 backdrop-blur-md shadow-sm flex justify-between items-center w-full px-6 py-4 sticky top-0 z-50">
     <div class="flex items-center gap-6">
-        <a href="{{ route('comensal.inicio') }}" class="text-sm bg-white px-3 py-1 rounded-md shadow-sm hover:bg-stone-50">Volver al inicio</a>
-        <h1 class="text-2xl font-bold tracking-tight text-[#C0392B]">El Comensal</h1>
+        <a href="{{ route('comensal.inicio') }}" class="text-sm bg-surface-container-lowest px-3 py-1 rounded-md shadow-sm hover:bg-surface-container-low transition-colors">Volver al inicio</a>
+        <h1 class="text-2xl font-black tracking-tighter text-primary-container">El Comensal</h1>
         <div class="hidden md:flex items-center space-gap-6 gap-6">
-            <a class="text-[#C0392B] font-bold border-b-2 border-[#C0392B] pb-1" href="{{ route('comensal.explorar') }}">Explorar</a>
-            <a class="text-stone-600 font-medium hover:bg-stone-100 transition-colors duration-300 px-3 py-1 rounded-lg" href="#">Favoritos</a>
-            <a class="text-stone-600 font-medium hover:bg-stone-100 transition-colors duration-300 px-3 py-1 rounded-lg" href="#">Reservas</a>
+            <a class="text-primary-container font-bold border-b-2 border-primary-container pb-1" href="{{ route('comensal.explorar') }}">Explorar</a>
+            <a class="text-on-surface-variant/80 font-medium hover:bg-surface-container-high transition-colors duration-300 px-3 py-1 rounded-lg" href="#">Favoritos</a>
+            <a class="text-on-surface-variant/80 font-medium hover:bg-surface-container-high transition-colors duration-300 px-3 py-1 rounded-lg" href="#">Reservas</a>
         </div>
     </div>
     <div class="flex items-center gap-4">
-        <div class="hidden sm:flex items-center bg-surface-container-highest px-4 py-2 rounded-full gap-2 w-64">
+        <div class="hidden sm:flex items-center bg-surface-container px-4 py-2 rounded-full gap-2 w-64">
             <span class="material-symbols-outlined text-on-surface-variant text-sm">search</span>
             <input id="globalSearch" class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-on-surface-variant/60" placeholder="Buscar en La Paz..." type="text"/>
         </div>
-        <button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-stone-100 rounded-full">notifications</button>
-        <button id="openFilters" class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-stone-100 rounded-full">tune</button>
+        <button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-container-high rounded-full">notifications</button>
+        <button id="openFilters" class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-container-high rounded-full">tune</button>
     </div>
 </nav>
 

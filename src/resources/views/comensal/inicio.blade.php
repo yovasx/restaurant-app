@@ -3,18 +3,18 @@
 @section('title', 'Inicio - GastroGuía La Paz')
 
 @section('content')
-<header class="bg-[#FFF8F2] docked full-width top-0 sticky z-50 no-border shadow-sm">
+<header class="bg-surface/95 backdrop-blur-md docked full-width top-0 sticky z-50 no-border shadow-sm">
     <div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
-        <div class="text-2xl font-black text-[#C0392B] tracking-tighter">GastroGuía</div>
-        <nav class="hidden md:flex items-center space-x-8 font-['Plus_Jakarta_Sans'] font-bold text-lg tracking-tight">
-            <a class="text-[#C0392B] border-b-2 border-[#C0392B] pb-1" href="{{ route('comensal.inicio') }}">Inicio</a>
-            <a class="text-stone-600 hover:text-[#C0392B] transition-colors" href="{{ route('comensal.explorar') }}">Explorar</a>
-            <a class="text-stone-600 hover:text-[#C0392B] transition-colors" href="{{ route('comensal.perfil') ?? '#' }}">Perfil</a>
+        <div class="text-2xl font-black text-primary-container tracking-tighter font-headline">GastroGuía</div>
+        <nav class="hidden md:flex items-center space-x-8 font-headline font-bold text-lg tracking-tight">
+            <a class="text-primary-container border-b-2 border-primary-container pb-1" href="{{ route('comensal.inicio') }}">Inicio</a>
+            <a class="text-on-surface-variant/80 hover:text-primary-container transition-colors" href="{{ route('comensal.explorar') }}">Explorar</a>
+            <a class="text-on-surface-variant/80 hover:text-primary-container transition-colors" href="{{ route('comensal.perfil') ?? '#' }}">Perfil</a>
         </nav>
         <div class="flex items-center space-x-4">
-            <a href="{{ route('comensal.perfil') ?? '#' }}" class="p-2 rounded-full hover:bg-stone-100 transition-colors duration-300 scale-95 active:scale-90 hidden md:block text-stone-600 font-bold text-sm">Hola, {{ Auth::guard('comensal')->check() ? Auth::guard('comensal')->user()->nombre : 'Comensal' }}</a>
+            <a href="{{ route('comensal.perfil') ?? '#' }}" class="p-2 rounded-full hover:bg-surface-container transition-colors duration-300 scale-95 active:scale-90 hidden md:block text-on-surface-variant font-bold text-sm">Hola, {{ Auth::guard('comensal')->check() ? Auth::guard('comensal')->user()->nombre : 'Comensal' }}</a>
             @if(Auth::guard('comensal')->check())
-            <form method="POST" action="{{ route('logout') }}" class="inline">@csrf<button type="submit" class="p-2 rounded-full hover:bg-stone-100 transition-colors flex items-center gap-1 group text-stone-600 font-bold" title="Cerrar sesión"><span class="material-symbols-outlined text-stone-600 group-hover:text-red-500">logout</span></button></form>
+            <form method="POST" action="{{ route('logout') }}" class="inline">@csrf<button type="submit" class="p-2 rounded-full hover:bg-surface-container transition-colors flex items-center gap-1 group text-on-surface-variant font-bold" title="Cerrar sesión"><span class="material-symbols-outlined text-on-surface-variant group-hover:text-error">logout</span></button></form>
             @endif
         </div>
     </div>

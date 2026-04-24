@@ -1,81 +1,18 @@
 <!DOCTYPE html>
 <html class="light" lang="es">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>@yield('title', 'GastroGuía | Panel de Control')</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              "secondary-fixed": "#ffdcc5",
-              "on-error-container": "#93000a",
-              "on-tertiary-fixed": "#351000",
-              "tertiary-fixed": "#ffdbcd",
-              "on-surface": "#1e1b18",
-              "surface-bright": "#fff8f2",
-              "primary-fixed": "#ffdad5",
-              "primary": "#9e2016",
-              "on-secondary-fixed-variant": "#713700",
-              "inverse-surface": "#33302c",
-              "on-primary-fixed": "#410000",
-              "secondary-container": "#fc8f34",
-              "tertiary-fixed-dim": "#ffb595",
-              "surface-container-high": "#eee7e1",
-              "tertiary": "#8e3600",
-              "secondary-fixed-dim": "#ffb783",
-              "primary-container": "#c0392b",
-              "on-primary-container": "#ffe5e1",
-              "background": "#fff8f2",
-              "on-error": "#ffffff",
-              "surface-dim": "#dfd9d3",
-              "on-tertiary-container": "#ffe6dc",
-              "on-secondary": "#ffffff",
-              "on-background": "#1e1b18",
-              "surface-tint": "#b02d21",
-              "on-tertiary": "#ffffff",
-              "inverse-on-surface": "#f6f0ea",
-              "surface-container-highest": "#e8e1dc",
-              "surface-container-lowest": "#ffffff",
-              "error-container": "#ffdad6",
-              "surface-variant": "#e8e1dc",
-              "on-secondary-fixed": "#301400",
-              "on-secondary-container": "#663100",
-              "surface": "#fff8f2",
-              "error": "#ba1a1a",
-              "outline-variant": "#e1bfb9",
-              "outline": "#8d706c",
-              "secondary": "#944a00",
-              "surface-container-low": "#f9f2ec",
-              "on-tertiary-fixed-variant": "#7c2e00",
-              "on-surface-variant": "#59413d",
-              "inverse-primary": "#ffb4a9",
-              "primary-fixed-dim": "#ffb4a9",
-              "on-primary": "#ffffff",
-              "tertiary-container": "#b54700",
-              "surface-container": "#f3ede7",
-              "on-primary-fixed-variant": "#8e130c"
-            },
-            fontFamily: {
-              "headline": ["Plus Jakarta Sans"],
-              "body": ["Inter"],
-              "label": ["Inter"]
-            },
-          },
-        },
-      }
-</script>
-<style>
-    body { font-family: 'Inter', sans-serif; background-color: #FFF8F2; }
-    .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-    .hide-scrollbar::-webkit-scrollbar { display: none; }
-</style>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>@yield('title', 'GastroGuía | Panel de Control')</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #FFF8F2; }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
 </head>
 <body class="bg-background text-on-background min-h-screen flex overflow-hidden">
 

@@ -1,80 +1,17 @@
 <!DOCTYPE html>
 <html class="light" lang="es">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Admin - Panel de Control</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
-tailwind.config = {
-    darkMode: "class",
-    theme: {
-        extend: {
-            "colors": {
-                "primary-fixed": "#ffdad5",
-                "on-tertiary-fixed-variant": "#7c2e00",
-                "surface-container-highest": "#e8e1dc",
-                "on-secondary-container": "#663100",
-                "surface-bright": "#fff8f2",
-                "surface-container-high": "#eee7e1",
-                "on-primary": "#ffffff",
-                "secondary": "#944a00",
-                "primary-fixed-dim": "#ffb4a9",
-                "secondary-fixed-dim": "#ffb783",
-                "surface-tint": "#b02d21",
-                "tertiary": "#8e3600",
-                "on-error": "#ffffff",
-                "tertiary-container": "#b54700",
-                "on-tertiary": "#ffffff",
-                "error": "#ba1a1a",
-                "secondary-container": "#fc8f34",
-                "surface-container": "#f3ede7",
-                "on-tertiary-fixed": "#351000",
-                "on-secondary-fixed-variant": "#713700",
-                "on-primary-fixed": "#410000",
-                "surface": "#fff8f2",
-                "inverse-surface": "#33302c",
-                "background": "#fff8f2",
-                "surface-dim": "#dfd9d3",
-                "outline": "#8d706c",
-                "on-surface": "#1e1b18",
-                "inverse-on-surface": "#f6f0ea",
-                "primary": "#9e2016",
-                "outline-variant": "#e1bfb9",
-                "secondary-fixed": "#ffdcc5",
-                "error-container": "#ffdad6",
-                "on-error-container": "#93000a",
-                "on-primary-fixed-variant": "#8e130c",
-                "inverse-primary": "#ffb4a9",
-                "tertiary-fixed-dim": "#ffb595",
-                "tertiary-fixed": "#ffdbcd",
-                "surface-container-lowest": "#ffffff",
-                "on-surface-variant": "#59413d",
-                "on-background": "#1e1b18",
-                "on-secondary-fixed": "#301400",
-                "surface-container-low": "#f9f2ec",
-                "on-secondary": "#ffffff",
-                "surface-variant": "#e8e1dc",
-                "primary-container": "#c0392b",
-                "on-primary-container": "#ffe5e1",
-                "on-tertiary-container": "#ffe6dc"
-            },
-            "fontFamily": {
-                "headline": ["Plus Jakarta Sans"],
-                "body": ["Inter"],
-                "label": ["Inter"]
-            }
-        },
-    },
-}
-</script>
-<style>
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-    body { font-family: 'Inter', sans-serif; }
-    h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
-</style>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Admin - Panel de Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
 </head>
 <body class="bg-background text-on-background min-h-screen">
 <!-- SideNavBar -->

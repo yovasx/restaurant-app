@@ -1,66 +1,18 @@
 <!DOCTYPE html>
 <html class="light" lang="es">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>@yield('title', 'Panel de Control') - GastroGuía</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
-tailwind.config = {
-    darkMode: "class",
-    theme: {
-        extend: {
-            colors: {
-                "primary": "#9e2016",
-                "primary-container": "#c0392b",
-                "on-primary": "#ffffff",
-                "on-primary-container": "#ffe5e1",
-                "primary-fixed": "#ffdad5",
-                "primary-fixed-dim": "#ffb4a9",
-                "on-primary-fixed": "#410000",
-                "on-primary-fixed-variant": "#8e130c",
-                "secondary": "#944a00",
-                "secondary-container": "#fc8f34",
-                "secondary-fixed": "#ffdcc5",
-                "on-secondary": "#ffffff",
-                "on-secondary-container": "#663100",
-                "tertiary": "#8e3600",
-                "tertiary-container": "#b54700",
-                "on-tertiary": "#ffffff",
-                "background": "#fff8f2",
-                "surface": "#fff8f2",
-                "surface-container-lowest": "#ffffff",
-                "surface-container-low": "#f9f2ec",
-                "surface-container": "#f3ede7",
-                "surface-container-high": "#eee7e1",
-                "surface-container-highest": "#e8e1dc",
-                "on-surface": "#1e1b18",
-                "on-surface-variant": "#59413d",
-                "on-background": "#1e1b18",
-                "outline": "#8d706c",
-                "outline-variant": "#e1bfb9",
-                "error": "#ba1a1a",
-                "inverse-surface": "#33302c",
-                "inverse-on-surface": "#f6f0ea",
-                "inverse-primary": "#ffb4a9",
-            },
-            fontFamily: {
-                "headline": ["Plus Jakarta Sans"],
-                "body": ["Inter"],
-                "label": ["Inter"]
-            },
-        },
-    },
-}
-</script>
-<style>
-    body { font-family: 'Inter', sans-serif; background-color: #f9f2ec; }
-    .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-    .nav-active { @apply bg-[#C0392B] text-white shadow-sm; }
-</style>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>@yield('title', 'Panel de Control') - GastroGuía</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f9f2ec; }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .nav-active { @apply bg-[#C0392B] text-white shadow-sm; }
+    </style>
 </head>
 <body class="bg-surface-container-low text-on-surface min-h-screen flex overflow-hidden">
 
