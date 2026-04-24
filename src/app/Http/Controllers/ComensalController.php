@@ -10,15 +10,15 @@ class ComensalController extends Controller
 {
     public function index()
     {
-        // Show a default set of restaurantes; JS will request nearby when user allows location
-        $restaurants = Restaurante::where('estado', 'activo')->take(12)->get();
+        // Paginate default set to reduce memory and avoid returning large collections
+        $restaurants = Restaurante::where('estado', 'activo')->paginate(12);
         return view('comensal.inicio', compact('restaurants'));
     }
 
     public function explorar()
     {
-        // initial set for the explorar view
-        $restaurants = Restaurante::where('estado', 'activo')->take(50)->get();
+        // Paginate la lista de explorar
+        $restaurants = Restaurante::where('estado', 'activo')->paginate(50);
         return view('comensal.explorar', compact('restaurants'));
     }
 
@@ -32,21 +32,39 @@ class ComensalController extends Controller
         $lat = (float) $request->query('lat');
         $lng = (float) $request->query('lng');
 
-        // Haversine formula (distance in kilometers) with avg rating and avg price
+        // Use a bounding box to reduce rows before calculating Haversine.
+        // Approx degrees for ~50km radius: 1 deg lat ~ 111 km
+        $radiusKm = 50; // limit search radius
+        $latDelta = $radiusKm / 111; // approx
+        $lngDelta = abs($radiusKm / (111 * cos(deg2rad($lat))));
+
+        $minLat = $lat - $latDelta;
+        $maxLat = $lat + $latDelta;
+        $minLng = $lng - $lngDelta;
+        $maxLng = $lng + $lngDelta;
+
+        // Use materialized view `restaurantes_stats` to avoid repeated heavy aggregation
         $restaurants = Restaurante::selectRaw(
-            "restaurantes.*, ( 6371 * acos( cos( radians(?) ) * cos( radians( latitud ) ) * cos( radians( longitud ) - radians(?) ) + sin( radians(?) ) * sin( radians( latitud ) ) ) ) AS distance,
-            (SELECT AVG(resenas.score) FROM resenas JOIN menus ON menus.id = resenas.menu_id WHERE menus.restaurante_id = restaurantes.id) AS avg_rating,
-            (SELECT AVG(productos.precio) FROM productos WHERE productos.usuario_id = restaurantes.usuario_id AND productos.precio IS NOT NULL) AS avg_price",
+            "restaurantes.*, ( 6371 * acos( cos( radians(?) ) * cos( radians( latitud ) ) * cos( radians( longitud ) - radians(?) ) + sin( radians(?) ) * sin( radians( latitud ) ) ) ) AS distance, stats.avg_rating AS avg_rating, stats.avg_price AS avg_price",
             [$lat, $lng, $lat]
         )
+        ->leftJoin('restaurantes_stats as stats', 'stats.restaurante_id', '=', 'restaurantes.id')
         ->where('estado', 'activo')
+        ->whereBetween('latitud', [$minLat, $maxLat])
+        ->whereBetween('longitud', [$minLng, $maxLng])
         ->whereNotNull('latitud')
         ->whereNotNull('longitud')
         ->orderBy('distance')
         ->limit(50)
         ->get();
 
-        return response()->json(['data' => $restaurants]);
+        // Cache short-term per coordinate (rounded) to avoid repeat heavy queries
+        $cacheKey = 'nearby:'.round($lat,4).':'.round($lng,4);
+        $cached = cache()->remember($cacheKey, 30, function() use ($restaurants) {
+            return $restaurants;
+        });
+
+        return response()->json(['data' => $cached]);
     }
 
     public function show($id)
