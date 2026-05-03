@@ -3,7 +3,7 @@
 @section('title', 'Explorar - GastroGuía')
 
 @section('content')
-<!-- Leaflet CSS/JS (loaded here) -->
+<!-- Leaflet CSS/JS (se cargan aqui) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -14,11 +14,11 @@
     .me-marker svg{ display:block; width:18px; height:18px; }
 </style>
 
-<!-- Top Navigation Shell -->
+<!-- el top del navegador que tiene iconos y la barra de busqueda -->
 <nav class="bg-surface/95 backdrop-blur-md shadow-sm flex justify-between items-center w-full px-6 py-4 sticky top-0 z-50">
     <div class="flex items-center gap-6">
         <a href="{{ route('comensal.inicio') }}" class="text-sm bg-surface-container-lowest px-3 py-1 rounded-md shadow-sm hover:bg-surface-container-low transition-colors">Volver al inicio</a>
-        <h1 class="text-2xl font-black tracking-tighter text-primary-container">El Comensal</h1>
+        <h1 class="text-2xl font-black tracking-tighter text-primary-container">Explorar Restaurantes</h1>
         <div class="hidden md:flex items-center space-gap-6 gap-6">
             <a class="text-primary-container font-bold border-b-2 border-primary-container pb-1" href="{{ route('comensal.explorar') }}">Explorar</a>
             <a class="text-on-surface-variant/80 font-medium hover:bg-surface-container-high transition-colors duration-300 px-3 py-1 rounded-lg" href="#">Favoritos</a>
@@ -64,7 +64,7 @@
         </div>
 
         <div id="listContainer" class="flex-1 overflow-y-auto p-6 space-y-6">
-            <!-- Cards will be injected here -->
+            <!-- Las tarjetas se inyectan aquí -->
         </div>
     </section>
 
@@ -74,7 +74,7 @@
     </section>
 </main>
 
-<!-- Advanced filters modal (simple) -->
+<!-- filtros avanzados -->
 <div id="advancedFilters" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
     <div class="bg-white rounded-xl p-6 w-11/12 max-w-md">
         <h3 class="font-bold mb-3">Filtros avanzados</h3>
@@ -95,11 +95,11 @@ document.addEventListener('DOMContentLoaded', function(){
     let restaurants = @json($restaurants ?? []);
     let currentMarkers = L.layerGroup();
 
-    // Elements
+    // Elementos
     const maxDistanceInput = document.getElementById('maxDistance');
     const maxDistanceValue = document.getElementById('maxDistanceValue');
 
-    // Initialize map
+    // Inicializar mapa
     const defaultLat = -16.489689, defaultLng = -68.119294; // La Paz
     const map = L.map('map', { zoomControl: true }).setView([defaultLat, defaultLng], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function(){
             `;
         }).join('');
 
-        // attach detail click
+        // detalles con click
         container.querySelectorAll('.open-detail').forEach(btn => {
             btn.addEventListener('click', () => { window.location.href = detailBase + '/' + btn.dataset.id; });
         });

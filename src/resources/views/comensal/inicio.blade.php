@@ -42,7 +42,7 @@
         </div>
     </section>
 
-    <!-- Category Filter Chips -->
+    <!-- filtro de categorias -->
     <section class="max-w-7xl mx-auto px-6 -mt-8 relative z-10 w-full">
         <div class="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
             <button class="flex items-center gap-2 px-6 py-3 bg-[#9e2016] text-white rounded-full font-bold shadow-lg whitespace-nowrap"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">restaurant</span> Todos</button>
@@ -52,7 +52,7 @@
         </div>
     </section>
 
-    <!-- Promotional Banner Strip -->
+    <!-- Pbanner promocional de la semana -->
     <section class="max-w-7xl mx-auto px-6 mt-12 w-full">
         <div class="bg-[#fc8f34] rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative">
             <div class="relative z-10 text-[#663100] max-w-lg">
@@ -65,7 +65,7 @@
         </div>
     </section>
 
-    <!-- Near You Section -->
+    <!-- Seccion de restaurantes cercanos -->
     <section class="max-w-7xl mx-auto px-6 mt-16 w-full">
         <div class="flex justify-between items-end mb-8">
             <div>
@@ -131,7 +131,7 @@
                             `;
                         }).join('');
                     }catch(e){ console.error(e); }
-                }, (err) => { console.warn('Geolocation denied or unavailable', err); }, { enableHighAccuracy: true, timeout: 10000 });
+                }, (err) => { console.warn('Geolocalización no disponible o denegada', err); }, { enableHighAccuracy: true, timeout: 10000 });
             }
         });
         </script>

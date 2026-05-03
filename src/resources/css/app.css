@@ -8,7 +8,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    /* Brand Colors */
+    /* Colores de marca */
     --color-primary: #9e2016;
     --color-primary-container: #c0392b;
     --color-on-primary: #ffffff;
@@ -36,7 +36,7 @@
     --color-on-tertiary-fixed: #351000;
     --color-on-tertiary-fixed-variant: #7c2e00;
 
-    /* Surface & Background */
+    /* Superficie y Fondo */
     --color-background: #fff8f2;
     --color-on-background: #1e1b18;
     --color-surface: #fff8f2;
@@ -53,7 +53,7 @@
     --color-surface-container-high: #eee7e1;
     --color-surface-container-highest: #e8e1dc;
 
-    /* Semantic Colors */
+    /* Colores semanticos */
     --color-outline: #8d706c;
     --color-outline-variant: #e1bfb9;
     --color-error: #ba1a1a;
@@ -64,7 +64,7 @@
     --color-inverse-on-surface: #f6f0ea;
     --color-inverse-primary: #ffb4a9;
 
-    /* Typography */
+    /* Tipografia */
     --font-headline: "Plus Jakarta Sans";
     --font-body: "Inter";
     --font-label: "Inter";
