@@ -179,14 +179,11 @@ docker compose exec app composer dump-autoload
 
 ---
 
-## 🗑 Limpiar todo y empezar de cero
+## permisos requeridos (SOLO SI INSTALAS EL SISTEMA EN LINUX)
 
-```bash
-# Elimina contenedores Y volúmenes (borra la base de datos también)
-make fresh
-
-# Luego vuelve a hacer setup
-make setup
+sudo chown -R $USER:$USER . && \
+docker compose exec app chown -R www-data:www-data storage bootstrap/cache && \
+docker compose exec app php artisan optimize:clear
 ```
 
 ---
