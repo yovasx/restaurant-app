@@ -28,7 +28,7 @@ elif id www-data >/dev/null 2>&1; then
   chown -R www-data:www-data storage bootstrap/cache || true
 fi
 
-chmod -R 775 storage bootstrap/cache || true
+chmod -R 777 storage bootstrap/cache || true
 chmod 664 storage/logs/laravel.log || true || true
 
 # Instala dependencias composer si no existe autoload
