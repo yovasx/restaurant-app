@@ -50,8 +50,6 @@ cp .env.example .env
 # Pon tu proyecto Laravel en la carpeta src/
 # (o créalo nuevo, ver más abajo)
 
-# Ejecuta el setup completo con un solo comando:
-make setup
 ```
 
 ### Opción B: Manual paso a paso
@@ -140,36 +138,6 @@ REDIS_HOST=redis
 
 ---
 
-## 🔧 Comandos del día a día
-
-```bash
-# ── Servicios ──
-make up             # Levantar todo
-make down           # Detener todo
-make restart        # Reiniciar
-make ps             # Ver estado
-make logs           # Ver logs en vivo
-
-# ── Laravel ──
-make artisan CMD="migrate --seed"
-make artisan CMD="make:model Producto -mcr"
-make composer CMD="require spatie/laravel-permission"
-make bash           # Shell dentro del contenedor
-make tinker         # Laravel Tinker
-
-# ── Base de datos ──
-make migrate
-make migrate-fresh  # ⚠ Borra y recrea todo
-make psql           # Consola de PostgreSQL
-
-# ── Caché ──
-make cache-clear    # Limpia todos los cachés
-
-# ── Permisos ──
-make permissions    # Arregla permisos de storage
-```
-
----
 
 ## ❗ Solución de errores comunes
 
@@ -202,6 +170,9 @@ docker compose exec app composer dump-autoload
 ### Error al conectar en pgAdmin
 - El servidor ya viene preconfigurado. Si pide contraseña, usa `secret`
 - Verifica que el nombre del servidor en pgAdmin sea `postgres` (no localhost)
+
+### Error optimizacion entrypoint docker (resconstruir contenedor)
+docker compose up -d --build app
 
 ---
 
