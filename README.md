@@ -174,8 +174,8 @@ docker compose exec app composer dump-autoload
 ### Error optimizacion entrypoint docker (resconstruir contenedor)
 - docker compose up -d --build app
 
-##Error assets de vite no cargan 
-- docker compose --profile dev up -d
+### Error assets de vite no cargan 
+- docker compose run --rm node sh -c "npm install && npm run build"
 
 ---
 
