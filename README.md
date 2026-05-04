@@ -36,7 +36,7 @@ proyecto-docker/
 
 ---
 
-## 🚀 Primer uso — Setup completo
+## Primer uso — Setup completo
 
 ### Opción A: 
 ```bash
@@ -82,7 +82,7 @@ docker compose exec app php artisan storage:link
 
 ---
 
-## 🆕 Crear un proyecto Laravel nuevo desde cero
+## Crear un proyecto Laravel nuevo desde cero
 
 Si aún no tienes un proyecto Laravel:
 
