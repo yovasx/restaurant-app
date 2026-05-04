@@ -46,6 +46,17 @@ if command -v composer >/dev/null 2>&1; then
   composer dump-autoload --optimize --no-interaction || true
 fi
 
+# Comprobar y generar .env y APP_KEY si es necesario
+if [ ! -f .env ] && [ -f .env.example ]; then
+  echo "[entrypoint] Creando archivo .env a partir de .env.example"
+  cp .env.example .env || true
+fi
+
+if grep -q "^APP_KEY=$" .env || ! grep -q "^APP_KEY=" .env; then
+  echo "[entrypoint] Generando APP_KEY..."
+  php artisan key:generate || true
+fi
+
 # Limpiar caches para evitar errores con cambios en config
 if command -v php >/dev/null 2>&1; then
   php artisan config:clear || true
