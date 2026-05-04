@@ -172,7 +172,10 @@ docker compose exec app composer dump-autoload
 - Verifica que el nombre del servidor en pgAdmin sea `postgres` (no localhost)
 
 ### Error optimizacion entrypoint docker (resconstruir contenedor)
-docker compose up -d --build app
+- docker compose up -d --build app
+
+##Error assets de vite no cargan 
+- docker compose --profile dev up -d
 
 ---
 
