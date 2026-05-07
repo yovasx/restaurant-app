@@ -17,8 +17,7 @@
 <!-- el top del navegador que tiene iconos y la barra de busqueda -->
 <nav class="bg-surface/95 backdrop-blur-md shadow-sm flex justify-between items-center w-full px-6 py-4 sticky top-0 z-50">
     <div class="flex items-center gap-6">
-        <a href="{{ route('comensal.inicio') }}" class="text-sm bg-surface-container-lowest px-3 py-1 rounded-md shadow-sm hover:bg-surface-container-low transition-colors">Volver al inicio</a>
-        <h1 class="text-2xl font-black tracking-tighter text-primary-container">Explorar Restaurantes</h1>
+        <a class="text-on-surface-variant/80 font-medium hover:bg-surface-container-high transition-colors duration-300 px-3 py-1 rounded-lg" href="{{ route('comensal.inicio') }}">Inicio</a>
         <div class="hidden md:flex items-center space-gap-6 gap-6">
             <a class="text-primary-container font-bold border-b-2 border-primary-container pb-1" href="{{ route('comensal.explorar') }}">Explorar</a>
             <a class="text-on-surface-variant/80 font-medium hover:bg-surface-container-high transition-colors duration-300 px-3 py-1 rounded-lg" href="#">Favoritos</a>
