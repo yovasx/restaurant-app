@@ -24,6 +24,12 @@ class ComensalController extends Controller
 
     public function nearby(Request $request)
     {
+        // This endpoint is intended to be used via AJAX from the comensal UI.
+        // If accessed directly from a browser tab (no ajax flag) redirect to the comensal inicio view.
+        if (! $request->boolean('ajax')) {
+            return redirect()->route('comensal.inicio');
+        }
+
         $request->validate([
             'lat' => 'required|numeric',
             'lng' => 'required|numeric',

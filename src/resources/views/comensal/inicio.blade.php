@@ -105,7 +105,7 @@
                     const lat = pos.coords.latitude;
                     const lng = pos.coords.longitude;
                     try{
-                        const resp = await fetch('{{ route('restaurantes.nearby') }}?lat='+lat+'&lng='+lng);
+                        const resp = await fetch('{{ route('restaurantes.nearby') }}?lat='+lat+'&lng='+lng+'&ajax=1');
                         if(!resp.ok) return;
                         const json = await resp.json();
                         const items = json.data || [];

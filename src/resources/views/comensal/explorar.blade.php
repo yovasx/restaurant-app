@@ -92,7 +92,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function(){
-    const nearbyUrl = '{{ route('restaurantes.nearby') }}';
+    const nearbyUrl = '{{ route('restaurantes.nearby') }}?ajax=1';
     const detailBase = '{{ url('restaurante') }}';
     let restaurants = @json($restaurants ?? []);
     let currentMarkers = L.layerGroup();
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     async function fetchNearby(lat, lng){
         try{
-            const resp = await fetch(`${nearbyUrl}?lat=${lat}&lng=${lng}`);
+            const resp = await fetch(`${nearbyUrl}&lat=${lat}&lng=${lng}`);
             if(!resp.ok) return;
             const json = await resp.json();
             restaurants = json.data || [];
