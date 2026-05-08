@@ -6,7 +6,7 @@
 <!-- Leaflet CSS/JS (se cargan aqui) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+ 
 <style>
     .restaurant-marker{ width:48px; height:48px; border-radius:50%; overflow:hidden; box-shadow:0 4px 10px rgba(0,0,0,0.2); border:2px solid #fff; }
     .restaurant-marker img{ width:100%; height:100%; object-fit:cover; display:block; }
@@ -58,6 +58,9 @@
                 </button>
                 <button id="openAdvanced" class="flex items-center gap-2 bg-surface-container-lowest text-on-surface-variant px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap hover:bg-stone-100">
                     <span class="material-symbols-outlined text-sm">filter_list</span> Filtros
+                </button>
+                <button id="openAdvanced" class="flex items-center gap-2 bg-surface-container-lowest text-on-surface-variant px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap hover:bg-stone-100">
+                    <span class="material-symbols-outlined text-sm">distance</span> Distancia
                 </button>
             </div>
         </div>
