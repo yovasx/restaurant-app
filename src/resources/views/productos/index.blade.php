@@ -4,6 +4,8 @@
 @section('page-title', 'Gestión de Menú')
 
 @section('content')
+@php($redirectTo = request()->fullUrl())
+
 <!-- Workspace Grid -->
 <div class="space-y-4">
     <div class="flex justify-between items-end px-2">
@@ -12,17 +14,11 @@
             <p class="text-sm text-stone-500">Administra tus platos, categorías y precios</p>
         </div>
         <div class="flex gap-2">
-            <a href="{{ route('productos.create') }}" class="flex items-center gap-2 bg-primary text-white py-2 px-4 rounded-lg font-headline font-bold text-sm shadow-md hover:bg-primary-container transition-colors">
+            <button type="button" data-modal-open="restaurante-producto-create-modal" class="flex items-center gap-2 bg-primary text-white py-2 px-4 rounded-lg font-headline font-bold text-sm shadow-md hover:bg-primary-container transition-colors">
                 <span class="material-symbols-outlined text-sm" data-icon="add">add</span> Nuevo Plato
-            </a>
+            </button>
         </div>
     </div>
-
-    @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-            <span class="block sm:inline">{{ session('success') }}</span>
-        </div>
-    @endif
 
     <div class="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden border-none">
         <table class="w-full text-left border-collapse">
@@ -53,16 +49,12 @@
                     <td class="px-6 py-4 text-sm text-stone-600">{{ $producto->stock }} unids.</td>
                     <td class="px-6 py-4 text-right">
                         <div class="flex justify-end gap-1">
-                            <a href="{{ route('productos.edit', $producto) }}" class="p-1.5 text-stone-400 hover:text-primary transition-colors">
+                            <button type="button" data-modal-open="producto-edit-{{ $producto->id }}" class="p-1.5 text-stone-400 hover:text-primary transition-colors">
                                 <span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
-                            </a>
-                            <form action="{{ route('productos.destroy', $producto) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Seguro quieres eliminar?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="p-1.5 text-stone-400 hover:text-red-600 transition-colors">
-                                    <span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
-                                </button>
-                            </form>
+                            </button>
+                            <button type="button" data-modal-open="producto-delete-{{ $producto->id }}" class="p-1.5 text-stone-400 hover:text-red-600 transition-colors">
+                                <span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -84,4 +76,10 @@
         @endif
     </div>
 </div>
+
+@include('productos._table-modals', [
+    'productos' => $productos,
+    'categorias' => $categorias,
+    'redirectTo' => $redirectTo,
+])
 @endsection

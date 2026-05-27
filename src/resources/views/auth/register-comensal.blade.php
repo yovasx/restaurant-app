@@ -75,6 +75,8 @@
 </style>
 </head>
 <body class="bg-background text-on-background min-h-screen flex flex-col">
+@include('partials.public-nav')
+
 <main class="flex-grow flex items-center justify-center lg:p-6">
     <div class="w-full max-w-7xl h-full lg:h-[921px] bg-surface-container-lowest lg:rounded-xl overflow-hidden flex flex-col md:flex-row shadow-[0_20px_50px_rgba(158,32,22,0.05)]">
         

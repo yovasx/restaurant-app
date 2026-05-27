@@ -8,8 +8,25 @@ use App\Http\Controllers\ComensalController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect()->route('login');
-});
+    if (auth()->guard('comensal')->check()) {
+        return redirect()->route('comensal.inicio');
+    }
+
+    if (auth()->guard('usuario')->check()) {
+        $rol = auth()->guard('usuario')->user()->rol_id;
+
+        return $rol == 1
+            ? redirect()->route('admin.dashboard')
+            : redirect()->route('restaurante.dashboard');
+    }
+
+    $restaurants = \App\Models\Restaurante::where('estado', 'activo')
+        ->latest()
+        ->take(12)
+        ->get();
+
+    return view('welcome', compact('restaurants'));
+})->name('home');
 
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
@@ -33,6 +50,10 @@ Route::post('register', [AuthController::class, 'registerComensal'])->name('regi
 Route::get('register/restaurante', [AuthController::class, 'showRegisterRestaurante'])->name('register.restaurante');
 Route::post('register/restaurante', [AuthController::class, 'registerRestaurante'])->name('register.restaurante.post');
 
+// Lectura publica para invitados y comensales
+Route::get('/restaurantes/nearby', [ComensalController::class, 'nearby'])->name('restaurantes.nearby');
+Route::get('/restaurante/{id}', [ComensalController::class, 'show'])->where('id', '[0-9]+')->name('restaurante.show');
+
 // Rutas protegidas para comensal
 Route::middleware('auth:comensal')->group(function () {
     Route::get('/inicio', [ComensalController::class, 'index'])->name('comensal.inicio');
@@ -44,8 +65,6 @@ Route::middleware('auth:comensal')->group(function () {
     
     Route::post('/perfil/update', [AuthController::class, 'updatePerfilComensal'])->name('comensal.perfil.update');
 
-    // API endpoint to get nearby restaurants (Haversine) - expects ?lat=&lng=
-    Route::get('/restaurantes/nearby', [ComensalController::class, 'nearby'])->name('restaurantes.nearby');
 });
 
 // Rutas de Restaurante / Usuario
@@ -62,12 +81,6 @@ Route::middleware(['auth:usuario'])->group(function () {
         ->except(['show']);
     // Reseñas
     Route::get('/restaurante/resenas', [\App\Http\Controllers\PromocionController::class, 'resenas'])->name('restaurante.resenas');
-});
-
-// Rutas protegidas para comensal (Detalle de restaurante)
-Route::middleware('auth:comensal')->group(function () {
-    // Restaurant detail view for comensal (strictly numeric id to avoid route collisions)
-    Route::get('/restaurante/{id}', [ComensalController::class, 'show'])->where('id', '[0-9]+')->name('restaurante.show');
 });
 
 // Rutas de Administrador

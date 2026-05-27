@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Mi Perfil - GastroGuía')
+@section('layout-flush', 'true')
 
 @section('content')
 <!-- TopAppBar -->

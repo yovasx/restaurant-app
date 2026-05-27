@@ -13,97 +13,113 @@
         h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
-<body class="bg-background text-on-background min-h-screen">
-<!-- SideNavBar -->
-<aside class="fixed left-0 top-0 h-screen w-64 bg-[#FFF8F2] dark:bg-stone-950 flex flex-col h-full py-8 space-y-2 z-50">
-    <div class="px-8 mb-10">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-white shadow-lg">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant_menu</span>
-            </div>
-            <div>
-                <h1 class="text-2xl font-black text-[#C0392B] tracking-tight leading-tight">Admin</h1>
-                <p class="text-[10px] uppercase tracking-widest text-stone-500 font-bold">Consola de Gestión</p>
-            </div>
-        </div>
-    </div>
-    
+<body class="bg-background text-on-background min-h-screen overflow-hidden">
     @php
         $route = Route::currentRouteName();
     @endphp
+    <div class="flex min-h-screen w-full">
+        <aside class="hidden lg:flex sticky top-0 h-screen w-72 shrink-0 flex-col border-r border-stone-200 bg-[#FFF8F2] py-6 shadow-[inset_-1px_0_0_rgba(231,218,208,0.9)]">
+            <div class="px-4 pb-8">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-container text-white shadow-lg shadow-primary/20">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant_menu</span>
+                    </div>
+                    <div class="min-w-0">
+                        <h1 class="font-headline text-2xl font-black leading-tight tracking-tight text-[#C0392B]">Admin</h1>
+                        <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-stone-500">Consola de Gestión</p>
+                    </div>
+                </div>
 
-    <nav class="flex-1 space-y-1">
-        <a class="{{ $route === 'admin.dashboard' ? 'bg-white text-[#C0392B] font-bold shadow-sm' : 'text-stone-500 hover:bg-white/50 hover:text-[#C0392B]' }} rounded-l-full ml-4 py-3 px-6 flex items-center gap-4 transition-all" href="{{ route('admin.dashboard') }}">
-            <span class="material-symbols-outlined">dashboard</span>
-            <span class="font-headline font-medium text-base">Panel de Control</span>
-        </a>
-        <a class="{{ $route === 'admin.restaurantes.index' ? 'bg-white text-[#C0392B] font-bold shadow-sm' : 'text-stone-500 hover:bg-white/50 hover:text-[#C0392B]' }} rounded-l-full ml-4 py-3 px-6 flex items-center gap-4 transition-all" href="{{ route('admin.restaurantes.index') }}">
-            <span class="material-symbols-outlined">restaurant</span>
-            <span class="font-headline font-medium text-base">Restaurantes</span>
-        </a>
-        <a class="{{ $route === 'admin.comensales.index' ? 'bg-white text-[#C0392B] font-bold shadow-sm' : 'text-stone-500 hover:bg-white/50 hover:text-[#C0392B]' }} rounded-l-full ml-4 py-3 px-6 flex items-center gap-4 transition-all" href="{{ route('admin.comensales.index') }}">
-            <span class="material-symbols-outlined">group</span>
-            <span class="font-headline font-medium text-base">Comensales</span>
-        </a>
-        <a class="{{ $route === 'admin.categorias.index' ? 'bg-white text-[#C0392B] font-bold shadow-sm' : 'text-stone-500 hover:bg-white/50 hover:text-[#C0392B]' }} rounded-l-full ml-4 py-3 px-6 flex items-center gap-4 transition-all" href="{{ route('admin.categorias.index') }}">
-            <span class="material-symbols-outlined">category</span>
-            <span class="font-headline font-medium text-base">Categorías</span>
-        </a>
-    </nav>
-
-    <div class="px-6 mt-auto space-y-4">
-        <a href="{{ route('admin.usuarios.create') }}" class="w-full bg-primary text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[0.98] transition-transform">
-            <span class="material-symbols-outlined">add_circle</span>
-            Añadir Usuario
-        </a>
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button class="w-full bg-primary text-on-primary py-4 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform">
-                <span class="material-symbols-outlined">logout</span>
-                Salir
-            </button>
-        </form>
-    </div>
-</aside>
-
-<!-- TopNavBar -->
-<header class="fixed top-0 right-0 left-64 bg-[#FFF8F2] dark:bg-stone-950 flex justify-between items-center px-8 py-4 z-40 shadow-sm dark:shadow-none">
-    <div class="flex items-center gap-4 flex-1">
-        <!-- Search omitted for now -->
-    </div>
-    <div class="flex items-center gap-6">
-        <div class="flex items-center gap-3 pl-6 border-l border-stone-200">
-            <div class="text-right">
-                <p class="text-xs font-bold text-on-surface">{{ Auth::guard('usuario')->user()->nombre }}</p>
-                <p class="text-[10px] text-stone-500">Super Administrador</p>
+                <div class="mt-5 flex items-center gap-3">
+                    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary-fixed font-bold text-primary shadow-sm">
+                        {{ substr(Auth::guard('usuario')->user()->nombre, 0, 1) }}
+                    </div>
+                    <div class="min-w-0">
+                        <p class="truncate font-headline text-sm font-bold text-on-surface">{{ Auth::guard('usuario')->user()->nombre }}</p>
+                        <p class="text-[10px] font-semibold uppercase tracking-[0.3em] text-stone-500">Super Admin</p>
+                    </div>
+                </div>
             </div>
-            <div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold shadow-sm">
-                {{ substr(Auth::guard('usuario')->user()->nombre, 0, 1) }}
-            </div>
-        </div>
-    </div>
-</header>
 
-<!-- Main Content -->
-<main class="ml-64 pt-24 p-8 min-h-screen">
-    <div class="max-w-7xl mx-auto">
-        @if (session('success'))
-            <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                <span class="block sm:inline">{{ session('success') }}</span>
-            </div>
-        @endif
-        @if ($errors->any())
-            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+            <nav class="flex-1 space-y-1 px-3">
+                <a class="{{ request()->routeIs('admin.dashboard') ? 'bg-white text-[#C0392B] font-bold shadow-sm' : 'text-stone-500 hover:bg-white/80 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all" href="{{ route('admin.dashboard') }}">
+                    <span class="material-symbols-outlined shrink-0">dashboard</span>
+                    <span class="font-headline text-sm font-medium">Panel de Control</span>
+                </a>
+                <a class="{{ request()->routeIs('admin.restaurantes.*') ? 'bg-white text-[#C0392B] font-bold shadow-sm' : 'text-stone-500 hover:bg-white/80 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all" href="{{ route('admin.restaurantes.index') }}">
+                    <span class="material-symbols-outlined shrink-0">restaurant</span>
+                    <span class="font-headline text-sm font-medium">Restaurantes</span>
+                </a>
+                <a class="{{ request()->routeIs('admin.comensales.*') ? 'bg-white text-[#C0392B] font-bold shadow-sm' : 'text-stone-500 hover:bg-white/80 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all" href="{{ route('admin.comensales.index') }}">
+                    <span class="material-symbols-outlined shrink-0">group</span>
+                    <span class="font-headline text-sm font-medium">Comensales</span>
+                </a>
+                <a class="{{ request()->routeIs('admin.categorias.*') ? 'bg-white text-[#C0392B] font-bold shadow-sm' : 'text-stone-500 hover:bg-white/80 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all" href="{{ route('admin.categorias.index') }}">
+                    <span class="material-symbols-outlined shrink-0">category</span>
+                    <span class="font-headline text-sm font-medium">Categorías</span>
+                </a>
+            </nav>
 
-        @yield('content')
+            <div class="mt-auto space-y-3 px-3">
+                <button type="button" data-modal-open="admin-user-create-modal" class="flex w-full items-center gap-3 rounded-2xl bg-primary px-4 py-3.5 font-headline text-sm font-bold text-white shadow-lg shadow-primary/20 transition hover:bg-primary-container">
+                    <span class="material-symbols-outlined shrink-0">add_circle</span>
+                    <span>Añadir Usuario</span>
+                </button>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 font-headline text-sm font-medium text-stone-500 transition-all hover:bg-stone-100 hover:text-red-600">
+                        <span class="material-symbols-outlined shrink-0">logout</span>
+                        <span>Cerrar Sesión</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <main class="flex-1 min-w-0 flex h-screen flex-col overflow-y-auto">
+            <header class="sticky top-0 z-30 w-full border-b border-stone-200/80 bg-[#FFF8F2]/95 shadow-sm backdrop-blur">
+                <div class="flex items-center justify-between px-6 py-4">
+                    <div class="flex min-w-0 items-center gap-4">
+                        <div class="lg:hidden">
+                            <span class="font-headline text-lg font-bold tracking-tight text-[#C0392B]">Admin</span>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-stone-500">Administrador</p>
+                            <h2 class="truncate font-headline text-xl font-extrabold text-on-surface sm:text-2xl">Panel de gestión</h2>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 border-l border-stone-200 pl-5">
+                        <div class="text-right">
+                            <p class="text-xs font-bold text-on-surface">{{ Auth::guard('usuario')->user()->nombre }}</p>
+                            <p class="text-[10px] text-stone-500">Super Administrador</p>
+                        </div>
+                        <div class="flex h-11 w-11 items-center justify-center rounded-full bg-primary-fixed font-bold text-primary shadow-sm">
+                            {{ substr(Auth::guard('usuario')->user()->nombre, 0, 1) }}
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="flex-1 w-full max-w-7xl mx-auto p-6">
+                @yield('content')
+            </div>
+        </main>
     </div>
-</main>
+
+    <x-modal
+        id="admin-user-create-modal"
+        title="Crear nuevo usuario"
+        subtitle="Registra administradores, restaurantes o comensales sin salir de la vista actual."
+        max-width="max-w-3xl"
+        :auto-open="old('_modal') === 'admin-user-create-modal'"
+    >
+        @include('admin.usuarios._modal-form', [
+            'redirectTo' => request()->fullUrl(),
+            'modalId' => 'admin-user-create-modal',
+            'fixedRole' => null,
+        ])
+    </x-modal>
+
+    @include('partials.screen-toast')
 </body>
 </html>

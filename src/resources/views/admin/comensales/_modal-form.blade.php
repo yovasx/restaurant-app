@@ -1,0 +1,44 @@
+<form action="{{ route('admin.comensales.update', $comensal->id) }}" method="POST" class="space-y-6">
+    @csrf
+
+    <input type="hidden" name="redirect_to" value="{{ $redirectTo }}">
+    <input type="hidden" name="_modal" value="{{ $modalId }}">
+
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div class="space-y-2">
+            <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">Nombre Completo</label>
+            <input name="nombre" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" required data-modal-initial-focus value="{{ old('nombre', $comensal->nombre) }}" />
+        </div>
+
+        <div class="space-y-2">
+            <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">Correo Electrónico</label>
+            <input name="email" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="email" required value="{{ old('email', $comensal->email) }}" />
+        </div>
+
+        <div class="space-y-2">
+            <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">Teléfono</label>
+            <input name="telefono" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" value="{{ old('telefono', $comensal->telefono) }}"/>
+        </div>
+
+        <div class="space-y-2">
+            <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">Estado</label>
+            <select name="estado" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" required>
+                <option value="activo" {{ old('estado', $comensal->estado) === 'activo' ? 'selected' : '' }}>Activo</option>
+                <option value="inactivo" {{ old('estado', $comensal->estado) === 'inactivo' ? 'selected' : '' }}>Inactivo</option>
+                <option value="baneado" {{ old('estado', $comensal->estado) === 'baneado' ? 'selected' : '' }}>Baneado</option>
+            </select>
+        </div>
+
+        <div class="space-y-2 md:col-span-2">
+            <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">Nueva Contraseña</label>
+            <input name="password" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="password" minlength="6" placeholder="Déjala vacía para mantener la actual"/>
+        </div>
+    </div>
+
+    <div class="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+        <button type="button" data-modal-close class="w-full rounded-2xl border border-stone-200 px-5 py-3.5 font-bold text-stone-600 transition hover:bg-stone-50 sm:w-auto sm:min-w-40">
+            Cancelar
+        </button>
+        <button class="w-full rounded-2xl bg-primary px-5 py-3.5 font-extrabold text-white shadow-lg shadow-primary/20 transition hover:bg-primary-container sm:w-auto sm:min-w-40" type="submit">Guardar Cambios</button>
+    </div>
+</form>

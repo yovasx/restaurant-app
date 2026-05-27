@@ -11,6 +11,17 @@ use App\Models\Menu;
 
 class PromocionController extends Controller
 {
+    private function redirectTo(Request $request, string $fallbackRoute)
+    {
+        $redirectTo = $request->input('redirect_to');
+
+        if (is_string($redirectTo) && (str_starts_with($redirectTo, url('/')) || str_starts_with($redirectTo, '/'))) {
+            return redirect()->to($redirectTo);
+        }
+
+        return redirect()->route($fallbackRoute);
+    }
+
     private function getRestauranteId()
     {
         $usuario = Auth::guard('usuario')->user();
@@ -23,7 +34,7 @@ class PromocionController extends Controller
         $restauranteId = $this->getRestauranteId();
         $promociones = $restauranteId
             ? Promocion::where('restaurante_id', $restauranteId)->latest()->paginate(10)
-            : collect();
+            : new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
         return view('restaurante.promociones.index', compact('promociones'));
     }
 
@@ -36,7 +47,7 @@ class PromocionController extends Controller
     {
         $restauranteId = $this->getRestauranteId();
         if (!$restauranteId) {
-            return back()->withErrors(['error' => 'Debes completar tu perfil de restaurante primero.']);
+            return back()->withErrors(['error' => 'Debes completar tu perfil de restaurante primero.'])->withInput();
         }
 
         $validated = $request->validate([
@@ -60,7 +71,7 @@ class PromocionController extends Controller
             'imagen'  => $imagenPath,
         ]));
 
-        return redirect()->route('restaurante.promociones.index')
+        return $this->redirectTo($request, 'restaurante.promociones.index')
             ->with('success', 'Promoción creada exitosamente.');
     }
 
@@ -90,14 +101,14 @@ class PromocionController extends Controller
 
         $promocion->update($validated);
 
-        return redirect()->route('restaurante.promociones.index')
+        return $this->redirectTo($request, 'restaurante.promociones.index')
             ->with('success', 'Promoción actualizada.');
     }
 
-    public function destroy(Promocion $promocion)
+    public function destroy(Request $request, Promocion $promocion)
     {
         $promocion->update(['estado' => 'inactivo']);
-        return back()->with('success', 'Promoción archivada.');
+        return $this->redirectTo($request, 'restaurante.promociones.index')->with('success', 'Promoción archivada.');
     }
 
     public function resenas()

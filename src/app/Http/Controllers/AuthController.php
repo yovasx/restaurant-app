@@ -43,7 +43,7 @@ class AuthController extends Controller
 
         return back()->withErrors([
             'email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
-        ])->onlyInput('email');
+        ])->withInput($request->only('email', 'login_type'));
     }
 
     public function logout(Request $request)
@@ -58,7 +58,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect()->route('home');
     }
 
     public function showRegisterComensal()
@@ -155,7 +155,7 @@ class AuthController extends Controller
 
         Auth::guard('usuario')->login($usuario);
 
-        return redirect()->intended('productos');
+        return redirect()->intended(route('restaurante.dashboard'));
     }
 
     public function updatePerfilComensal(Request $request)

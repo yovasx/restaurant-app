@@ -11,21 +11,16 @@
 <style>
       body { font-family: 'Inter', sans-serif; }
       h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+      .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
       .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
       .glass-effect { background: rgba(255, 248, 242, 0.8); backdrop-filter: blur(12px); }
 </style>
 </head>
 <body class="bg-[#fff8f2] text-[#1e1b18]">
-<header class="fixed top-0 w-full z-50 bg-[#FFF8F2] shadow-sm">
-    <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
-        <a href="{{ route('login') }}" class="text-2xl font-black text-[#9e2016] tracking-tight">GastroGuía</a>
-        <nav class="hidden md:flex gap-8 items-center">
-            <a class="bg-[#9e2016] text-white px-6 py-2 rounded-lg font-bold hover:scale-105 transition-all" href="{{ route('login') }}">Ya tengo cuenta</a>
-        </nav>
-    </div>
-</header>
-<main class="min-h-screen pt-24 pb-20 flex flex-col lg:flex-row gap-0">
-    <section class="hidden lg:flex lg:w-1/3 fixed left-0 top-0 h-full z-0 overflow-hidden">
+@include('partials.public-nav')
+
+<main class="min-h-[calc(100vh-80px)] py-10 flex flex-col lg:flex-row gap-0">
+    <section class="hidden lg:flex lg:w-1/3 fixed left-0 top-20 h-[calc(100vh-5rem)] z-0 overflow-hidden">
         <div class="relative w-full h-full">
             <img class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeLrZ3lpInv_m75e13k9wYOG9exXo8b8PsHvZK7_w63skbuN1LCEk8Gu67kgiY5x1avu_cycxz17rsolLhYMcMjxO21tHtXfOXw2xaV-vIDpFAR-pXHC2VZmzBXmVKaE03GKWjYUyybM6klBNiZ8CMiic2GCoFgGb0p_cH3--Yd0rQoOerc41QXvSd5ijPFaVoVr8QKkUi3A8wpVLBshp8UGtcP4uFfX8Wlse9vEceG35Wf8EOW2YzffosXOcQE-ArLgJzIRTJTiBo">
             <div class="absolute inset-0 bg-gradient-to-t from-red-900/80 to-transparent"></div>

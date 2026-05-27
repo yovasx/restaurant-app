@@ -4,6 +4,8 @@
 @section('page-title', 'Gestión del Menú')
 
 @section('content')
+@php($redirectTo = request()->fullUrl())
+
 <div class="space-y-8">
     <!-- Stats Bento Grid -->
     <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -37,9 +39,9 @@
                     <p class="text-[10px] font-bold text-stone-500 uppercase">Total Platos</p>
                     <p class="text-2xl font-black text-on-surface">{{ $totalProductos }}</p>
                 </div>
-                <a href="{{ route('productos.create') }}" class="bg-primary text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#c0392b] transition-colors">
+                <button type="button" data-modal-open="restaurante-producto-create-modal" class="bg-primary text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#c0392b] transition-colors">
                     + Añadir
-                </a>
+                </button>
             </div>
         </div>
         <!-- Quick Config Card -->
@@ -68,9 +70,9 @@
                     <h3 class="font-headline font-bold text-lg text-on-surface">Gestión de Menú</h3>
                     <p class="text-sm text-stone-500">Administra la visibilidad y precios de tus platos</p>
                 </div>
-                <a href="{{ route('productos.create') }}" class="flex items-center gap-2 bg-primary text-white py-2 px-4 rounded-lg font-headline font-bold text-sm shadow-md hover:bg-[#c0392b] transition-colors">
+                <button type="button" data-modal-open="restaurante-producto-create-modal" class="flex items-center gap-2 bg-primary text-white py-2 px-4 rounded-lg font-headline font-bold text-sm shadow-md hover:bg-[#c0392b] transition-colors">
                     <span class="material-symbols-outlined text-sm">add</span> Nuevo Plato
-                </a>
+                </button>
             </div>
             <div class="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden">
                 <table class="w-full text-left border-collapse">
@@ -117,15 +119,12 @@
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <div class="flex justify-end gap-1">
-                                    <a href="{{ route('productos.edit', $producto) }}" class="p-1.5 text-stone-400 hover:text-primary transition-colors">
+                                    <button type="button" data-modal-open="producto-edit-{{ $producto->id }}" class="p-1.5 text-stone-400 hover:text-primary transition-colors">
                                         <span class="material-symbols-outlined text-lg">edit</span>
-                                    </a>
-                                    <form action="{{ route('productos.destroy', $producto) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Eliminar este plato?');">
-                                        @csrf @method('DELETE')
-                                        <button type="submit" class="p-1.5 text-stone-400 hover:text-red-600 transition-colors">
-                                            <span class="material-symbols-outlined text-lg">delete</span>
-                                        </button>
-                                    </form>
+                                    </button>
+                                    <button type="button" data-modal-open="producto-delete-{{ $producto->id }}" class="p-1.5 text-stone-400 hover:text-red-600 transition-colors">
+                                        <span class="material-symbols-outlined text-lg">delete</span>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -134,7 +133,7 @@
                             <td colspan="4" class="px-6 py-12 text-center text-stone-500">
                                 <span class="material-symbols-outlined text-5xl mb-3 opacity-40">restaurant_menu</span>
                                 <p class="font-semibold">Aún no tienes platos agregados.</p>
-                                <a href="{{ route('productos.create') }}" class="mt-3 inline-block text-primary font-bold underline text-sm">Crear primer plato</a>
+                                <button type="button" data-modal-open="restaurante-producto-create-modal" class="mt-3 inline-block text-primary font-bold underline text-sm">Crear primer plato</button>
                             </td>
                         </tr>
                         @endforelse
@@ -184,4 +183,10 @@
         </div>
     </section>
 </div>
+
+@include('productos._table-modals', [
+    'productos' => $productos,
+    'categorias' => $categorias,
+    'redirectTo' => $redirectTo,
+])
 @endsection

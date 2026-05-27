@@ -11,14 +11,26 @@ use Illuminate\Http\Request;
 
 class ProductoController extends Controller
 {
+    private function redirectTo(Request $request, string $fallbackRoute)
+    {
+        $redirectTo = $request->input('redirect_to');
+
+        if (is_string($redirectTo) && (str_starts_with($redirectTo, url('/')) || str_starts_with($redirectTo, '/'))) {
+            return redirect()->to($redirectTo);
+        }
+
+        return redirect()->route($fallbackRoute);
+    }
+
     public function index()
     {
         $usuario = Auth::guard('usuario')->user();
         $productos = Producto::where('usuario_id', $usuario->id)
             ->with('categoria')
             ->paginate(10);
+        $categorias = Categoria::where('estado', 'activo')->orderBy('nombre_categoria')->get();
 
-        return view('productos.index', compact('productos'));
+        return view('productos.index', compact('productos', 'categorias'));
     }
 
     public function create()
@@ -53,7 +65,7 @@ class ProductoController extends Controller
             'usuario_id'   => Auth::guard('usuario')->id(),
         ]);
 
-        return redirect()->route('restaurante.dashboard')
+        return $this->redirectTo($request, 'restaurante.dashboard')
             ->with('success', 'Plato creado con éxito.');
     }
 
@@ -87,14 +99,14 @@ class ProductoController extends Controller
 
         $producto->update($validated);
 
-        return redirect()->route('restaurante.dashboard')
+        return $this->redirectTo($request, 'restaurante.dashboard')
             ->with('success', 'Plato actualizado con éxito.');
     }
 
-    public function destroy(Producto $producto)
+    public function destroy(Request $request, Producto $producto)
     {
         $producto->delete();
-        return redirect()->route('restaurante.dashboard')
+        return $this->redirectTo($request, 'restaurante.dashboard')
             ->with('success', 'Plato eliminado correctamente.');
     }
 

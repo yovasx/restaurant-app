@@ -25,9 +25,10 @@ class RestauranteController extends Controller
             ->with('categoria')
             ->latest()
             ->paginate(10);
+        $categorias = Categoria::where('estado', 'activo')->orderBy('nombre_categoria')->get();
         $totalProductos = Producto::where('usuario_id', $usuario->id)->count();
         
-        return view('restaurante.dashboard', compact('usuario', 'restaurante', 'productos', 'totalProductos'));
+        return view('restaurante.dashboard', compact('usuario', 'restaurante', 'productos', 'categorias', 'totalProductos'));
     }
 
     public function configuracion()

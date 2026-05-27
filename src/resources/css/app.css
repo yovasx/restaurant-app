@@ -184,3 +184,129 @@
         border-color: #a7f3d0;
     }
 }
+
+@layer components {
+    .workspace-shell {
+        display: flex;
+        min-height: 100vh;
+        width: 100%;
+    }
+
+    .workspace-sidebar {
+        width: 5.5rem;
+        transition: width 220ms ease;
+        overflow: hidden;
+    }
+
+    .workspace-main {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+
+    .sidebar-copy,
+    .sidebar-label,
+    .sidebar-action-label,
+    .sidebar-user-copy {
+        max-width: 0;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateX(-0.35rem);
+        transition: max-width 180ms ease, opacity 180ms ease, transform 180ms ease;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    .workspace-sidebar .sidebar-item,
+    .workspace-sidebar .sidebar-action {
+        justify-content: center;
+    }
+
+    .workspace-sidebar:hover,
+    .workspace-sidebar:focus-within {
+        width: 16rem;
+    }
+
+    .workspace-sidebar:hover .sidebar-copy,
+    .workspace-sidebar:hover .sidebar-label,
+    .workspace-sidebar:hover .sidebar-action-label,
+    .workspace-sidebar:hover .sidebar-user-copy,
+    .workspace-sidebar:focus-within .sidebar-copy,
+    .workspace-sidebar:focus-within .sidebar-label,
+    .workspace-sidebar:focus-within .sidebar-action-label,
+    .workspace-sidebar:focus-within .sidebar-user-copy {
+        max-width: 14rem;
+        opacity: 1;
+        transform: translateX(0);
+        pointer-events: auto;
+    }
+
+    .workspace-sidebar:hover .sidebar-item,
+    .workspace-sidebar:hover .sidebar-action,
+    .workspace-sidebar:focus-within .sidebar-item,
+    .workspace-sidebar:focus-within .sidebar-action {
+        justify-content: flex-start;
+    }
+
+    .workspace-sidebar.workspace-sidebar-overlay {
+        position: sticky;
+        top: 0;
+        width: 5.5rem;
+        overflow: visible;
+    }
+
+    .workspace-sidebar.workspace-sidebar-overlay:hover,
+    .workspace-sidebar.workspace-sidebar-overlay:focus-within {
+        width: 5.5rem;
+    }
+
+    .workspace-sidebar-overlay .workspace-sidebar-panel {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 50;
+        display: flex;
+        width: 5.5rem;
+        flex-direction: column;
+        overflow: hidden;
+        transition: width 220ms ease, box-shadow 220ms ease;
+    }
+
+    .workspace-sidebar-overlay:hover .workspace-sidebar-panel,
+    .workspace-sidebar-overlay:focus-within .workspace-sidebar-panel {
+        width: 16rem;
+        box-shadow: 18px 0 36px rgba(30, 27, 24, 0.16);
+    }
+
+    .sidebar-toast {
+        animation: toast-enter 220ms ease;
+    }
+
+    @keyframes toast-enter {
+        from {
+            opacity: 0;
+            transform: translateY(0.75rem) scale(0.96);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @media (max-width: 1023px) {
+        .workspace-sidebar {
+            width: auto;
+        }
+
+        .sidebar-copy,
+        .sidebar-label,
+        .sidebar-action-label,
+        .sidebar-user-copy {
+            max-width: none;
+            opacity: 1;
+            transform: none;
+            pointer-events: auto;
+        }
+    }
+}

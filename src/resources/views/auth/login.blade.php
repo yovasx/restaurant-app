@@ -1,3 +1,7 @@
+@php
+    $selectedRole = old('login_type', request('role', 'comensal'));
+@endphp
+
 <!DOCTYPE html>
 <html class="light" lang="es">
 <head>
@@ -80,7 +84,9 @@
 </style>
 </head>
 <body class="bg-background text-on-background font-body min-h-screen flex flex-col">
-<main class="flex-grow flex flex-col md:flex-row min-h-screen">
+@include('partials.public-nav')
+
+<main class="flex-grow flex flex-col md:flex-row min-h-[calc(100vh-80px)]">
     <!-- LEFT SIDE: Auth Form -->
     <div class="w-full md:w-1/2 flex items-center justify-center p-8 lg:p-16 bg-surface-bright">
         <div class="max-w-md w-full space-y-10">
@@ -95,11 +101,11 @@
 
             <!-- Role Toggle -->
             <div class="bg-surface-container-high p-1 rounded-xl flex gap-1 mb-6">
-                <button type="button" onclick="setRole('comensal')" id="btn-comensal" class="flex-1 py-2 px-4 rounded-lg bg-surface-container-lowest text-primary font-bold shadow-sm flex items-center justify-center gap-2 transition-all">
+                <button type="button" onclick="setRole('comensal')" id="btn-comensal" class="flex-1 py-2 px-4 rounded-lg {{ $selectedRole === 'usuario' ? 'text-on-surface-variant font-semibold hover:bg-surface-container-highest' : 'bg-surface-container-lowest text-primary font-bold shadow-sm' }} flex items-center justify-center gap-2 transition-all">
                     <span class="material-symbols-outlined text-xl" data-icon="person">person</span>
                     <span class="font-label text-sm uppercase tracking-wider">Comensal</span>
                 </button>
-                <button type="button" onclick="setRole('usuario')" id="btn-usuario" class="flex-1 py-2 px-4 rounded-lg text-on-surface-variant font-semibold hover:bg-surface-container-highest flex items-center justify-center gap-2 transition-all">
+                <button type="button" onclick="setRole('usuario')" id="btn-usuario" class="flex-1 py-2 px-4 rounded-lg {{ $selectedRole === 'usuario' ? 'bg-surface-container-lowest text-primary font-bold shadow-sm' : 'text-on-surface-variant font-semibold hover:bg-surface-container-highest' }} flex items-center justify-center gap-2 transition-all">
                     <span class="material-symbols-outlined text-xl" data-icon="restaurant">restaurant</span>
                     <span class="font-label text-sm uppercase tracking-wider">Restaurante</span>
                 </button>
@@ -118,7 +124,7 @@
             <!-- Form Section -->
             <form action="{{ route('login') }}" method="POST" class="space-y-6">
                 @csrf
-                <input type="hidden" name="login_type" id="login_type" value="comensal">
+                <input type="hidden" name="login_type" id="login_type" value="{{ $selectedRole === 'usuario' ? 'usuario' : 'comensal' }}">
                 <div class="space-y-4">
                     <div class="group">
                         <label class="block text-sm font-semibold text-on-surface-variant mb-1 ml-1 font-label uppercase tracking-widest" for="email">Correo Electrónico</label>
@@ -151,11 +157,11 @@
             </form>
             
             <div class="mt-6 text-center" id="register-link-container">
-                <p class="text-sm text-stone-500" id="register-text">
+                <p class="text-sm text-stone-500 {{ $selectedRole === 'usuario' ? 'hidden' : '' }}" id="register-text">
                     ¿No tienes una cuenta de Comensal? 
                     <a class="text-primary font-bold hover:underline ml-1" href="{{ route('register.comensal') }}">Regístrate gratis</a>
                 </p>
-                <p class="text-sm text-stone-500 hidden" id="register-rest-text">
+                <p class="text-sm text-stone-500 {{ $selectedRole === 'usuario' ? '' : 'hidden' }}" id="register-rest-text">
                     ¿Tu restaurante no está registrado? 
                     <a class="text-primary font-bold hover:underline ml-1" href="{{ route('register.restaurante') }}">Únete aquí</a>
                 </p>
@@ -201,6 +207,10 @@
             document.getElementById('register-rest-text').classList.remove('hidden');
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        setRole('{{ $selectedRole === 'usuario' ? 'usuario' : 'comensal' }}');
+    });
 </script>
 </body>
 </html>

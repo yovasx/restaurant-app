@@ -14,117 +14,134 @@
         .nav-active { @apply bg-[#C0392B] text-white shadow-sm; }
     </style>
 </head>
-<body class="bg-surface-container-low text-on-surface min-h-screen flex overflow-hidden">
+<body class="bg-surface-container-low text-on-surface min-h-screen overflow-hidden">
 
-<!-- SideNavBar -->
-<aside class="hidden lg:flex flex-col h-screen w-64 border-r border-stone-200 bg-[#FFF8F2] py-6 shrink-0 fixed left-0 top-0 z-40">
-    <div class="px-6 mb-8">
-        <h1 class="font-black text-[#C0392B] text-2xl tracking-tighter font-headline">GastroGuía</h1>
-        @php
-            $sideRestaurante = \App\Models\Restaurante::where('usuario_id', Auth::guard('usuario')->id())->first();
-        @endphp
-        <div class="mt-5 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full overflow-hidden bg-primary-fixed flex items-center justify-center text-primary font-black text-lg shadow-sm shrink-0">
-                @if($sideRestaurante && $sideRestaurante->foto_portada)
-                    <img class="w-full h-full object-cover" src="{{ asset('storage/'.$sideRestaurante->foto_portada) }}" alt="Foto Restaurante">
-                @else
-                    {{ substr(Auth::guard('usuario')->user()->nombre ?? 'R', 0, 1) }}
-                @endif
-            </div>
-            <div>
-                <p class="font-headline font-bold text-sm text-on-surface leading-tight">{{ Auth::guard('usuario')->user()->nombre ?? 'Restaurante' }}</p>
-                <p class="text-[10px] uppercase tracking-widest text-stone-500 font-semibold">Panel de Control</p>
-            </div>
-        </div>
-    </div>
+@php
+    $route = Route::currentRouteName();
+    $sideRestaurante = \App\Models\Restaurante::where('usuario_id', Auth::guard('usuario')->id())->first();
+    $sidebarCategorias = \App\Models\Categoria::where('estado', 'activo')->orderBy('nombre_categoria')->get();
+@endphp
 
-    @php $route = Route::currentRouteName(); @endphp
-    
-    <nav class="flex-1 space-y-1 px-2">
-        <a href="{{ route('restaurante.dashboard') }}"
-           class="{{ str_starts_with($route, 'restaurante.dashboard') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 px-4 py-3 rounded-lg mx-2 transition-all duration-200 hover:translate-x-1">
-            <span class="material-symbols-outlined">dashboard</span>
-            <span class="font-headline font-medium text-sm">Panel</span>
-        </a>
-        <a href="{{ route('productos.index') }}"
-           class="{{ str_starts_with($route, 'productos') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 px-4 py-3 rounded-lg mx-2 transition-all duration-200 hover:translate-x-1">
-            <span class="material-symbols-outlined">restaurant</span>
-            <span class="font-headline font-medium text-sm">Menú</span>
-        </a>
-        <a href="{{ route('restaurante.promociones.index') }}"
-           class="{{ str_starts_with($route, 'restaurante.promociones') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 px-4 py-3 rounded-lg mx-2 transition-all duration-200 hover:translate-x-1">
-            <span class="material-symbols-outlined">local_offer</span>
-            <span class="font-headline font-medium text-sm">Promociones</span>
-        </a>
-        <a href="{{ route('restaurante.resenas') }}"
-           class="{{ $route === 'restaurante.resenas' ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 px-4 py-3 rounded-lg mx-2 transition-all duration-200 hover:translate-x-1">
-            <span class="material-symbols-outlined">star</span>
-            <span class="font-headline font-medium text-sm">Reseñas</span>
-        </a>
-        <a href="{{ route('restaurante.configuracion') }}"
-           class="{{ str_starts_with($route, 'restaurante.configuracion') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 px-4 py-3 rounded-lg mx-2 transition-all duration-200 hover:translate-x-1">
-            <span class="material-symbols-outlined">settings</span>
-            <span class="font-headline font-medium text-sm">Ajustes</span>
-        </a>
-    </nav>
-
-    <div class="px-4 mt-auto space-y-3">
-        <a href="{{ route('productos.create') }}" class="w-full flex items-center justify-center gap-2 bg-primary text-white py-3 rounded-lg font-headline font-bold text-sm shadow-md active:scale-95 transition-transform hover:bg-[#c0392b]">
-            <span class="material-symbols-outlined text-sm">add</span>
-            Nuevo Plato
-        </a>
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button class="w-full flex items-center justify-center gap-2 py-3 rounded-lg font-headline font-medium text-sm text-stone-500 hover:bg-stone-100 hover:text-red-600 transition-all">
-                <span class="material-symbols-outlined text-sm">logout</span>
-                Cerrar Sesión
-            </button>
-        </form>
-    </div>
-</aside>
-
-<!-- Main Content -->
-<main class="flex-1 lg:ml-64 flex flex-col h-screen overflow-y-auto">
-    <!-- Top Header -->
-    <header class="sticky top-0 z-30 bg-[#FFF8F2] w-full border-b border-stone-200/80 shadow-sm">
-        <div class="flex justify-between items-center w-full px-6 py-4">
-            <div class="flex items-center gap-4 lg:hidden">
-                <span class="font-headline font-bold text-lg tracking-tight text-[#C0392B]">GastroGuía</span>
-            </div>
-            <div class="hidden md:flex items-center gap-2">
-                <h2 class="font-headline font-bold text-xl text-on-surface">@yield('page-title', 'Panel de Control')</h2>
-            </div>
-            <div class="flex items-center gap-4">
-                <div class="hidden sm:flex items-center bg-surface-container-highest px-3 py-1.5 rounded-full">
-                    <span class="material-symbols-outlined text-stone-500 text-xl">search</span>
-                    <input class="bg-transparent border-none focus:ring-0 text-sm w-40 font-body outline-none" placeholder="Buscar platos..." type="text"/>
+<div class="workspace-shell">
+    <!-- SideNavBar -->
+    <aside class="workspace-sidebar hidden lg:flex sticky top-0 h-screen shrink-0 flex-col border-r border-stone-200 bg-[#FFF8F2] py-6">
+        <div class="px-4 pb-8">
+            <div class="flex items-center gap-3">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-container text-white shadow-lg shadow-primary/20">
+                    <span class="material-symbols-outlined">restaurant_menu</span>
                 </div>
-                <a href="{{ route('restaurante.configuracion') }}" class="p-2 text-stone-600 hover:bg-stone-100 rounded-full transition-colors">
-                    <span class="material-symbols-outlined">account_circle</span>
-                </a>
+                <div class="sidebar-copy min-w-0">
+                    <h1 class="font-black text-[#C0392B] text-2xl tracking-tighter font-headline">GastroGuía</h1>
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-stone-500 font-semibold">Panel de Control</p>
+                </div>
+            </div>
+
+            <div class="mt-5 flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full overflow-hidden bg-primary-fixed flex items-center justify-center text-primary font-black text-lg shadow-sm shrink-0">
+                    @if($sideRestaurante && $sideRestaurante->foto_portada)
+                        <img class="w-full h-full object-cover" src="{{ asset('storage/'.$sideRestaurante->foto_portada) }}" alt="Foto Restaurante">
+                    @else
+                        {{ substr(Auth::guard('usuario')->user()->nombre ?? 'R', 0, 1) }}
+                    @endif
+                </div>
+                <div class="sidebar-user-copy min-w-0">
+                    <p class="font-headline font-bold text-sm text-on-surface leading-tight truncate">{{ Auth::guard('usuario')->user()->nombre ?? 'Restaurante' }}</p>
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-stone-500 font-semibold">Panel de Control</p>
+                </div>
             </div>
         </div>
-    </header>
 
-    <div class="flex-1 p-6 max-w-7xl mx-auto w-full">
-        @if(session('success'))
-            <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl font-bold">
-                {{ session('success') }}
-            </div>
-        @endif
-        @if($errors->any())
-            <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl">
-                <ul class="list-disc pl-5">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+        <nav class="flex-1 space-y-1 px-3">
+            <a href="{{ route('restaurante.dashboard') }}"
+               class="sidebar-item {{ str_starts_with($route, 'restaurante.dashboard') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
+                <span class="material-symbols-outlined shrink-0">dashboard</span>
+                <span class="sidebar-label font-headline font-medium text-sm">Panel</span>
+            </a>
+            <a href="{{ route('productos.index') }}"
+               class="sidebar-item {{ str_starts_with($route, 'productos') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
+                <span class="material-symbols-outlined shrink-0">restaurant</span>
+                <span class="sidebar-label font-headline font-medium text-sm">Menú</span>
+            </a>
+            <a href="{{ route('restaurante.promociones.index') }}"
+               class="sidebar-item {{ str_starts_with($route, 'restaurante.promociones') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
+                <span class="material-symbols-outlined shrink-0">local_offer</span>
+                <span class="sidebar-label font-headline font-medium text-sm">Promociones</span>
+            </a>
+            <a href="{{ route('restaurante.resenas') }}"
+               class="sidebar-item {{ $route === 'restaurante.resenas' ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
+                <span class="material-symbols-outlined shrink-0">star</span>
+                <span class="sidebar-label font-headline font-medium text-sm">Reseñas</span>
+            </a>
+            <a href="{{ route('restaurante.configuracion') }}"
+               class="sidebar-item {{ str_starts_with($route, 'restaurante.configuracion') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
+                <span class="material-symbols-outlined shrink-0">settings</span>
+                <span class="sidebar-label font-headline font-medium text-sm">Ajustes</span>
+            </a>
+        </nav>
 
-        @yield('content')
-    </div>
-</main>
+        <div class="px-3 mt-auto space-y-3">
+            <button type="button" data-modal-open="restaurante-producto-create-modal" class="sidebar-action w-full flex items-center gap-3 bg-primary text-white py-3 px-4 rounded-2xl font-headline font-bold text-sm shadow-md transition hover:bg-[#c0392b]">
+                <span class="material-symbols-outlined text-sm shrink-0">add</span>
+                <span class="sidebar-action-label">Nuevo Plato</span>
+            </button>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button class="sidebar-action w-full flex items-center gap-3 py-3 px-4 rounded-2xl font-headline font-medium text-sm text-stone-500 hover:bg-stone-100 hover:text-red-600 transition-all">
+                    <span class="material-symbols-outlined text-sm shrink-0">logout</span>
+                    <span class="sidebar-action-label">Cerrar Sesión</span>
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="workspace-main flex flex-col h-screen overflow-y-auto pb-20 lg:pb-0">
+        <!-- Top Header -->
+        <header class="sticky top-0 z-30 bg-[#FFF8F2]/95 w-full border-b border-stone-200/80 shadow-sm backdrop-blur">
+            <div class="flex justify-between items-center w-full px-6 py-4">
+                <div class="flex items-center gap-4 lg:hidden">
+                    <span class="font-headline font-bold text-lg tracking-tight text-[#C0392B]">GastroGuía</span>
+                </div>
+                <div class="hidden md:flex items-center gap-2">
+                    <h2 class="font-headline font-bold text-xl text-on-surface">@yield('page-title', 'Panel de Control')</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="hidden sm:flex items-center bg-surface-container-highest px-3 py-1.5 rounded-full">
+                        <span class="material-symbols-outlined text-stone-500 text-xl">search</span>
+                        <input class="bg-transparent border-none focus:ring-0 text-sm w-40 font-body outline-none" placeholder="Buscar platos..." type="text"/>
+                    </div>
+                    <a href="{{ route('restaurante.configuracion') }}" class="p-2 text-stone-600 hover:bg-stone-100 rounded-full transition-colors">
+                        <span class="material-symbols-outlined">account_circle</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 p-6 max-w-7xl mx-auto w-full">
+            @yield('content')
+        </div>
+    </main>
+</div>
+
+<x-modal
+    id="restaurante-producto-create-modal"
+    title="Añadir nuevo plato"
+    subtitle="Crea un plato sin salir del panel actual."
+    max-width="max-w-3xl"
+    :auto-open="old('_modal') === 'restaurante-producto-create-modal'"
+>
+    @include('productos._modal-form', [
+        'action' => route('productos.store'),
+        'producto' => null,
+        'categorias' => $sidebarCategorias,
+        'submitLabel' => 'Guardar plato',
+        'redirectTo' => request()->fullUrl(),
+        'modalId' => 'restaurante-producto-create-modal',
+        'formKey' => 'restaurante-producto-create',
+    ])
+</x-modal>
+
+@include('partials.screen-toast')
 
 <!-- Mobile Bottom Nav -->
 <nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-safe pt-3 bg-white/80 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.05)] rounded-t-2xl">

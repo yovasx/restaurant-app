@@ -12,6 +12,17 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
+    private function redirectTo(Request $request, string $fallbackRoute)
+    {
+        $redirectTo = $request->input('redirect_to');
+
+        if (is_string($redirectTo) && (str_starts_with($redirectTo, url('/')) || str_starts_with($redirectTo, '/'))) {
+            return redirect()->to($redirectTo);
+        }
+
+        return redirect()->route($fallbackRoute);
+    }
+
     public function dashboard()
     {
         $totalRestaurantes = Usuario::where('rol_id', 2)->count();
@@ -37,12 +48,12 @@ class AdminController extends Controller
         return view('admin.restaurantes.edit', compact('usuario'));
     }
 
-    public function destroyRestaurante($id)
+    public function destroyRestaurante(Request $request, $id)
     {
         $usuario = Usuario::findOrFail($id);
         $usuario->estado = 'inactivo';
         $usuario->save();
-        return back()->with('success', 'Restaurante movido a inactivos correctamente.');
+        return $this->redirectTo($request, 'admin.restaurantes.index')->with('success', 'Restaurante movido a inactivos correctamente.');
     }
 
     public function updateRestaurante(Request $request, $id)
@@ -67,7 +78,7 @@ class AdminController extends Controller
         }
         
         $usuario->save();
-        return redirect()->route('admin.restaurantes.index')->with('success', 'Registro del local actualizado exitosamente.');
+        return $this->redirectTo($request, 'admin.restaurantes.index')->with('success', 'Registro del local actualizado exitosamente.');
     }
 
     public function comensales(Request $request)
@@ -87,12 +98,12 @@ class AdminController extends Controller
         return view('admin.comensales.edit', compact('comensal'));
     }
 
-    public function destroyComensal($id)
+    public function destroyComensal(Request $request, $id)
     {
         $comensal = Comensal::findOrFail($id);
         $comensal->estado = 'inactivo';
         $comensal->save();
-        return back()->with('success', 'Usuario movido a inactivos correctamente.');
+        return $this->redirectTo($request, 'admin.comensales.index')->with('success', 'Usuario movido a inactivos correctamente.');
     }
 
     public function updateComensal(Request $request, $id)
@@ -117,7 +128,7 @@ class AdminController extends Controller
         }
         
         $comensal->save();
-        return redirect()->route('admin.comensales.index')->with('success', 'Comensal actualizado exitosamente.');
+        return $this->redirectTo($request, 'admin.comensales.index')->with('success', 'Comensal actualizado exitosamente.');
     }
 
     public function changeRole(Request $request)
@@ -166,10 +177,10 @@ class AdminController extends Controller
                 }
             }
             DB::commit();
-            return back()->with('success', 'Rol modificado y transferido de ser necesario.');
+            return $this->redirectTo($request, 'admin.dashboard')->with('success', 'Rol modificado y transferido de ser necesario.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => 'Error al cambiar de rol: ' . $e->getMessage()]);
+            return back()->withErrors(['error' => 'Error al cambiar de rol: ' . $e->getMessage()])->withInput();
         }
     }
 
@@ -218,7 +229,7 @@ class AdminController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.dashboard')->with('success', 'Usuario creado exitosamente.');
+        return $this->redirectTo($request, 'admin.dashboard')->with('success', 'Usuario creado exitosamente.');
     }
 
     public function categorias(Request $request)
@@ -244,7 +255,7 @@ class AdminController extends Controller
             'descripcion' => $validated['descripcion'],
             'estado' => 'activo'
         ]);
-        return back()->with('success', 'Categoría creada exitosamente.');
+        return $this->redirectTo($request, 'admin.categorias.index')->with('success', 'Categoría creada exitosamente.');
     }
 
     public function editCategoria($id)
@@ -263,14 +274,14 @@ class AdminController extends Controller
         ]);
 
         $categoria->update($validated);
-        return back()->with('success', 'Categoría actualizada correctamente.');
+        return $this->redirectTo($request, 'admin.categorias.index')->with('success', 'Categoría actualizada correctamente.');
     }
 
-    public function destroyCategoria($id)
+    public function destroyCategoria(Request $request, $id)
     {
         $categoria = Categoria::findOrFail($id);
         $categoria->estado = 'inactivo';
         $categoria->save();
-        return back()->with('success', 'Categoría movida a inactivos.');
+        return $this->redirectTo($request, 'admin.categorias.index')->with('success', 'Categoría movida a inactivos.');
     }
 }

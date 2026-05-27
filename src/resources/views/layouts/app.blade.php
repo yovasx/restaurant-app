@@ -14,86 +14,20 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="bg-background text-on-background min-h-screen flex overflow-hidden">
-
-<!-- SideNavBar Component -->
+<body class="min-h-screen bg-background text-on-background">
 @php
-    $showRestaurantLayout = auth()->guard('usuario')->check() && (
-        request()->is('restaurante*') || request()->is('productos*') || request()->routeIs('restaurante.*') || request()->routeIs('productos.*') || request()->routeIs('admin.*')
-    );
+    $showPublicNav = !auth()->guard('comensal')->check() && !auth()->guard('usuario')->check();
+    $flushContent = trim($__env->yieldContent('layout-flush')) === 'true';
 @endphp
 
-@if($showRestaurantLayout)
-<aside class="hidden lg:flex flex-col h-screen w-64 border-r border-stone-200 dark:border-stone-800 bg-[#FFF8F2] dark:bg-stone-900 py-6 shrink-0">
-    <div class="px-6 mb-8">
-        <h1 class="font-black text-[#C0392B] text-2xl tracking-tighter">GastroGuía</h1>
-        <div class="mt-6 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC96_CLZtpGcoIz48YRebD_nXDvOYBJ6kodh2Huw1W9_DHlecaIZvAR_GLr8nnookFNCZIdIANCURiOoNIsF9Z7W2z1mhp0GUWn6DS0BEEynv3Dla1qC6HbFwGlo8trPx7_HvM4Me1anN6ev9X19WFFCJzBFZgynnTDeNVmKufj_LQMqTNNYhY8z0pvwGSYEbtfuICZaoQqZePtAPbptPJXUtwBkUb9IjclwgdMao0wcaG5funKApJ2sYCDQpkHzb1GHUHcrWd2rK0T"/>
-            </div>
-            <div>
-                <p class="font-headline font-bold text-sm text-on-surface">Mi Restaurante</p>
-                <p class="text-[10px] uppercase tracking-widest text-stone-500 font-semibold">Panel de Control</p>
-            </div>
-        </div>
-    </div>
-    
-    <nav class="flex-1 space-y-1 px-2">
-        <a class="flex items-center gap-3 px-4 py-3 text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg mx-2 transition-transform duration-200 hover:translate-x-1 cursor-pointer" href="{{ route('productos.index') }}">
-            <span class="material-symbols-outlined" data-icon="restaurant" style="font-variation-settings: 'FILL' 1;">restaurant</span>
-            <span class="font-headline font-medium text-sm">Menú</span>
-        </a>
-    </nav>
-    <div class="px-4 mt-auto">
-        <a href="{{ route('productos.create') }}" class="w-full flex items-center justify-center gap-2 bg-primary text-white py-3 rounded-lg font-headline font-bold text-sm shadow-md active:scale-95 transition-transform">
-            <span class="material-symbols-outlined text-sm" data-icon="add">add</span>
-            Nuevo Plato
-        </a>
-        
-        @auth
-        <form method="POST" action="{{ route('logout') }}" class="mt-4">
-            @csrf
-            <button class="w-full flex items-center gap-3 px-4 py-3 hover:bg-stone-100 rounded-lg font-headline font-bold text-sm text-gray-700 transition-colors">
-                <span class="material-symbols-outlined text-sm" data-icon="logout">logout</span>
-                Cerrar Sesión
-            </button>
-        </form>
-        @endauth
-    </div>
-</aside>
+@if($showPublicNav)
+    @include('partials.public-nav')
 @endif
 
-<!-- Main Content Area -->
-<main class="flex-1 flex flex-col h-screen overflow-y-auto bg-surface-container-low">
-    <!-- TopAppBar Component -->
-    @if($showRestaurantLayout)
-    <header class="sticky top-0 z-50 bg-[#FFF8F2] dark:bg-stone-950 w-full shadow-sm">
-        <div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
-            <div class="flex items-center gap-4 lg:hidden">
-                <span class="material-symbols-outlined text-primary text-2xl" data-icon="menu">menu</span>
-                <span class="font-['Plus_Jakarta_Sans'] font-bold text-lg tracking-tight text-[#C0392B]">GastroGuía</span>
-            </div>
-            <div class="hidden md:flex items-center gap-8">
-                <h2 class="font-headline font-bold text-xl text-on-surface">Gestión del Sistema</h2>
-            </div>
-            
-            <div class="flex items-center gap-4">
-                <div class="hidden sm:flex items-center bg-surface-container-highest px-3 py-1.5 rounded-full border-none">
-                    <span class="material-symbols-outlined text-stone-500 text-xl" data-icon="search">search</span>
-                    <input class="bg-transparent border-none focus:ring-0 text-sm w-48 font-body" placeholder="Buscar..." type="text"/>
-                </div>
-                <button class="p-2 text-stone-600 dark:text-stone-400 hover:bg-stone-100 rounded-full transition-colors">
-                    <span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
-                </button>
-            </div>
-        </div>
-    </header>
-    @endif
-
-    <!-- Dashboard Canvas -->
-    <div class="p-6 max-w-7xl mx-auto w-full space-y-8">
-        @yield('content')
-    </div>
+<main class="{{ $flushContent ? '' : 'mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8' }}">
+    @yield('content')
 </main>
+
+@include('partials.screen-toast')
 </body>
 </html>

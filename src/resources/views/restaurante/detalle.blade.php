@@ -1,11 +1,12 @@
 @extends('layouts.app')
 
 @section('title', $restaurante->nombre)
+@section('layout-flush', 'true')
 
 @section('content')
 <section class="max-w-7xl mx-auto px-6 pb-12">
     <div class="mt-6 mb-6">
-        <a href="{{ route('comensal.inicio') }}" class="inline-flex items-center gap-2 text-sm text-[#9e2016] font-bold hover:underline">
+        <a href="{{ auth()->guard('comensal')->check() ? route('comensal.inicio') : route('home') }}" class="inline-flex items-center gap-2 text-sm text-[#9e2016] font-bold hover:underline">
             <span class="material-symbols-outlined">arrow_back</span> Volver
         </a>
     </div>

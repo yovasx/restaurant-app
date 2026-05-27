@@ -88,6 +88,4 @@
         </form>
     </div>
 </div>
-
-@include('partials.dropzone')
 @endsection

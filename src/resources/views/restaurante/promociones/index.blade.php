@@ -4,16 +4,18 @@
 @section('page-title', 'Mis Promociones')
 
 @section('content')
+@php($redirectTo = request()->fullUrl())
+
 <div class="space-y-6">
     <div class="flex justify-between items-center">
         <div>
             <h2 class="text-2xl font-headline font-bold text-on-surface">Gestión de Promociones</h2>
             <p class="text-stone-500 text-sm mt-1">Crea y administra ofertas especiales de tu restaurante</p>
         </div>
-        <a href="{{ route('restaurante.promociones.create') }}"
+        <button type="button" data-modal-open="promocion-create-modal"
            class="flex items-center gap-2 bg-primary text-white py-2.5 px-5 rounded-lg font-bold text-sm shadow-md hover:bg-[#c0392b] transition-colors">
-            <span class="material-symbols-outlined text-sm">add</span> Nueva Promoción
-        </a>
+             <span class="material-symbols-outlined text-sm">add</span> Nueva Promoción
+        </button>
     </div>
 
     <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-stone-100">
@@ -60,17 +62,14 @@
                     </td>
                     <td class="px-6 py-4 text-right">
                         <div class="flex justify-end gap-1">
-                            <a href="{{ route('restaurante.promociones.edit', $promo) }}"
+                            <button type="button" data-modal-open="promocion-edit-{{ $promo->id }}"
                                class="p-1.5 text-stone-400 hover:text-primary transition-colors">
                                 <span class="material-symbols-outlined text-lg">edit</span>
-                            </a>
+                            </button>
                             @if($promo->estado === 'activo')
-                            <form action="{{ route('restaurante.promociones.destroy', $promo) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Archivar esta promoción?');">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="p-1.5 text-stone-400 hover:text-red-600 transition-colors">
+                                <button type="button" data-modal-open="promocion-delete-{{ $promo->id }}" class="p-1.5 text-stone-400 hover:text-red-600 transition-colors">
                                     <span class="material-symbols-outlined text-lg">archive</span>
                                 </button>
-                            </form>
                             @endif
                         </div>
                     </td>
@@ -80,7 +79,7 @@
                     <td colspan="6" class="px-6 py-16 text-center text-stone-500">
                         <span class="material-symbols-outlined text-5xl mb-3 opacity-40">local_offer</span>
                         <p class="font-semibold">No tienes promociones activas.</p>
-                        <a href="{{ route('restaurante.promociones.create') }}" class="mt-2 inline-block text-primary font-bold underline text-sm">Crear primera promoción</a>
+                        <button type="button" data-modal-open="promocion-create-modal" class="mt-2 inline-block text-primary font-bold underline text-sm">Crear primera promoción</button>
                     </td>
                 </tr>
                 @endforelse
@@ -91,4 +90,26 @@
         @endif
     </div>
 </div>
+
+<x-modal
+    id="promocion-create-modal"
+    title="Crear promoción"
+    subtitle="Lanza nuevas campañas sin salir del panel."
+    max-width="max-w-3xl"
+    :auto-open="old('_modal') === 'promocion-create-modal'"
+>
+    @include('restaurante.promociones._modal-form', [
+        'action' => route('restaurante.promociones.store'),
+        'promocion' => null,
+        'submitLabel' => 'Lanzar promoción',
+        'redirectTo' => $redirectTo,
+        'modalId' => 'promocion-create-modal',
+        'formKey' => 'promocion-create',
+    ])
+</x-modal>
+
+@include('restaurante.promociones._table-modals', [
+    'promociones' => $promociones,
+    'redirectTo' => $redirectTo,
+])
 @endsection

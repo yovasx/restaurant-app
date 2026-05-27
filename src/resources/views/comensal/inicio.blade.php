@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Inicio - GastroGuía La Paz')
+@section('layout-flush', 'true')
 
 @section('content')
 <header class="bg-surface/95 backdrop-blur-md docked full-width top-0 sticky z-50 no-border shadow-sm">

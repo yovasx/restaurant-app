@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Explorar - GastroGuía')
+@section('layout-flush', 'true')
 
 @section('content')
 <!-- Leaflet CSS/JS (se cargan aqui) -->
