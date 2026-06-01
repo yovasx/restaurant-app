@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Producto extends Model
@@ -19,6 +20,8 @@ class Producto extends Model
 
     protected $casts = ['activo' => 'boolean'];
 
+    protected $appends = ['foto_url'];
+
     public function categoria()
     {
         return $this->belongsTo(Categoria::class);
@@ -27,5 +30,12 @@ class Producto extends Model
     public function restaurante()
     {
         return $this->belongsTo(Restaurante::class);
+    }
+
+    protected function fotoUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => media_url($this->foto),
+        );
     }
 }

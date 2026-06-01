@@ -26,8 +26,8 @@
                 <label class="text-xs font-bold text-[#59413d] uppercase tracking-wider">Foto del Plato</label>
                 <div class="border-2 border-dashed border-stone-300 rounded-xl p-6 text-center transition-all duration-200 cursor-pointer"
                      data-dropzone="true" data-input="foto" data-preview="foto-preview" data-placeholder="foto-placeholder">
-                    @if($producto->foto)
-                        <img id="foto-preview" class="mx-auto mb-3 h-40 w-40 object-cover rounded-xl shadow" src="{{ asset('storage/'.$producto->foto) }}">
+                    @if($producto->foto_url)
+                        <img id="foto-preview" class="mx-auto mb-3 h-40 w-40 object-cover rounded-xl shadow" src="{{ $producto->foto_url }}">
                     @else
                         <img id="foto-preview" class="hidden mx-auto mb-3 h-40 w-40 object-cover rounded-xl shadow" src="">
                     @endif

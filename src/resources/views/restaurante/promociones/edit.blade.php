@@ -76,8 +76,8 @@
                 <label class="text-xs font-bold text-[#59413d] uppercase tracking-wider">Imagen Promocional</label>
                 <div class="border-2 border-dashed border-stone-300 rounded-xl p-6 text-center transition-all duration-200 cursor-pointer"
                      data-dropzone="true" data-input="imagen" data-preview="promo-preview" data-placeholder="promo-placeholder">
-                    @if($promocion->imagen)
-                        <img id="promo-preview" class="mx-auto mb-3 h-36 w-full object-cover rounded-xl shadow" src="{{ asset('storage/'.$promocion->imagen) }}">
+                    @if($promocion->imagen_url)
+                        <img id="promo-preview" class="mx-auto mb-3 h-36 w-full object-cover rounded-xl shadow" src="{{ $promocion->imagen_url }}">
                     @else
                         <img id="promo-preview" class="hidden mx-auto mb-3 h-36 w-full object-cover rounded-xl shadow" src="">
                     @endif

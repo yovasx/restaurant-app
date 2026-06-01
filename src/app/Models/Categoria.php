@@ -7,11 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Categoria extends Model
 {
     protected $table = 'categorias';
-    
+
     protected $fillable = [
         'nombre_categoria',
         'descripcion',
         'estado',
-        'modulo_id' // opcional dependiendo cómo organices
+        'modulo_id',
     ];
+
+    public function restaurantes()
+    {
+        return $this->belongsToMany(Restaurante::class, 'restaurante_categorias');
+    }
 }

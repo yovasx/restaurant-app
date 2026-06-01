@@ -13,8 +13,8 @@
         <div class="md:col-span-2 bg-surface-container-lowest p-6 rounded-xl shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div class="flex items-center gap-6">
                 <div class="relative w-20 h-20 rounded-2xl overflow-hidden shadow-lg bg-stone-100 shrink-0">
-                    @if($restaurante && $restaurante->foto_portada)
-                        <img class="w-full h-full object-cover" src="{{ asset('storage/'.$restaurante->foto_portada) }}" alt="Logo">
+                    @if($restaurante && $restaurante->foto_portada_url)
+                        <img class="w-full h-full object-cover" src="{{ $restaurante->foto_portada_url }}" alt="Logo">
                     @else
                         <div class="w-full h-full flex items-center justify-center bg-primary-fixed text-primary font-black text-3xl">
                             {{ substr($usuario->nombre, 0, 1) }}
@@ -99,8 +99,8 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-surface-container flex items-center justify-center">
-                                        @if($producto->foto)
-                                            <img class="w-full h-full object-cover" src="{{ asset('storage/'.$producto->foto) }}" alt="{{ $producto->nombre }}">
+                                        @if($producto->foto_url)
+                                            <img class="w-full h-full object-cover" src="{{ $producto->foto_url }}" alt="{{ $producto->nombre }}">
                                         @else
                                             <span class="text-primary font-bold text-lg">{{ substr($producto->nombre, 0, 1) }}</span>
                                         @endif

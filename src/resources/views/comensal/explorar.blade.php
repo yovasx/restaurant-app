@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function(){
             const rating = r.avg_rating ? Number(r.avg_rating).toFixed(1) : '—';
             const price = r.avg_price ? ('Bs ' + Number(r.avg_price).toFixed(0)) : '—';
             const dist = r.distance ? (Number(r.distance).toFixed(2) + ' km') : '—';
-            const foto = r.foto_portada ? ('/storage/' + r.foto_portada) : 'https://via.placeholder.com/900x600?text=Restaurante';
+            const foto = r.foto_portada_url || 'https://via.placeholder.com/900x600?text=Restaurante';
             return `
                 <article class="group relative bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
                     <div class="relative h-44 overflow-hidden">
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function(){
         currentMarkers.clearLayers();
         items.forEach(r => {
             if(!r.latitud || !r.longitud) return;
-            const foto = r.foto_portada ? ('/storage/' + r.foto_portada) : 'https://via.placeholder.com/900x600?text=Restaurante';
+            const foto = r.foto_portada_url || 'https://via.placeholder.com/900x600?text=Restaurante';
             const html = `<div class="restaurant-marker"><img src="${foto}" alt="${r.nombre}"/></div>`;
             const icon = L.divIcon({ html, className: '', iconSize: [48,48], iconAnchor: [24,24] });
             const m = L.marker([r.latitud, r.longitud], { icon });

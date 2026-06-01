@@ -27,8 +27,8 @@
         @forelse($sucursales as $sucursal)
         <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100 overflow-hidden {{ $sucursal->estado !== 'activo' ? 'opacity-60' : '' }}">
             <div class="relative h-40 bg-stone-100 overflow-hidden">
-                @if($sucursal->foto_portada)
-                    <img class="w-full h-full object-cover" src="{{ asset('storage/'.$sucursal->foto_portada) }}" alt="{{ $sucursal->nombre }}">
+                @if($sucursal->foto_portada_url)
+                    <img class="w-full h-full object-cover" src="{{ $sucursal->foto_portada_url }}" alt="{{ $sucursal->nombre }}">
                 @else
                     <div class="w-full h-full flex items-center justify-center bg-primary-fixed text-primary">
                         <span class="material-symbols-outlined text-5xl">store</span>

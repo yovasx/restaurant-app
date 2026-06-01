@@ -30,12 +30,24 @@ Route::get('/', function () {
         };
     }
 
-    $restaurants = \App\Models\Restaurante::where('estado', 'activo')
-        ->latest()
+    $query = \App\Models\Restaurante::where('restaurantes.estado', 'activo');
+
+    if (request()->filled('categoria') && request()->categoria !== 'todos') {
+        $query->whereHas('categorias', function ($q) {
+            $q->where('categorias.id', request()->categoria);
+        });
+    }
+
+    $restaurants = $query
+        ->leftJoin('restaurantes_stats as stats', 'stats.restaurante_id', '=', 'restaurantes.id')
+        ->select('restaurantes.*', 'stats.avg_rating', 'stats.avg_price')
+        ->latest('restaurantes.created_at')
         ->take(12)
         ->get();
 
-    return view('welcome', compact('restaurants'));
+    $categorias = \App\Models\Categoria::where('estado', 'activo')->get();
+
+    return view('welcome', compact('restaurants', 'categorias'));
 })->name('home');
 
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');

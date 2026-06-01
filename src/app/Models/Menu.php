@@ -8,7 +8,10 @@ class Menu extends Model
 {
     protected $table = 'menus';
 
-    protected $fillable = ['restaurante_id', 'nombre', 'descripcion', 'estado'];
+    protected $fillable = [
+        'restaurante_id', 'categoria_id', 'nombre', 'descripcion',
+        'precio', 'foto_plato', 'tipo', 'estado', 'orden',
+    ];
 
     public function restaurante()
     {

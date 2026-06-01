@@ -130,7 +130,7 @@ class AuthController extends Controller
             'email_reservas' => 'required|email',
             'instagram' => 'nullable|string',
             'facebook_url' => 'nullable|string',
-            'foto_portada' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120',
+            'foto_portada' => 'nullable',
         ]);
 
         $usuario = \App\Models\Usuario::create([
@@ -146,10 +146,7 @@ class AuthController extends Controller
             'nit' => $validated['nit'],
         ]);
 
-        $portadaPath = null;
-        if ($request->hasFile('foto_portada')) {
-            $portadaPath = $request->file('foto_portada')->store('portadas', 'public');
-        }
+        $portadaPath = resolve_media_input($request, 'foto_portada', 'portadas');
 
         Restaurante::create([
             'usuario_id' => $usuario->id,

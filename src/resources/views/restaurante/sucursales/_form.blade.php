@@ -70,7 +70,7 @@
             <label class="block text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-2">Foto de Portada</label>
             <div class="relative h-40 rounded-xl overflow-hidden bg-surface-container-highest group cursor-pointer" onclick="document.getElementById('foto_portada_suc').click()">
                 @if($foto_portada)
-                <img id="portada-preview-suc" class="w-full h-full object-cover" src="{{ asset('storage/'.$foto_portada) }}" alt="Portada">
+                <img id="portada-preview-suc" class="w-full h-full object-cover" src="{{ media_url($foto_portada) }}" alt="Portada">
                 @else
                 <div id="portada-placeholder-suc" class="w-full h-full flex items-center justify-center flex-col gap-1 text-stone-400">
                     <span class="material-symbols-outlined text-3xl">add_photo_alternate</span>

@@ -29,8 +29,8 @@
 
         <!-- Cover Photo Preview -->
         <div class="relative group h-64 rounded-xl overflow-hidden bg-surface-container-highest">
-            @if($restaurante && $restaurante->foto_portada)
-            <img id="portada-preview" alt="Cover Photo" class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" src="{{ asset('storage/'.$restaurante->foto_portada) }}"/>
+            @if($restaurante && $restaurante->foto_portada_url)
+            <img id="portada-preview" alt="Cover Photo" class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" src="{{ $restaurante->foto_portada_url }}"/>
             @else
             <img id="portada-preview" alt="Cover Photo" class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700 hidden" src=""/>
             <div class="w-full h-full flex items-center justify-center flex-col gap-2 text-stone-400">
@@ -50,6 +50,10 @@
             </div>
         </div>
         <input type="file" id="foto_portada" name="foto_portada" class="hidden" accept="image/*" onchange="previewPortada(this)">
+        <div class="mt-4">
+            <label class="block text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-2">Logo del Restaurante (URL)</label>
+            <input name="logo_url" class="w-full bg-surface-container-highest border-0 rounded-lg p-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all font-medium" type="url" value="{{ old('logo_url', $restaurante->logo_url ?? '') }}" placeholder="https://ejemplo.com/logo.png"/>
+        </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Left Column -->

@@ -2,21 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Categoria;
+use App\Models\Producto;
+use App\Models\Promocion;
 use App\Models\Restaurante;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ComensalController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $restaurants = Restaurante::where('estado', 'activo')->paginate(12);
-        return view('comensal.inicio', compact('restaurants'));
+        $categorias = Categoria::where('estado', 'activo')->get();
+
+        $query = Restaurante::select('restaurantes.*', 'stats.avg_rating', 'stats.avg_price')
+            ->leftJoin('restaurantes_stats as stats', 'stats.restaurante_id', '=', 'restaurantes.id')
+            ->where('restaurantes.estado', 'activo')
+            ->with('categorias');
+
+        if ($request->filled('categoria') && $request->categoria !== 'todos') {
+            $query->whereHas('categorias', function ($q) use ($request) {
+                $q->where('categorias.id', $request->categoria);
+            });
+        }
+
+        $restaurants = $query->paginate(12);
+
+        return view('comensal.inicio', compact('restaurants', 'categorias'));
     }
 
     public function explorar()
     {
-        $restaurants = Restaurante::where('estado', 'activo')->paginate(50);
+        $restaurants = Restaurante::select('restaurantes.*', 'stats.avg_rating', 'stats.avg_price')
+            ->leftJoin('restaurantes_stats as stats', 'stats.restaurante_id', '=', 'restaurantes.id')
+            ->where('restaurantes.estado', 'activo')
+            ->get();
         return view('comensal.explorar', compact('restaurants'));
     }
 
@@ -68,8 +88,8 @@ class ComensalController extends Controller
     public function show($id)
     {
         $restaurante = Restaurante::findOrFail($id);
-        $productos = \App\Models\Producto::where('restaurante_id', $restaurante->id)->where('activo', 1)->get();
-        $promociones = \App\Models\Promocion::where('restaurante_id', $restaurante->id)->where('estado', 'activo')->get();
+        $productos = Producto::where('restaurante_id', $restaurante->id)->where('activo', 1)->get();
+        $promociones = Promocion::where('restaurante_id', $restaurante->id)->where('estado', 'activo')->get();
 
         return view('restaurante.detalle', compact('restaurante', 'productos', 'promociones'));
     }

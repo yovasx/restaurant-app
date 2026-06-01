@@ -72,13 +72,8 @@ class ProductoController extends Controller
             'stock'        => 'required|integer|min:0',
             'categoria_id' => 'nullable|exists:categorias,id',
             'descripcion'  => 'nullable|string',
-            'foto'         => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120',
+            'foto'         => 'nullable',
         ]);
-
-        $fotoPath = null;
-        if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('productos', 'public');
-        }
 
         Producto::create([
             'restaurante_id' => $restauranteId,
@@ -87,7 +82,7 @@ class ProductoController extends Controller
             'stock'        => $validated['stock'],
             'categoria_id' => $validated['categoria_id'],
             'descripcion'  => $validated['descripcion'],
-            'foto'         => $fotoPath,
+            'foto'         => resolve_media_input($request, 'foto', 'productos'),
         ]);
 
         return $this->redirectTo($request, 'restaurante.dashboard')
@@ -115,11 +110,11 @@ class ProductoController extends Controller
             'stock'        => 'required|integer|min:0',
             'categoria_id' => 'nullable|exists:categorias,id',
             'descripcion'  => 'nullable|string',
-            'foto'         => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120',
+            'foto'         => 'nullable',
         ]);
 
-        if ($request->hasFile('foto')) {
-            $validated['foto'] = $request->file('foto')->store('productos', 'public');
+        if ($request->hasFile('foto') || $request->filled('foto')) {
+            $validated['foto'] = resolve_media_input($request, 'foto', 'productos');
         } else {
             unset($validated['foto']);
         }

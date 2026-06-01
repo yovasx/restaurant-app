@@ -66,18 +66,15 @@ class PromocionController extends Controller
             'condicion'    => 'nullable|string',
             'fecha_inicio' => 'nullable|date',
             'fecha_fin'    => 'nullable|date|after_or_equal:fecha_inicio',
-            'imagen'       => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120',
+            'imagen'       => 'nullable',
+            'publicidad'   => 'nullable|in:imagen,video',
+            'video_url'    => 'nullable|string|max:255',
         ]);
-
-        $imagenPath = null;
-        if ($request->hasFile('imagen')) {
-            $imagenPath = $request->file('imagen')->store('promociones', 'public');
-        }
 
         Promocion::create(array_merge($validated, [
             'restaurante_id' => $restauranteId,
-            'estado'  => 'activo',
-            'imagen'  => $imagenPath,
+            'estado'   => 'activo',
+            'imagen'   => resolve_media_input($request, 'imagen', 'promociones'),
         ]));
 
         return $this->redirectTo($request, 'restaurante.promociones.index')
@@ -101,11 +98,13 @@ class PromocionController extends Controller
             'fecha_inicio' => 'nullable|date',
             'fecha_fin'    => 'nullable|date|after_or_equal:fecha_inicio',
             'estado'       => 'required|in:activo,inactivo',
-            'imagen'       => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120',
+            'imagen'       => 'nullable',
+            'publicidad'   => 'nullable|in:imagen,video',
+            'video_url'    => 'nullable|string|max:255',
         ]);
 
-        if ($request->hasFile('imagen')) {
-            $validated['imagen'] = $request->file('imagen')->store('promociones', 'public');
+        if ($request->hasFile('imagen') || $request->filled('imagen')) {
+            $validated['imagen'] = resolve_media_input($request, 'imagen', 'promociones');
         } else {
             unset($validated['imagen']);
         }

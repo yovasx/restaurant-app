@@ -28,10 +28,27 @@
 
     <section class="relative z-10 mx-auto -mt-8 w-full max-w-7xl px-6">
         <div class="hide-scrollbar flex gap-3 overflow-x-auto pb-4">
-            <button class="flex items-center gap-2 whitespace-nowrap rounded-full bg-[#9e2016] px-6 py-3 font-bold text-white shadow-lg"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">restaurant</span> Todos</button>
-            <button class="flex items-center gap-2 whitespace-nowrap rounded-full border border-[#e1bfb9] bg-white px-6 py-3 font-semibold text-[#59413d] hover:bg-stone-50"><span class="material-symbols-outlined text-sm">local_pizza</span> Pizza</button>
-            <button class="flex items-center gap-2 whitespace-nowrap rounded-full border border-[#e1bfb9] bg-white px-6 py-3 font-semibold text-[#59413d] hover:bg-stone-50"><span class="material-symbols-outlined text-sm">set_meal</span> Sushi</button>
-            <button class="flex items-center gap-2 whitespace-nowrap rounded-full border border-[#e1bfb9] bg-white px-6 py-3 font-semibold text-[#59413d] hover:bg-stone-50"><span class="material-symbols-outlined text-sm">lunch_dining</span> Burgers</button>
+            <a href="{{ route('home') }}"
+               class="flex items-center gap-2 whitespace-nowrap rounded-full px-6 py-3 font-bold shadow-lg transition-all {{ !request('categoria') ? 'bg-[#9e2016] text-white' : 'border border-[#e1bfb9] bg-white text-[#59413d]' }}">
+                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">restaurant</span> Todos
+            </a>
+            @php
+                $iconos = [
+                    'Pizza' => 'local_pizza', 'Sushi' => 'set_meal', 'Burgers' => 'lunch_dining',
+                    'Parrilla' => 'outdoor_grill', 'Comida Boliviana' => 'restaurant_menu',
+                    'Café y Brunch' => 'local_cafe', 'Pastas' => 'ramen_dining',
+                    'Pollos' => 'restaurant', 'Chifa' => 'takeout_dining',
+                    'Mariscos' => 'set_meal', 'Postres y Panadería' => 'cake',
+                    'Cocina Fusión' => 'menu_book',
+                ];
+            @endphp
+            @foreach($categorias as $cat)
+                <a href="{{ route('home', ['categoria' => $cat->id]) }}"
+                   class="flex items-center gap-2 whitespace-nowrap rounded-full px-6 py-3 font-semibold transition-all hover:bg-[#9e2016] hover:text-white {{ request('categoria') == $cat->id ? 'bg-[#9e2016] text-white' : 'border border-[#e1bfb9] bg-white text-[#59413d]' }}">
+                    <span class="material-symbols-outlined text-sm">{{ $iconos[$cat->nombre_categoria] ?? 'restaurant' }}</span>
+                    {{ $cat->nombre_categoria }}
+                </a>
+            @endforeach
         </div>
     </section>
 
@@ -64,8 +81,8 @@
                 <div class="group overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:shadow-xl">
                     <a href="{{ route('restaurante.show', $r->id) }}" class="block">
                         <div class="relative h-64 w-full overflow-hidden">
-                            <img class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" src="{{ $r->foto_portada ? asset('storage/'.$r->foto_portada) : 'https://via.placeholder.com/900x600?text=Restaurante' }}" alt="{{ $r->nombre }}"/>
-                            <div class="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-white/90 px-3 py-1 shadow backdrop-blur"><span class="material-symbols-outlined text-sm text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span><span class="text-sm font-bold text-stone-800">—</span></div>
+                            <img class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" src="{{ media_url($r->foto_portada) ?: 'https://via.placeholder.com/900x600?text=Restaurante' }}" alt="{{ $r->nombre }}"/>
+                            <div class="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-white/90 px-3 py-1 shadow backdrop-blur"><span class="material-symbols-outlined text-sm text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span><span class="text-sm font-bold text-stone-800">{{ isset($r->avg_rating) ? number_format($r->avg_rating, 1) : '—' }}</span></div>
                         </div>
                         <div class="p-6">
                             <div class="mb-2 flex items-start justify-between">
@@ -106,7 +123,7 @@
                     const items = json.data || [];
 
                     grid.innerHTML = items.map((r) => {
-                        const foto = r.foto_portada ? ('/storage/' + r.foto_portada) : 'https://via.placeholder.com/900x600?text=Restaurante';
+                        const foto = r.foto_portada_url || 'https://via.placeholder.com/900x600?text=Restaurante';
                         const dist = r.distance !== undefined ? (Number(r.distance).toFixed(2) + ' km') : '—';
                         const descripcion = (r.descripcion || '').substring(0, 80);
 
@@ -115,7 +132,7 @@
                                 <a href="/restaurante/${r.id}" class="block">
                                     <div class="relative h-64 w-full overflow-hidden">
                                         <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="${foto}" alt="${r.nombre}"/>
-                                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full flex items-center gap-1 shadow"><span class="material-symbols-outlined text-yellow-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span><span class="font-bold text-sm text-stone-800">—</span></div>
+                                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full flex items-center gap-1 shadow"><span class="material-symbols-outlined text-yellow-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span><span class="font-bold text-sm text-stone-800">${r.avg_rating ? Number(r.avg_rating).toFixed(1) : '—'}</span></div>
                                     </div>
                                     <div class="p-6">
                                         <div class="flex justify-between items-start mb-2">

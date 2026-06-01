@@ -21,8 +21,8 @@
              data-input="{{ $dropzoneInputId }}"
              data-preview="{{ $dropzonePreviewId }}"
              data-placeholder="{{ $dropzonePlaceholderId }}">
-            @if($isEditing && $producto->foto)
-                <img id="{{ $dropzonePreviewId }}" class="mx-auto mb-3 h-40 w-40 object-cover rounded-xl shadow" src="{{ asset('storage/'.$producto->foto) }}">
+            @if($isEditing && $producto->foto_url)
+                <img id="{{ $dropzonePreviewId }}" class="mx-auto mb-3 h-40 w-40 object-cover rounded-xl shadow" src="{{ $producto->foto_url }}">
             @else
                 <img id="{{ $dropzonePreviewId }}" class="hidden mx-auto mb-3 h-40 w-40 object-cover rounded-xl shadow" src="">
             @endif

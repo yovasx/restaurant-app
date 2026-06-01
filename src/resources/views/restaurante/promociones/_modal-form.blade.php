@@ -80,8 +80,8 @@
              data-input="{{ $dropzoneInputId }}"
              data-preview="{{ $dropzonePreviewId }}"
              data-placeholder="{{ $dropzonePlaceholderId }}">
-            @if($isEditing && $promocion->imagen)
-                <img id="{{ $dropzonePreviewId }}" class="mx-auto mb-3 h-36 w-full object-cover rounded-xl shadow" src="{{ asset('storage/'.$promocion->imagen) }}">
+            @if($isEditing && $promocion->imagen_url)
+                <img id="{{ $dropzonePreviewId }}" class="mx-auto mb-3 h-36 w-full object-cover rounded-xl shadow" src="{{ $promocion->imagen_url }}">
             @else
                 <img id="{{ $dropzonePreviewId }}" class="hidden mx-auto mb-3 h-36 w-full object-cover rounded-xl shadow" src="">
             @endif

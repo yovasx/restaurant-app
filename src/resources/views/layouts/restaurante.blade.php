@@ -40,8 +40,8 @@
 
             <div class="mt-5 flex items-center gap-3">
                 <div class="w-12 h-12 rounded-full overflow-hidden bg-primary-fixed flex items-center justify-center text-primary font-black text-lg shadow-sm shrink-0">
-                    @if($sidebarSucursalActiva && $sidebarSucursalActiva->foto_portada)
-                        <img class="w-full h-full object-cover" src="{{ asset('storage/'.$sidebarSucursalActiva->foto_portada) }}" alt="Foto Restaurante">
+                    @if($sidebarSucursalActiva && $sidebarSucursalActiva->foto_portada_url)
+                        <img class="w-full h-full object-cover" src="{{ $sidebarSucursalActiva->foto_portada_url }}" alt="Foto Restaurante">
                     @else
                         {{ substr(Auth::guard('restaurante')->user()->nombre ?? 'R', 0, 1) }}
                     @endif

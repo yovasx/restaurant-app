@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Restaurante extends Model
@@ -22,6 +23,7 @@ class Restaurante extends Model
         'hora_apertura_domingo',
         'hora_cierre_domingo',
         'foto_portada',
+        'logo_url',
         'telefono',
         'email_reservas',
         'instagram',
@@ -36,6 +38,8 @@ class Restaurante extends Model
         'es_principal' => 'boolean',
     ];
 
+    protected $appends = ['foto_portada_url', 'logo_url_resolved'];
+
     public function usuario()
     {
         return $this->belongsTo(Usuario::class);
@@ -46,8 +50,32 @@ class Restaurante extends Model
         return $this->hasMany(Producto::class, 'restaurante_id');
     }
 
+    public function menus()
+    {
+        return $this->hasMany(Menu::class, 'restaurante_id');
+    }
+
     public function promociones()
     {
         return $this->hasMany(Promocion::class, 'restaurante_id');
+    }
+
+    public function categorias()
+    {
+        return $this->belongsToMany(Categoria::class, 'restaurante_categorias');
+    }
+
+    protected function fotoPortadaUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => media_url($this->foto_portada),
+        );
+    }
+
+    protected function logoUrlResolved(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => media_url($this->logo_url),
+        );
     }
 }

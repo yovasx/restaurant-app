@@ -13,7 +13,7 @@
 
     <div class="bg-white rounded-xl overflow-hidden shadow-sm">
         <div class="h-64 w-full overflow-hidden">
-            <img class="w-full h-full object-cover" src="{{ $restaurante->foto_portada ? asset('storage/'.$restaurante->foto_portada) : 'https://via.placeholder.com/1600x600?text=Restaurante' }}" alt="{{ $restaurante->nombre }}" />
+            <img class="w-full h-full object-cover" src="{{ media_url($restaurante->foto_portada) ?: 'https://via.placeholder.com/1600x600?text=Restaurante' }}" alt="{{ $restaurante->nombre }}" />
         </div>
         <div class="p-8">
             <div class="flex justify-between items-start mb-6">
@@ -49,7 +49,7 @@
                         @foreach($productos as $p)
                         <div class="p-4 bg-surface-container-lowest rounded-lg flex gap-4 items-center">
                             <div class="w-20 h-20 rounded-lg overflow-hidden">
-                                <img src="{{ $p->foto ? asset('storage/'.$p->foto) : 'https://via.placeholder.com/240x160?text=Plato' }}" class="w-full h-full object-cover" alt="{{ $p->nombre }}" />
+                                <img src="{{ media_url($p->foto) ?: 'https://via.placeholder.com/240x160?text=Plato' }}" class="w-full h-full object-cover" alt="{{ $p->nombre }}" />
                             </div>
                             <div class="flex-1">
                                 <div class="flex justify-between items-start">
@@ -70,7 +70,7 @@
                         <p class="text-sm text-stone-600">{{ $promo->tipo }} · {{ $promo->valor }}</p>
                         @if($promo->imagen)
                         <div class="mt-3">
-                            <img src="{{ asset('storage/'.$promo->imagen) }}" class="w-full h-32 object-cover rounded-lg" />
+                            <img src="{{ media_url($promo->imagen) }}" class="w-full h-32 object-cover rounded-lg" />
                         </div>
                         @endif
                     </div>

@@ -16,11 +16,12 @@
 </head>
 <body class="min-h-screen bg-background text-on-background">
 @php
-    $showPublicNav = !auth()->guard('comensal')->check() && !auth()->guard('admin')->check() && !auth()->guard('restaurante')->check();
+    $routeName = request()->route() ? request()->route()->getName() : '';
+    $isComensalRoute = str_starts_with($routeName, 'comensal.');
     $flushContent = trim($__env->yieldContent('layout-flush')) === 'true';
 @endphp
 
-@if($showPublicNav)
+@if(!$isComensalRoute)
     @include('partials.public-nav')
 @endif
 

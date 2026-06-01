@@ -70,7 +70,8 @@ class RestauranteController extends Controller
             'email_reservas'              => 'required|email',
             'instagram'                   => 'nullable|string',
             'facebook_url'                => 'nullable|string',
-            'foto_portada'                => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120',
+            'foto_portada'                => 'nullable',
+            'logo_url'                    => 'nullable|string|max:255',
             'password'                    => 'nullable|string|min:6',
             'nit'                         => 'required|string',
         ]);
@@ -95,8 +96,8 @@ class RestauranteController extends Controller
         }
 
         $portadaPath = $restaurante ? $restaurante->foto_portada : null;
-        if ($request->hasFile('foto_portada')) {
-            $portadaPath = $request->file('foto_portada')->store('portadas', 'public');
+        if ($request->hasFile('foto_portada') || $request->filled('foto_portada')) {
+            $portadaPath = resolve_media_input($request, 'foto_portada', 'portadas');
         }
 
         $data = [
@@ -117,6 +118,7 @@ class RestauranteController extends Controller
             'instagram'            => $validated['instagram'],
             'facebook_url'         => $validated['facebook_url'],
             'foto_portada'         => $portadaPath,
+            'logo_url'             => $validated['logo_url'] ?? $restaurante?->logo_url,
         ];
 
         if ($restaurante) {
@@ -193,13 +195,10 @@ class RestauranteController extends Controller
             'hora_cierre_sabado'    => 'nullable|string',
             'hora_apertura_domingo' => 'nullable|string',
             'hora_cierre_domingo'   => 'nullable|string',
-            'foto_portada'          => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120',
+            'foto_portada'          => 'nullable',
         ]);
 
-        $portadaPath = null;
-        if ($request->hasFile('foto_portada')) {
-            $portadaPath = $request->file('foto_portada')->store('portadas', 'public');
-        }
+        $portadaPath = resolve_media_input($request, 'foto_portada', 'portadas');
 
         $totalActivas = $usuario->restaurantes()->where('estado', 'activo')->count();
 
@@ -256,12 +255,12 @@ class RestauranteController extends Controller
             'hora_cierre_sabado'    => 'nullable|string',
             'hora_apertura_domingo' => 'nullable|string',
             'hora_cierre_domingo'   => 'nullable|string',
-            'foto_portada'          => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120',
+            'foto_portada'          => 'nullable',
         ]);
 
         $portadaPath = $restaurante->foto_portada;
-        if ($request->hasFile('foto_portada')) {
-            $portadaPath = $request->file('foto_portada')->store('portadas', 'public');
+        if ($request->hasFile('foto_portada') || $request->filled('foto_portada')) {
+            $portadaPath = resolve_media_input($request, 'foto_portada', 'portadas');
         }
 
         $restaurante->update([
