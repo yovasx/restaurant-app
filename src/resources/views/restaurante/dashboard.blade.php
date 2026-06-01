@@ -32,6 +32,14 @@
                             {{ $restaurante ? $restaurante->nombre : $usuario->nombre }}
                         </p>
                     </div>
+                    @if($restaurante)
+                    <div class="flex items-center gap-2 mt-1">
+                        @if($restaurante->es_principal)
+                        <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full uppercase tracking-wider">Principal</span>
+                        @endif
+                        <span class="text-[10px] text-stone-400">Sucursal activa</span>
+                    </div>
+                    @endif
                 </div>
             </div>
             <div class="flex items-center gap-4 bg-surface-container p-3 rounded-lg w-full md:w-auto">
@@ -193,9 +201,13 @@
                 @else
                 <p class="text-sm text-stone-400 text-center py-4">No has completado tu configuración aún.</p>
                 @endif
-                <a href="{{ route('restaurante.configuracion') }}" class="w-full mt-4 flex items-center justify-center gap-2 bg-surface-container py-3 rounded-xl font-bold text-sm text-on-surface hover:bg-surface-container-high transition-colors">
+                <a href="{{ route('restaurante.configuracion') }}" class="w-full mt-2 flex items-center justify-center gap-2 bg-surface-container py-3 rounded-xl font-bold text-sm text-on-surface hover:bg-surface-container-high transition-colors">
                     <span class="material-symbols-outlined text-sm">edit</span>
-                    Editar Información
+                    Editar Sucursal
+                </a>
+                <a href="{{ route('restaurante.sucursales.index') }}" class="w-full flex items-center justify-center gap-2 bg-surface-container py-3 rounded-xl font-bold text-sm text-on-surface hover:bg-surface-container-high transition-colors">
+                    <span class="material-symbols-outlined text-sm">store</span>
+                    Administrar Sucursales
                 </a>
             </div>
         </div>

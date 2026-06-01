@@ -132,4 +132,207 @@ class RestauranteController extends Controller
 
         return back()->with('success', 'Configuración guardada exitosamente.');
     }
+
+    private function findOwnedSucursalOrFail($id)
+    {
+        $usuario = Auth::guard('restaurante')->user();
+        $sucursal = $usuario->restaurantes()->findOrFail($id);
+        return $sucursal;
+    }
+
+    private function resolveSucursalActivaOPrincipal()
+    {
+        $usuario = Auth::guard('restaurante')->user();
+        $sucursalId = session('restaurante_sucursal_id');
+        if ($sucursalId) {
+            $sucursal = $usuario->restaurantes()->where('id', $sucursalId)->first();
+            if ($sucursal) return $sucursal;
+        }
+        $principal = $usuario->restaurantes()->where('es_principal', true)->where('estado', 'activo')->first();
+        if ($principal) {
+            session(['restaurante_sucursal_id' => $principal->id]);
+            return $principal;
+        }
+        $primera = $usuario->restaurantes()->where('estado', 'activo')->first();
+        if ($primera) {
+            session(['restaurante_sucursal_id' => $primera->id]);
+            return $primera;
+        }
+        return null;
+    }
+
+    // ─── Sucursales ─────────────────────────────────────────────────
+
+    public function sucursalesIndex()
+    {
+        $usuario = Auth::guard('restaurante')->user();
+        $sucursales = $usuario->restaurantes()->orderByDesc('es_principal')->orderBy('nombre')->get();
+        $sucursalActiva = $this->resolveSucursalActivaOPrincipal();
+
+        return view('restaurante.sucursales.index', compact('sucursales', 'sucursalActiva'));
+    }
+
+    public function storeSucursal(Request $request)
+    {
+        $usuario = Auth::guard('restaurante')->user();
+
+        $validated = $request->validate([
+            'nombre'                => 'required|string|max:150',
+            'descripcion'           => 'nullable|string',
+            'telefono'              => 'required|string|max:20',
+            'email_reservas'        => 'required|email',
+            'instagram'             => 'nullable|string',
+            'facebook_url'          => 'nullable|string',
+            'direccion'             => 'required|string|max:255',
+            'zona'                  => 'required|string|max:100',
+            'latitud'               => 'nullable|numeric',
+            'longitud'              => 'nullable|numeric',
+            'horario_apertura'      => 'nullable|string',
+            'horario_cierre'        => 'nullable|string',
+            'hora_apertura_sabado'  => 'nullable|string',
+            'hora_cierre_sabado'    => 'nullable|string',
+            'hora_apertura_domingo' => 'nullable|string',
+            'hora_cierre_domingo'   => 'nullable|string',
+            'foto_portada'          => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120',
+        ]);
+
+        $portadaPath = null;
+        if ($request->hasFile('foto_portada')) {
+            $portadaPath = $request->file('foto_portada')->store('portadas', 'public');
+        }
+
+        $totalActivas = $usuario->restaurantes()->where('estado', 'activo')->count();
+
+        $sucursal = Restaurante::create([
+            'usuario_id'            => $usuario->id,
+            'nombre'                => $validated['nombre'],
+            'descripcion'           => $validated['descripcion'],
+            'telefono'              => $validated['telefono'],
+            'email_reservas'        => $validated['email_reservas'],
+            'instagram'             => $validated['instagram'],
+            'facebook_url'          => $validated['facebook_url'],
+            'direccion'             => $validated['direccion'],
+            'zona'                  => $validated['zona'],
+            'latitud'               => $validated['latitud'],
+            'longitud'              => $validated['longitud'],
+            'horario_apertura'      => $validated['horario_apertura'],
+            'horario_cierre'        => $validated['horario_cierre'],
+            'hora_apertura_sabado'  => $validated['hora_apertura_sabado'],
+            'hora_cierre_sabado'    => $validated['hora_cierre_sabado'],
+            'hora_apertura_domingo' => $validated['hora_apertura_domingo'],
+            'hora_cierre_domingo'   => $validated['hora_cierre_domingo'],
+            'foto_portada'          => $portadaPath,
+            'estado'                => 'activo',
+            'fecha_registro'        => now()->toDateString(),
+            'es_principal'          => $totalActivas === 0,
+        ]);
+
+        if ($totalActivas === 0) {
+            session(['restaurante_sucursal_id' => $sucursal->id]);
+        }
+
+        return redirect()->route('restaurante.sucursales.index')
+            ->with('success', 'Sucursal creada exitosamente.');
+    }
+
+    public function updateSucursal(Request $request, Restaurante $restaurante)
+    {
+        $this->findOwnedSucursalOrFail($restaurante->id);
+
+        $validated = $request->validate([
+            'nombre'                => 'required|string|max:150',
+            'descripcion'           => 'nullable|string',
+            'telefono'              => 'required|string|max:20',
+            'email_reservas'        => 'required|email',
+            'instagram'             => 'nullable|string',
+            'facebook_url'          => 'nullable|string',
+            'direccion'             => 'required|string|max:255',
+            'zona'                  => 'required|string|max:100',
+            'latitud'               => 'nullable|numeric',
+            'longitud'              => 'nullable|numeric',
+            'horario_apertura'      => 'nullable|string',
+            'horario_cierre'        => 'nullable|string',
+            'hora_apertura_sabado'  => 'nullable|string',
+            'hora_cierre_sabado'    => 'nullable|string',
+            'hora_apertura_domingo' => 'nullable|string',
+            'hora_cierre_domingo'   => 'nullable|string',
+            'foto_portada'          => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120',
+        ]);
+
+        $portadaPath = $restaurante->foto_portada;
+        if ($request->hasFile('foto_portada')) {
+            $portadaPath = $request->file('foto_portada')->store('portadas', 'public');
+        }
+
+        $restaurante->update([
+            'nombre'                => $validated['nombre'],
+            'descripcion'           => $validated['descripcion'],
+            'telefono'              => $validated['telefono'],
+            'email_reservas'        => $validated['email_reservas'],
+            'instagram'             => $validated['instagram'],
+            'facebook_url'          => $validated['facebook_url'],
+            'direccion'             => $validated['direccion'],
+            'zona'                  => $validated['zona'],
+            'latitud'               => $validated['latitud'],
+            'longitud'              => $validated['longitud'],
+            'horario_apertura'      => $validated['horario_apertura'],
+            'horario_cierre'        => $validated['horario_cierre'],
+            'hora_apertura_sabado'  => $validated['hora_apertura_sabado'],
+            'hora_cierre_sabado'    => $validated['hora_cierre_sabado'],
+            'hora_apertura_domingo' => $validated['hora_apertura_domingo'],
+            'hora_cierre_domingo'   => $validated['hora_cierre_domingo'],
+            'foto_portada'          => $portadaPath,
+        ]);
+
+        return redirect()->route('restaurante.sucursales.index')
+            ->with('success', 'Sucursal actualizada exitosamente.');
+    }
+
+    public function archiveSucursal(Restaurante $restaurante)
+    {
+        $this->findOwnedSucursalOrFail($restaurante->id);
+        $usuario = Auth::guard('restaurante')->user();
+
+        $activas = $usuario->restaurantes()->where('estado', 'activo')->count();
+        if ($activas <= 1) {
+            return back()->with('error', 'No puedes archivar la única sucursal activa.');
+        }
+
+        $restaurante->update(['estado' => 'inactivo', 'es_principal' => false]);
+
+        if (session('restaurante_sucursal_id') == $restaurante->id) {
+            $newActiva = $usuario->restaurantes()->where('estado', 'activo')->where('es_principal', true)->first()
+                ?? $usuario->restaurantes()->where('estado', 'activo')->first();
+            if ($newActiva) {
+                session(['restaurante_sucursal_id' => $newActiva->id]);
+                if ($restaurante->es_principal) {
+                    $newActiva->update(['es_principal' => true]);
+                }
+            }
+        }
+
+        return redirect()->route('restaurante.sucursales.index')
+            ->with('success', 'Sucursal archivada correctamente.');
+    }
+
+    public function setSucursalPrincipal(Restaurante $restaurante)
+    {
+        $this->findOwnedSucursalOrFail($restaurante->id);
+        $usuario = Auth::guard('restaurante')->user();
+
+        $usuario->restaurantes()->where('es_principal', true)->update(['es_principal' => false]);
+        $restaurante->update(['es_principal' => true]);
+
+        return redirect()->route('restaurante.sucursales.index')
+            ->with('success', 'Sucursal marcada como principal.');
+    }
+
+    public function selectSucursal(Restaurante $restaurante)
+    {
+        $this->findOwnedSucursalOrFail($restaurante->id);
+
+        session(['restaurante_sucursal_id' => $restaurante->id]);
+
+        return back()->with('success', 'Sucursal activa cambiada a: '.$restaurante->nombre);
+    }
 }

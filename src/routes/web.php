@@ -93,6 +93,13 @@ Route::middleware('auth:restaurante')->group(function () {
         ->except(['show']);
     // Reseñas
     Route::get('/restaurante/resenas', [\App\Http\Controllers\PromocionController::class, 'resenas'])->name('restaurante.resenas');
+    // Sucursales
+    Route::get('/restaurante/sucursales', [RestauranteController::class, 'sucursalesIndex'])->name('restaurante.sucursales.index');
+    Route::post('/restaurante/sucursales', [RestauranteController::class, 'storeSucursal'])->name('restaurante.sucursales.store');
+    Route::post('/restaurante/sucursales/{restaurante}/update', [RestauranteController::class, 'updateSucursal'])->name('restaurante.sucursales.update');
+    Route::post('/restaurante/sucursales/{restaurante}/archivar', [RestauranteController::class, 'archiveSucursal'])->name('restaurante.sucursales.archive');
+    Route::post('/restaurante/sucursales/{restaurante}/principal', [RestauranteController::class, 'setSucursalPrincipal'])->name('restaurante.sucursales.set-primary');
+    Route::post('/restaurante/sucursales/{restaurante}/seleccionar', [RestauranteController::class, 'selectSucursal'])->name('restaurante.sucursales.select');
 });
 
 // Rutas de Administrador

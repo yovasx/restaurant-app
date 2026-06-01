@@ -20,6 +20,12 @@ class PromocionController extends Controller
         return redirect()->route($fallbackRoute);
     }
 
+    private function findOwnedSucursalOrFail($restauranteId)
+    {
+        $usuario = Auth::guard('restaurante')->user();
+        return $usuario->restaurantes()->findOrFail($restauranteId);
+    }
+
     private function getRestauranteId()
     {
         $usuario = Auth::guard('restaurante')->user();
@@ -80,11 +86,13 @@ class PromocionController extends Controller
 
     public function edit(Promocion $promocion)
     {
+        $this->findOwnedSucursalOrFail($promocion->restaurante_id);
         return view('restaurante.promociones.edit', compact('promocion'));
     }
 
     public function update(Request $request, Promocion $promocion)
     {
+        $this->findOwnedSucursalOrFail($promocion->restaurante_id);
         $validated = $request->validate([
             'nombre'       => 'required|string|max:150',
             'tipo'         => 'required|in:descuento,2x1,postre,otro',
@@ -110,6 +118,7 @@ class PromocionController extends Controller
 
     public function destroy(Request $request, Promocion $promocion)
     {
+        $this->findOwnedSucursalOrFail($promocion->restaurante_id);
         $promocion->update(['estado' => 'inactivo']);
         return $this->redirectTo($request, 'restaurante.promociones.index')->with('success', 'Promoción archivada.');
     }

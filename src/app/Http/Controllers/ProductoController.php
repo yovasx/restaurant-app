@@ -23,6 +23,13 @@ class ProductoController extends Controller
         return redirect()->route($fallbackRoute);
     }
 
+    private function findOwnedSucursalOrFail($restauranteId)
+    {
+        $usuario = Auth::guard('restaurante')->user();
+        $sucursal = $usuario->restaurantes()->findOrFail($restauranteId);
+        return $sucursal;
+    }
+
     private function getRestauranteId()
     {
         $usuario = Auth::guard('restaurante')->user();
@@ -94,12 +101,14 @@ class ProductoController extends Controller
 
     public function edit(Producto $producto)
     {
+        $this->findOwnedSucursalOrFail($producto->restaurante_id);
         $categorias = Categoria::where('estado', 'activo')->orderBy('nombre_categoria')->get();
         return view('productos.edit', compact('producto', 'categorias'));
     }
 
     public function update(Request $request, Producto $producto)
     {
+        $this->findOwnedSucursalOrFail($producto->restaurante_id);
         $validated = $request->validate([
             'nombre'       => 'required|string|max:255',
             'precio'       => 'required|numeric|min:0',
@@ -123,6 +132,7 @@ class ProductoController extends Controller
 
     public function destroy(Request $request, Producto $producto)
     {
+        $this->findOwnedSucursalOrFail($producto->restaurante_id);
         $producto->delete();
         return $this->redirectTo($request, 'restaurante.dashboard')
             ->with('success', 'Plato eliminado correctamente.');
@@ -130,6 +140,7 @@ class ProductoController extends Controller
 
     public function toggle(Producto $producto)
     {
+        $this->findOwnedSucursalOrFail($producto->restaurante_id);
         $producto->activo = !$producto->activo;
         $producto->save();
         $status = $producto->activo ? 'habilitado' : 'deshabilitado';

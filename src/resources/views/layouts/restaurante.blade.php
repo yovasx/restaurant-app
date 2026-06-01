@@ -17,7 +17,10 @@
 
 @php
     $route = Route::currentRouteName();
-    $sideRestaurante = \App\Models\Restaurante::where('usuario_id', Auth::guard('restaurante')->id())->first();
+    $sidebarSucursales = Auth::guard('restaurante')->user()->restaurantes()->where('estado', 'activo')->orderByDesc('es_principal')->orderBy('nombre')->get();
+    $sidebarSucursalActiva = $sidebarSucursales->firstWhere('id', session('restaurante_sucursal_id'))
+        ?? $sidebarSucursales->firstWhere('es_principal', true)
+        ?? $sidebarSucursales->first();
     $sidebarCategorias = \App\Models\Categoria::where('estado', 'activo')->orderBy('nombre_categoria')->get();
 @endphp
 
@@ -37,8 +40,8 @@
 
             <div class="mt-5 flex items-center gap-3">
                 <div class="w-12 h-12 rounded-full overflow-hidden bg-primary-fixed flex items-center justify-center text-primary font-black text-lg shadow-sm shrink-0">
-                    @if($sideRestaurante && $sideRestaurante->foto_portada)
-                        <img class="w-full h-full object-cover" src="{{ asset('storage/'.$sideRestaurante->foto_portada) }}" alt="Foto Restaurante">
+                    @if($sidebarSucursalActiva && $sidebarSucursalActiva->foto_portada)
+                        <img class="w-full h-full object-cover" src="{{ asset('storage/'.$sidebarSucursalActiva->foto_portada) }}" alt="Foto Restaurante">
                     @else
                         {{ substr(Auth::guard('restaurante')->user()->nombre ?? 'R', 0, 1) }}
                     @endif
@@ -48,6 +51,20 @@
                     <p class="text-[10px] uppercase tracking-[0.3em] text-stone-500 font-semibold">Panel de Control</p>
                 </div>
             </div>
+            @if($sidebarSucursales->count() > 0)
+            <div class="mt-3 px-2">
+                <form method="POST" action="{{ route('restaurante.sucursales.select', $sidebarSucursalActiva?->id ?? 0) }}" id="sucursal-switch-form">
+                    @csrf
+                    <select name="sucursal_id" onchange="if(this.value){var f=document.getElementById('sucursal-switch-form');f.action='{{ url('restaurante/sucursales') }}/'+this.value+'/seleccionar';f.submit()}" class="w-full bg-surface-container-high border-0 rounded-xl py-2 px-3 text-xs font-bold text-on-surface focus:ring-2 focus:ring-primary">
+                        @foreach($sidebarSucursales as $suc)
+                        <option value="{{ $suc->id }}" {{ $sidebarSucursalActiva && $sidebarSucursalActiva->id === $suc->id ? 'selected' : '' }}>
+                            {{ $suc->nombre }}@if($suc->es_principal) ★@endif
+                        </option>
+                        @endforeach
+                    </select>
+                </form>
+            </div>
+            @endif
         </div>
 
         <nav class="flex-1 space-y-1 px-3">
@@ -70,6 +87,11 @@
                class="{{ $route === 'restaurante.resenas' ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
                 <span class="material-symbols-outlined shrink-0">star</span>
                 <span class="font-headline font-medium text-sm">Reseñas</span>
+            </a>
+            <a href="{{ route('restaurante.sucursales.index') }}"
+               class="{{ str_starts_with($route, 'restaurante.sucursales') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
+                <span class="material-symbols-outlined shrink-0">store</span>
+                <span class="font-headline font-medium text-sm">Sucursales</span>
             </a>
             <a href="{{ route('restaurante.configuracion') }}"
                class="{{ str_starts_with($route, 'restaurante.configuracion') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">

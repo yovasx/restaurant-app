@@ -9,7 +9,19 @@
         <div>
             <h1 class="text-4xl font-extrabold font-headline text-primary tracking-tight">Gestión de Perfil</h1>
             <p class="text-on-surface-variant font-body mt-2">Configura la identidad pública de tu restaurante en La Paz.</p>
+            @if($restaurante)
+            <div class="flex items-center gap-2 mt-2">
+                <span class="text-sm font-bold text-on-surface">Editando: {{ $restaurante->nombre }}</span>
+                @if($restaurante->es_principal)
+                <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full uppercase tracking-wider">Principal</span>
+                @endif
+            </div>
+            @endif
         </div>
+        <a href="{{ route('restaurante.sucursales.index') }}" class="flex items-center gap-2 text-sm text-primary font-bold hover:underline">
+            <span class="material-symbols-outlined text-sm">store</span>
+            Administrar sucursales
+        </a>
     </section>
 
     <form action="{{ route('restaurante.configuracion.update') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
