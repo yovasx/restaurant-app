@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Promocion;
 use App\Models\Restaurante;
-use App\Models\Resena;
-use App\Models\Menu;
 
 class PromocionController extends Controller
 {
@@ -25,8 +23,13 @@ class PromocionController extends Controller
     private function getRestauranteId()
     {
         $usuario = Auth::guard('restaurante')->user();
-        $restaurante = Restaurante::where('usuario_id', $usuario->id)->first();
-        return $restaurante ? $restaurante->id : null;
+        $sucursalId = session('restaurante_sucursal_id');
+        if ($sucursalId) {
+            $sucursal = $usuario->restaurantes()->where('id', $sucursalId)->first();
+            if ($sucursal) return $sucursal->id;
+        }
+        $principal = $usuario->restaurantes()->where('es_principal', true)->first();
+        return $principal?->id ?? $usuario->restaurantes()->first()?->id;
     }
 
     public function index()
@@ -47,7 +50,7 @@ class PromocionController extends Controller
     {
         $restauranteId = $this->getRestauranteId();
         if (!$restauranteId) {
-            return back()->withErrors(['error' => 'Debes completar tu perfil de restaurante primero.'])->withInput();
+            return back()->with('error', 'Debes completar tu perfil de restaurante primero.')->withInput();
         }
 
         $validated = $request->validate([
@@ -114,7 +117,6 @@ class PromocionController extends Controller
     public function resenas()
     {
         $restauranteId = $this->getRestauranteId();
-        // Get reviews for menus linked to this restaurant
         $resenas = \App\Models\Resena::whereHas('menu', function ($q) use ($restauranteId) {
                 $q->where('restaurante_id', $restauranteId);
             })

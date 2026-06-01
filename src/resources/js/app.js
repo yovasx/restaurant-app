@@ -142,17 +142,17 @@ function initToasts() {
     }
 
     const dismiss = () => {
-        toast.classList.add('opacity-0', 'translate-y-4', 'scale-95');
+        toast.classList.add('opacity-0', 'translate-x-4', 'scale-95');
         window.setTimeout(() => toast.remove(), 250);
     };
 
     toast.classList.remove('hidden');
     window.requestAnimationFrame(() => {
-        toast.classList.remove('opacity-0', 'translate-y-4', 'scale-95');
+        toast.classList.remove('opacity-0', 'translate-x-4', 'scale-95');
     });
 
     toast.querySelector('[data-toast-close]')?.addEventListener('click', dismiss);
-    window.setTimeout(dismiss, Number(toast.dataset.timeout || 3600));
+    window.setTimeout(dismiss, Number(toast.dataset.timeout || 3500));
 }
 
 function boot() {

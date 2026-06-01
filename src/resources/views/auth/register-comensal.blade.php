@@ -77,24 +77,10 @@
 <body class="bg-background text-on-background min-h-screen flex flex-col">
 @include('partials.public-nav')
 
-<main class="flex-grow flex items-center justify-center lg:p-6">
-    <div class="w-full max-w-7xl h-full lg:h-[921px] bg-surface-container-lowest lg:rounded-xl overflow-hidden flex flex-col md:flex-row shadow-[0_20px_50px_rgba(158,32,22,0.05)]">
-        
-        <!-- Image Pane -->
-        <section class="hidden md:block md:w-1/2 lg:w-3/5 relative overflow-hidden bg-surface-container-highest">
-            <div class="absolute inset-0 z-10 bg-gradient-to-t from-primary/40 via-transparent to-transparent"></div>
-            <img class="w-full h-full object-cover object-center transform transition-transform duration-[2000ms]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXE_fHiBBXKqL_pFqskmuGW5N4a9xJD_JsWjwQB0tSwHCtH_l7d50WcoxC3kieN976pjhKybkIBllX2rS1fA77rA4-JDix2HinU15Hs4e1EHIqX9KZVSGKweghalFPP38f77bYIKDUq9NVlw6eUE8mEtWOgYGUT6XFgrRM2kdvqwFXFdqJwN52qnj9sfxoZlIvPSLDfWxnCXKQUDni6biEqOeOM3aP0vfLK7wrOIW150f41crqJuBSVnk0hlY13N1RD3Rc-0eV7WpO" />
-            <div class="absolute bottom-12 left-12 z-20 max-w-md">
-                <div class="bg-surface/80 backdrop-blur-md p-6 rounded-xl border border-white/20">
-                    <span class="text-primary font-headline text-xs font-bold tracking-widest uppercase mb-2 block">Cultura Gastronómica</span>
-                    <h2 class="text-3xl font-extrabold text-on-surface leading-tight">Explora el sabor auténtico de La Paz.</h2>
-                    <p class="text-on-surface-variant mt-3 leading-relaxed">Únete a la comunidad de paladares más exigentes de Bolivia y descubre tesoros culinarios ocultos.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Register Pane -->
-        <section class="w-full md:w-1/2 lg:w-2/5 flex flex-col p-8 md:p-12 lg:p-16 justify-center">
+<main class="flex-grow flex flex-col md:flex-row min-h-[calc(100vh-80px)]">
+    <!-- LEFT SIDE: Register Form -->
+    <div class="w-full md:w-1/2 flex justify-center p-6 sm:p-8 lg:p-16 bg-surface-bright">
+        <div class="max-w-md w-full py-4">
             <div class="mb-10 flex flex-col items-start">
                 <span class="text-primary font-headline text-2xl font-extrabold tracking-tighter mb-1">GastroGuía</span>
                 <h1 class="text-4xl font-extrabold text-on-surface tracking-tight mb-2">Bienvenido</h1>
@@ -114,10 +100,26 @@
             <form action="{{ route('register.comensal.post') }}" method="POST" class="space-y-6">
                 @csrf
                 <div class="space-y-1.5">
-                    <label class="text-sm font-semibold text-on-surface-variant ml-1" for="name">Nombre Completo</label>
+                    <label class="text-sm font-semibold text-on-surface-variant ml-1" for="name">Nombres</label>
                     <div class="relative">
                         <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 text-xl">person</span>
-                        <input class="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-0 rounded-lg outline-none text-on-surface" id="name" name="nombre" value="{{ old('nombre') }}" placeholder="Ej. Juan Pérez" type="text" required/>
+                        <input class="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-0 rounded-lg outline-none text-on-surface" id="name" name="nombre" value="{{ old('nombre') }}" placeholder="Ej. Juan" type="text" required oninput="psUpdate('name','email','password')"/>
+                    </div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-sm font-semibold text-on-surface-variant ml-1" for="ap">Apellido Paterno</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 text-xl">badge</span>
+                        <input class="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-0 rounded-lg outline-none text-on-surface" id="ap" name="apellido_paterno" value="{{ old('apellido_paterno') }}" placeholder="Ej. Pérez" type="text" required/>
+                    </div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-sm font-semibold text-on-surface-variant ml-1" for="am">Apellido Materno</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 text-xl">badge</span>
+                        <input class="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-0 rounded-lg outline-none text-on-surface" id="am" name="apellido_materno" value="{{ old('apellido_materno') }}" placeholder="Ej. García" type="text" required/>
                     </div>
                 </div>
 
@@ -125,18 +127,18 @@
                     <label class="text-sm font-semibold text-on-surface-variant ml-1" for="email">Correo Electrónico</label>
                     <div class="relative">
                         <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 text-xl">mail</span>
-                        <input class="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-0 rounded-lg outline-none text-on-surface" id="email" name="email" value="{{ old('email') }}" placeholder="nombre@ejemplo.com" type="email" required/>
+                        <input class="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-0 rounded-lg outline-none text-on-surface" id="email" name="email" value="{{ old('email') }}" placeholder="nombre@ejemplo.com" type="email" required oninput="psUpdate('name','email','password')"/>
                     </div>
                 </div>
 
                 <div class="space-y-1.5">
-                    <label class="text-sm font-semibold text-on-surface-variant ml-1" for="phone">Teléfono (opcional)</label>
+                    <label class="text-sm font-semibold text-on-surface-variant ml-1" for="phone">Teléfono</label>
                     <div class="flex gap-2">
                         <div class="relative w-24 shrink-0">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface font-semibold text-sm">+591</span>
                             <div class="w-full h-full border-0 bg-surface-container-low rounded-lg py-3.5"></div>
                         </div>
-                        <input class="flex-grow px-4 py-3.5 bg-surface-container-low border-0 rounded-lg outline-none text-on-surface" id="phone" name="telefono" value="{{ old('telefono') }}" placeholder="70000000" type="tel"/>
+                        <input class="flex-grow px-4 py-3.5 bg-surface-container-low border-0 rounded-lg outline-none text-on-surface" id="phone" name="telefono" value="{{ old('telefono') }}" placeholder="70000000" type="tel" required/>
                     </div>
                 </div>
 
@@ -145,6 +147,19 @@
                     <div class="relative">
                         <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 text-xl">lock</span>
                         <input class="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-0 rounded-lg outline-none text-on-surface" id="password" name="password" placeholder="••••••••" type="password" required minlength="6"/>
+                    </div>
+                    @include('partials.password-suggestion', [
+                        'nameId' => 'name',
+                        'emailId' => 'email',
+                        'passwordId' => 'password',
+                        'passwordConfirmationId' => 'password_confirmation',
+                    ])
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-sm font-semibold text-on-surface-variant ml-1" for="password_confirmation">Confirmar Contraseña</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 text-xl">lock</span>
+                        <input class="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-0 rounded-lg outline-none text-on-surface" id="password_confirmation" name="password_confirmation" placeholder="••••••••" type="password" required minlength="6"/>
                     </div>
                 </div>
                 
@@ -166,7 +181,20 @@
                     <a class="text-primary font-bold hover:underline ml-1" href="{{ route('login') }}">Inicia sesión aquí</a>
                 </p>
             </div>
-        </section>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE: Visual -->
+    <div class="hidden md:block md:w-1/2 relative overflow-hidden bg-stone-900">
+        <div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent z-10"></div>
+        <img class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXE_fHiBBXKqL_pFqskmuGW5N4a9xJD_JsWjwQB0tSwHCtH_l7d50WcoxC3kieN976pjhKybkIBllX2rS1fA77rA4-JDix2HinU15Hs4e1EHIqX9KZVSGKweghalFPP38f77bYIKDUq9NVlw6eUE8mEtWOgYGUT6XFgrRM2kdvqwFXFdqJwN52qnj9sfxoZlIvPSLDfWxnCXKQUDni6biEqOeOM3aP0vfLK7wrOIW150f41crqJuBSVnk0hlY13N1RD3Rc-0eV7WpO" />
+        <div class="absolute bottom-12 left-12 z-20 max-w-md">
+            <div class="bg-surface/80 backdrop-blur-md p-6 rounded-xl border border-white/20">
+                <span class="text-primary font-headline text-xs font-bold tracking-widest uppercase mb-2 block">Cultura Gastronómica</span>
+                <h2 class="text-3xl font-extrabold text-on-surface leading-tight">Explora el sabor auténtico de La Paz.</h2>
+                <p class="text-on-surface-variant mt-3 leading-relaxed">Únete a la comunidad de paladares más exigentes de Bolivia y descubre tesoros culinarios ocultos.</p>
+            </div>
+        </div>
     </div>
 </main>
 </body>

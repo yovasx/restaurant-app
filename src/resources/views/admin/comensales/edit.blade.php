@@ -17,8 +17,18 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="space-y-2">
-                <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Nombre Completo</label>
+                <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Nombres</label>
                 <input name="nombre" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" required value="{{ old('nombre', $comensal->nombre) }}" />
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Apellido Paterno</label>
+                <input name="apellido_paterno" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" required value="{{ old('apellido_paterno', $comensal->apellido_paterno) }}" />
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Apellido Materno</label>
+                <input name="apellido_materno" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" required value="{{ old('apellido_materno', $comensal->apellido_materno) }}" />
             </div>
 
             <div class="space-y-2">
@@ -28,7 +38,7 @@
 
             <div class="space-y-2">
                 <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Teléfono</label>
-                <input name="telefono" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" value="{{ old('telefono', $comensal->telefono) }}"/>
+                <input name="telefono" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" required value="{{ old('telefono', $comensal->telefono) }}"/>
             </div>
 
             <div class="space-y-2">

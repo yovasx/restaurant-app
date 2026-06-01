@@ -2,55 +2,64 @@
     $toastType = null;
     $toastMessage = null;
 
-    if (session('success')) {
+    if ($errorMessage = session('error')) {
+        $toastType = 'error';
+        $toastMessage = $errorMessage;
+    } elseif ($successMessage = session('success')) {
         $toastType = 'success';
-        $toastMessage = session('success');
+        $toastMessage = $successMessage;
     } elseif ($errors->any()) {
         $toastType = 'error';
         $toastMessage = $errors->all();
     }
 
-    $toastStyles = [
-        'success' => 'border-emerald-200 bg-white text-emerald-900',
-        'error' => 'border-red-200 bg-white text-red-900',
-    ];
-
-    $toastIcons = [
-        'success' => 'check_circle',
-        'error' => 'error',
-    ];
+    $toastTimeout = $toastType === 'error' ? 8000 : 3500;
 @endphp
 
 @if($toastType && $toastMessage)
-    <div class="pointer-events-none fixed inset-0 z-[90] flex items-center justify-center p-4">
-        <div
-            data-screen-toast
-            data-timeout="3800"
-            class="sidebar-toast pointer-events-auto hidden w-full max-w-md rounded-[1.75rem] border px-6 py-5 shadow-2xl transition duration-200 opacity-0 translate-y-4 scale-95 {{ $toastStyles[$toastType] }}"
+    <div
+        data-screen-toast
+        data-timeout="{{ $toastTimeout }}"
+        class="fixed top-4 right-4 left-4 sm:left-auto z-[90] hidden sm:max-w-sm transition-all duration-200 opacity-0 translate-x-4 scale-95"
+        role="alert"
+    >
+        <div class="pointer-events-auto rounded-2xl border px-5 py-4 shadow-2xl
+            {{ $toastType === 'success' ? 'border-emerald-200 bg-emerald-50 text-emerald-900' : 'border-red-200 bg-red-50 text-red-900' }}"
         >
-            <div class="flex items-start gap-4">
-                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl {{ $toastType === 'success' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600' }}">
-                    <span class="material-symbols-outlined">{{ $toastIcons[$toastType] }}</span>
+            <div class="flex items-start gap-3">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl
+                    {{ $toastType === 'success' ? 'bg-emerald-200/60 text-emerald-700' : 'bg-red-200/60 text-red-700' }}">
+                    <span class="material-symbols-outlined text-2xl">
+                        {{ $toastType === 'success' ? 'check_circle' : 'cancel' }}
+                    </span>
                 </div>
 
-                <div class="min-w-0 flex-1">
-                    <p class="font-headline text-lg font-extrabold">
-                        {{ $toastType === 'success' ? 'Cambio guardado' : 'Revisa el formulario' }}
+                <div class="min-w-0 flex-1 pt-0.5">
+                    <p class="font-headline text-sm font-extrabold">
+                        {{ $toastType === 'success' ? 'Cambio guardado' : 'No se pudo guardar' }}
                     </p>
 
                     @if(is_array($toastMessage))
-                        <ul class="mt-2 space-y-1 text-sm">
-                            @foreach($toastMessage as $message)
-                                <li>{{ $message }}</li>
+                        <ul class="mt-1.5 space-y-1 text-sm text-current/70">
+                            @foreach(array_slice($toastMessage, 0, 2) as $message)
+                                <li class="flex items-start gap-1.5">
+                                    <span class="mt-0.5 shrink-0">•</span>
+                                    <span>{{ $message }}</span>
+                                </li>
                             @endforeach
+                            @if(count($toastMessage) > 2)
+                                <li class="text-xs opacity-60">y {{ count($toastMessage) - 2 }} más...</li>
+                            @endif
                         </ul>
                     @else
-                        <p class="mt-2 text-sm text-current/80">{{ $toastMessage }}</p>
+                        <p class="mt-1 text-sm text-current/70">{{ $toastMessage }}</p>
                     @endif
                 </div>
 
-                <button type="button" data-toast-close class="rounded-full p-2 text-current/60 transition hover:bg-black/5 hover:text-current">
-                    <span class="material-symbols-outlined text-[20px]">close</span>
+                <button type="button" data-toast-close
+                    class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors
+                        {{ $toastType === 'success' ? 'hover:bg-emerald-200/60 text-emerald-600' : 'hover:bg-red-200/60 text-red-600' }}">
+                    <span class="material-symbols-outlined text-lg">close</span>
                 </button>
             </div>
         </div>

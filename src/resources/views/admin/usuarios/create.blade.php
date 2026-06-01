@@ -14,8 +14,18 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="space-y-2">
-                <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Nombre Completo</label>
+                <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Nombres</label>
                 <input name="nombre" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" required value="{{ old('nombre') }}" placeholder="Nombre o Razón Social" />
+            </div>
+
+            <div class="space-y-2 apellido-field">
+                <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Apellido Paterno</label>
+                <input name="apellido_paterno" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" value="{{ old('apellido_paterno') }}" placeholder="Solo para comensal"/>
+            </div>
+
+            <div class="space-y-2 apellido-field">
+                <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Apellido Materno</label>
+                <input name="apellido_materno" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" value="{{ old('apellido_materno') }}" placeholder="Solo para comensal"/>
             </div>
 
             <div class="space-y-2">
@@ -25,7 +35,12 @@
 
             <div class="space-y-2">
                 <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Teléfono</label>
-                <input name="telefono" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" value="{{ old('telefono') }}" placeholder="70000000"/>
+                <input name="telefono" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" required value="{{ old('telefono') }}" placeholder="70000000"/>
+            </div>
+
+            <div class="space-y-2 nit-restaurante-field">
+                <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">NIT</label>
+                <input name="nit" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" value="{{ old('nit') }}" placeholder="Solo para restaurante"/>
             </div>
 
             <div class="space-y-2">

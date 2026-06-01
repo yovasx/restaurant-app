@@ -17,10 +17,20 @@ class Usuario extends Authenticatable
         'password',
         'telefono',
         'estado',
-        'rol_id'
+        'rol_id',
     ];
 
     protected $hidden = [
         'password',
     ];
+
+    public function perfilRestaurante()
+    {
+        return $this->hasOne(PerfilRestaurante::class, 'usuario_id');
+    }
+
+    public function restaurantes()
+    {
+        return $this->hasMany(Restaurante::class, 'usuario_id');
+    }
 }

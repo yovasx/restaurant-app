@@ -165,10 +165,28 @@
                         <span class="text-on-surface-variant">{{ $restaurante->horario_apertura }} – {{ $restaurante->horario_cierre }}</span>
                     </div>
                     @endif
+                    @if($restaurante->telefono)
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-secondary text-[18px]">call</span>
+                        <span class="text-on-surface-variant">{{ $restaurante->telefono }}</span>
+                    </div>
+                    @endif
+                    @if($restaurante->email_reservas)
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-secondary text-[18px]">mail</span>
+                        <span class="text-on-surface-variant">{{ $restaurante->email_reservas }}</span>
+                    </div>
+                    @endif
                     @if($restaurante->instagram)
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-secondary text-[18px]">alternate_email</span>
                         <span class="text-on-surface-variant">{{ $restaurante->instagram }}</span>
+                    </div>
+                    @endif
+                    @if($restaurante->facebook_url)
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-secondary text-[18px]">language</span>
+                        <span class="text-on-surface-variant">{{ $restaurante->facebook_url }}</span>
                     </div>
                     @endif
                 </div>

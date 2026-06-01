@@ -6,8 +6,18 @@
 
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div class="space-y-2">
-            <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">Nombre Completo</label>
+            <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">Nombres</label>
             <input name="nombre" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" required data-modal-initial-focus value="{{ old('nombre', $comensal->nombre) }}" />
+        </div>
+
+        <div class="space-y-2">
+            <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">Apellido Paterno</label>
+            <input name="apellido_paterno" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" required value="{{ old('apellido_paterno', $comensal->apellido_paterno) }}" />
+        </div>
+
+        <div class="space-y-2">
+            <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">Apellido Materno</label>
+            <input name="apellido_materno" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" required value="{{ old('apellido_materno', $comensal->apellido_materno) }}" />
         </div>
 
         <div class="space-y-2">
@@ -17,7 +27,7 @@
 
         <div class="space-y-2">
             <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">Teléfono</label>
-            <input name="telefono" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" value="{{ old('telefono', $comensal->telefono) }}"/>
+            <input name="telefono" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" required value="{{ old('telefono', $comensal->telefono) }}"/>
         </div>
 
         <div class="space-y-2">

@@ -34,7 +34,7 @@
             @foreach($comensales as $comensal)
             <tr class="hover:bg-surface-container-low/30 transition-colors group">
                 <td class="px-6 py-5">
-                    <p class="font-bold text-on-surface">{{ $comensal->nombre }}</p>
+                    <p class="font-bold text-on-surface">{{ $comensal->nombre }} {{ $comensal->apellido_paterno }} {{ $comensal->apellido_materno }}</p>
                     <p class="text-xs text-stone-400">ID: #{{ $comensal->id }}</p>
                 </td>
                 <td class="px-6 py-5">

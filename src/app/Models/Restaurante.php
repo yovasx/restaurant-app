@@ -23,17 +23,31 @@ class Restaurante extends Model
         'hora_cierre_domingo',
         'foto_portada',
         'telefono',
-        'fecha_registro',
-        'estado',
         'email_reservas',
         'instagram',
         'facebook_url',
         'zona',
-        'nit'
+        'fecha_registro',
+        'estado',
+        'es_principal',
+    ];
+
+    protected $casts = [
+        'es_principal' => 'boolean',
     ];
 
     public function usuario()
     {
         return $this->belongsTo(Usuario::class);
+    }
+
+    public function productos()
+    {
+        return $this->hasMany(Producto::class, 'restaurante_id');
+    }
+
+    public function promociones()
+    {
+        return $this->hasMany(Promocion::class, 'restaurante_id');
     }
 }

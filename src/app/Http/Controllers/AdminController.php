@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Usuario;
 use App\Models\Comensal;
 use App\Models\Categoria;
+use App\Models\PerfilRestaurante;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -27,7 +28,6 @@ class AdminController extends Controller
     {
         $totalRestaurantes = Usuario::where('rol_id', 2)->count();
         $totalComensales = Comensal::count();
-        // Mock data for reviews/revenues for now since we don't have the full models hooked up yet
         return view('admin.dashboard', compact('totalRestaurantes', 'totalComensales'));
     }
 
@@ -44,7 +44,7 @@ class AdminController extends Controller
 
     public function editRestaurante($id)
     {
-        $usuario = Usuario::findOrFail($id);
+        $usuario = Usuario::with('perfilRestaurante')->findOrFail($id);
         return view('admin.restaurantes.edit', compact('usuario'));
     }
 
@@ -59,25 +59,37 @@ class AdminController extends Controller
     public function updateRestaurante(Request $request, $id)
     {
         $usuario = Usuario::findOrFail($id);
-        
+
         $validated = $request->validate([
             'nombre' => 'required|string|max:100',
             'email' => 'required|email|max:150|unique:usuarios,email,'.$usuario->id,
-            'telefono' => 'nullable|string|max:20',
+            'telefono' => 'required|string|max:20',
             'estado' => 'required|in:activo,inactivo,baneado',
-            'password' => 'nullable|string|min:6'
+            'password' => 'nullable|string|min:6',
+            'nit' => 'required|string',
         ]);
 
         $usuario->nombre = $validated['nombre'];
         $usuario->email = $validated['email'];
         $usuario->telefono = $validated['telefono'];
         $usuario->estado = $validated['estado'];
-        
+
         if (!empty($validated['password'])) {
             $usuario->password = Hash::make($validated['password']);
         }
-        
+
         $usuario->save();
+
+        $perfil = $usuario->perfilRestaurante;
+        if ($perfil) {
+            $perfil->update(['nit' => $validated['nit']]);
+        } else {
+            PerfilRestaurante::create([
+                'usuario_id' => $usuario->id,
+                'nit' => $validated['nit'],
+            ]);
+        }
+
         return $this->redirectTo($request, 'admin.restaurantes.index')->with('success', 'Registro del local actualizado exitosamente.');
     }
 
@@ -109,70 +121,77 @@ class AdminController extends Controller
     public function updateComensal(Request $request, $id)
     {
         $comensal = Comensal::findOrFail($id);
-        
+
         $validated = $request->validate([
             'nombre' => 'required|string|max:100',
+            'apellido_paterno' => 'required|string|max:100',
+            'apellido_materno' => 'required|string|max:100',
             'email' => 'required|email|max:150|unique:comensales,email,'.$comensal->id,
-            'telefono' => 'nullable|string|max:20',
+            'telefono' => 'required|string|max:20',
             'estado' => 'required|in:activo,inactivo,baneado',
-            'password' => 'nullable|string|min:6'
+            'password' => 'nullable|string|min:6',
         ]);
 
         $comensal->nombre = $validated['nombre'];
+        $comensal->apellido_paterno = $validated['apellido_paterno'];
+        $comensal->apellido_materno = $validated['apellido_materno'];
         $comensal->email = $validated['email'];
         $comensal->telefono = $validated['telefono'];
         $comensal->estado = $validated['estado'];
-        
+
         if (!empty($validated['password'])) {
             $comensal->password = Hash::make($validated['password']);
         }
-        
+
         $comensal->save();
         return $this->redirectTo($request, 'admin.comensales.index')->with('success', 'Comensal actualizado exitosamente.');
     }
 
     public function changeRole(Request $request)
     {
-        // This method allows an admin to transfer a "Comensal" to a "Restaurante" by moving tables,
-        // or change "Restaurante" to "Administrador" by changing rol_id.
         $request->validate([
             'user_type' => 'required|in:comensal,usuario',
             'user_id' => 'required|integer',
-            'new_role' => 'required|in:1,2,comensal' // 1: Admin, 2: Restaurante
+            'new_role' => 'required|in:1,2,comensal',
         ]);
 
         DB::beginTransaction();
         try {
             if ($request->user_type === 'comensal') {
                 $user = Comensal::findOrFail($request->user_id);
-                
+
                 if ($request->new_role !== 'comensal') {
-                    // Moving Comensal -> Usuario (Restaurante or Admin)
                     $newUser = Usuario::create([
                         'nombre' => $user->nombre,
                         'email' => $user->email,
                         'password' => $user->password,
                         'telefono' => $user->telefono,
                         'estado' => $user->estado,
-                        'rol_id' => $request->new_role
+                        'rol_id' => $request->new_role,
                     ]);
+                    if ($request->new_role == 2) {
+                        PerfilRestaurante::create([
+                            'usuario_id' => $newUser->id,
+                            'nit' => 'PENDIENTE',
+                        ]);
+                    }
                     $user->delete();
                 }
             } else {
                 $user = Usuario::findOrFail($request->user_id);
-                
+
                 if ($request->new_role === 'comensal') {
-                    // Moving Usuario -> Comensal
                     $newComensal = Comensal::create([
                         'nombre' => $user->nombre,
+                        'apellido_paterno' => '',
+                        'apellido_materno' => '',
                         'email' => $user->email,
                         'password' => $user->password,
                         'telefono' => $user->telefono,
-                        'estado' => $user->estado
+                        'estado' => $user->estado,
                     ]);
                     $user->delete();
                 } else {
-                    // Changing between Admin and Restaurante
                     $user->update(['rol_id' => $request->new_role]);
                 }
             }
@@ -180,7 +199,7 @@ class AdminController extends Controller
             return $this->redirectTo($request, 'admin.dashboard')->with('success', 'Rol modificado y transferido de ser necesario.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => 'Error al cambiar de rol: ' . $e->getMessage()])->withInput();
+            return back()->with('error', 'Error al cambiar de rol: ' . $e->getMessage())->withInput();
         }
     }
 
@@ -194,39 +213,53 @@ class AdminController extends Controller
         $validated = $request->validate([
             'nombre' => 'required|string|max:100',
             'email' => 'required|email|max:150',
-            'telefono' => 'nullable|string|max:20',
+            'telefono' => 'required|string|max:20',
             'password' => 'required|string|min:6',
             'estado' => 'required|in:activo,inactivo',
-            'user_type' => 'required|in:1,2,comensal' // 1:admin, 2:restaurante
+            'user_type' => 'required|in:1,2,comensal',
         ]);
 
         if ($validated['user_type'] === 'comensal') {
-            // Check uniqueness in comensales
+            $rules = [
+                'apellido_paterno' => 'required|string|max:100',
+                'apellido_materno' => 'required|string|max:100',
+            ];
+            $extra = $request->validate($rules);
+
             if (Comensal::where('email', $validated['email'])->exists()) {
                 return back()->withErrors(['email' => 'El correo ya está en uso por otro comensal.'])->withInput();
             }
 
             Comensal::create([
                 'nombre' => $validated['nombre'],
+                'apellido_paterno' => $extra['apellido_paterno'],
+                'apellido_materno' => $extra['apellido_materno'],
                 'email' => $validated['email'],
                 'password' => Hash::make($validated['password']),
                 'telefono' => $validated['telefono'],
-                'estado' => $validated['estado']
+                'estado' => $validated['estado'],
             ]);
         } else {
-            // Check uniqueness in usuarios
             if (Usuario::where('email', $validated['email'])->exists()) {
                 return back()->withErrors(['email' => 'El correo ya está en uso por otro usuario/restaurante.'])->withInput();
             }
 
-            Usuario::create([
+            $usuario = Usuario::create([
                 'nombre' => $validated['nombre'],
                 'email' => $validated['email'],
                 'password' => Hash::make($validated['password']),
                 'telefono' => $validated['telefono'],
                 'estado' => $validated['estado'],
-                'rol_id' => $validated['user_type']
+                'rol_id' => $validated['user_type'],
             ]);
+
+            if ($validated['user_type'] == 2) {
+                $nitData = $request->validate(['nit' => 'required|string']);
+                PerfilRestaurante::create([
+                    'usuario_id' => $usuario->id,
+                    'nit' => $nitData['nit'],
+                ]);
+            }
         }
 
         return $this->redirectTo($request, 'admin.dashboard')->with('success', 'Usuario creado exitosamente.');
@@ -253,7 +286,7 @@ class AdminController extends Controller
         Categoria::create([
             'nombre_categoria' => $validated['nombre_categoria'],
             'descripcion' => $validated['descripcion'],
-            'estado' => 'activo'
+            'estado' => 'activo',
         ]);
         return $this->redirectTo($request, 'admin.categorias.index')->with('success', 'Categoría creada exitosamente.');
     }
@@ -270,7 +303,7 @@ class AdminController extends Controller
         $validated = $request->validate([
             'nombre_categoria' => 'required|string|max:100',
             'descripcion' => 'nullable|string',
-            'estado' => 'required|in:activo,inactivo'
+            'estado' => 'required|in:activo,inactivo',
         ]);
 
         $categoria->update($validated);

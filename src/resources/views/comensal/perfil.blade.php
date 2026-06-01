@@ -76,10 +76,28 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Name -->
                 <div class="flex flex-col gap-2">
-                    <label class="text-xs font-bold uppercase tracking-widest text-[#59413d] ml-1">Nombre Completo</label>
+                    <label class="text-xs font-bold uppercase tracking-widest text-[#59413d] ml-1">Nombres</label>
                     <div class="relative">
                         <input name="nombre" class="w-full bg-white border-0 rounded-lg px-4 py-3 text-on-surface focus:ring-2 focus:ring-[#9e2016] transition-all" type="text" value="{{ old('nombre', Auth::guard('comensal')->user()->nombre) }}" required/>
                         <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-stone-300">person</span>
+                    </div>
+                </div>
+
+                <!-- Apellido Paterno -->
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs font-bold uppercase tracking-widest text-[#59413d] ml-1">Apellido Paterno</label>
+                    <div class="relative">
+                        <input name="apellido_paterno" class="w-full bg-white border-0 rounded-lg px-4 py-3 text-on-surface focus:ring-2 focus:ring-[#9e2016] transition-all" type="text" value="{{ old('apellido_paterno', Auth::guard('comensal')->user()->apellido_paterno) }}" required/>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-stone-300">badge</span>
+                    </div>
+                </div>
+
+                <!-- Apellido Materno -->
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs font-bold uppercase tracking-widest text-[#59413d] ml-1">Apellido Materno</label>
+                    <div class="relative">
+                        <input name="apellido_materno" class="w-full bg-white border-0 rounded-lg px-4 py-3 text-on-surface focus:ring-2 focus:ring-[#9e2016] transition-all" type="text" value="{{ old('apellido_materno', Auth::guard('comensal')->user()->apellido_materno) }}" required/>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-stone-300">badge</span>
                     </div>
                 </div>
                 
@@ -108,7 +126,7 @@
                         <div class="bg-[#eee7e1] px-4 flex items-center text-[#59413d] font-bold border-r border-[#e1bfb9]/20">
                             +591
                         </div>
-                        <input name="telefono" class="w-full bg-white border-0 px-4 py-3 text-on-surface focus:ring-2 focus:ring-[#9e2016] transition-all outline-none" type="tel" value="{{ old('telefono', Auth::guard('comensal')->user()->telefono) }}"/>
+                        <input name="telefono" class="w-full bg-white border-0 px-4 py-3 text-on-surface focus:ring-2 focus:ring-[#9e2016] transition-all outline-none" type="tel" value="{{ old('telefono', Auth::guard('comensal')->user()->telefono) }}" required/>
                     </div>
                 </div>
             </div>

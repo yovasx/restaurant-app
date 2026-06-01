@@ -62,12 +62,12 @@
                                 <label class="block text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-2">Teléfono de Contacto</label>
                                 <div class="relative">
                                     <span class="absolute left-4 top-1/2 -translate-y-1/2 text-stone-500 font-semibold">+591</span>
-                                    <input name="telefono" class="w-full bg-surface-container-highest border-0 rounded-lg p-4 pl-16 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all font-medium" type="tel" value="{{ old('telefono', $restaurante->telefono ?? $usuario->telefono) }}"/>
+                                    <input name="telefono" class="w-full bg-surface-container-highest border-0 rounded-lg p-4 pl-16 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all font-medium" type="tel" required value="{{ old('telefono', $restaurante->telefono ?? $usuario->telefono) }}"/>
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-2">Email de Reservas</label>
-                                <input name="email_reservas" class="w-full bg-surface-container-highest border-0 rounded-lg p-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all font-medium" type="email" value="{{ old('email_reservas', $restaurante->email_reservas ?? '') }}" placeholder="reservas@local.com"/>
+                                <input name="email_reservas" class="w-full bg-surface-container-highest border-0 rounded-lg p-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all font-medium" type="email" required value="{{ old('email_reservas', $restaurante->email_reservas ?? '') }}" placeholder="reservas@local.com"/>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -90,6 +90,20 @@
                         Nueva Contraseña
                     </h3>
                     <input name="password" class="w-full bg-surface-container-highest border-0 rounded-lg p-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all font-medium" type="password" placeholder="Déjalo en blanco para no cambiar"/>
+                </div>
+
+                <!-- Business Data -->
+                <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-4">
+                    <h3 class="text-xl font-bold font-headline flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">badge</span>
+                        Datos del Negocio
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-2">NIT</label>
+                            <input name="nit" class="w-full bg-surface-container-highest border-0 rounded-lg p-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all font-medium" type="text" required value="{{ old('nit', optional($perfil)->nit) }}"/>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Location -->

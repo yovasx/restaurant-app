@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Comensal;
+use App\Models\PerfilRestaurante;
+use App\Models\Restaurante;
 
 class AuthController extends Controller
 {
@@ -80,13 +82,17 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'nombre' => 'required|string|max:100',
+            'apellido_paterno' => 'required|string|max:100',
+            'apellido_materno' => 'required|string|max:100',
             'email' => 'required|string|email|max:150|unique:comensales,email',
-            'telefono' => 'nullable|string|max:20',
-            'password' => 'required|string|min:6',
+            'telefono' => 'required|string|max:20',
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
         $comensal = Comensal::create([
             'nombre' => $validated['nombre'],
+            'apellido_paterno' => $validated['apellido_paterno'],
+            'apellido_materno' => $validated['apellido_materno'],
             'email' => $validated['email'],
             'telefono' => $validated['telefono'],
             'password' => Hash::make($validated['password']),
@@ -109,8 +115,8 @@ class AuthController extends Controller
             'descripcion' => 'nullable|string',
             'email' => 'required|string|email|max:150|unique:usuarios,email',
             'telefono' => 'required|string|max:20',
-            'password' => 'required|string|min:6',
-            'nit' => 'nullable|string',
+            'password' => 'required|string|min:6|confirmed',
+            'nit' => 'required|string',
             'zona' => 'nullable|string',
             'direccion' => 'nullable|string',
             'latitud' => 'nullable|numeric',
@@ -121,10 +127,10 @@ class AuthController extends Controller
             'hora_cierre_sabado' => 'nullable|string',
             'hora_apertura_domingo' => 'nullable|string',
             'hora_cierre_domingo' => 'nullable|string',
-            'email_reservas' => 'nullable|email',
+            'email_reservas' => 'required|email',
             'instagram' => 'nullable|string',
             'facebook_url' => 'nullable|string',
-            'foto_portada' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120' // Max 5MB
+            'foto_portada' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
         $usuario = \App\Models\Usuario::create([
@@ -132,7 +138,12 @@ class AuthController extends Controller
             'email' => $validated['email'],
             'telefono' => $validated['telefono'],
             'password' => Hash::make($validated['password']),
-            'rol_id' => 2 // Default Restaurante Role
+            'rol_id' => 2,
+        ]);
+
+        PerfilRestaurante::create([
+            'usuario_id' => $usuario->id,
+            'nit' => $validated['nit'],
         ]);
 
         $portadaPath = null;
@@ -140,7 +151,7 @@ class AuthController extends Controller
             $portadaPath = $request->file('foto_portada')->store('portadas', 'public');
         }
 
-        \App\Models\Restaurante::create([
+        Restaurante::create([
             'usuario_id' => $usuario->id,
             'nombre' => $validated['nombre'],
             'descripcion' => $request->input('descripcion'),
@@ -154,13 +165,13 @@ class AuthController extends Controller
             'hora_cierre_sabado' => $request->input('hora_cierre_sabado'),
             'hora_apertura_domingo' => $request->input('hora_apertura_domingo'),
             'hora_cierre_domingo' => $request->input('hora_cierre_domingo'),
-            'email_reservas' => $request->input('email_reservas'),
+            'email_reservas' => $validated['email_reservas'],
             'instagram' => $request->input('instagram'),
             'facebook_url' => $request->input('facebook_url'),
             'zona' => $request->input('zona'),
-            'nit' => $request->input('nit'),
             'foto_portada' => $portadaPath,
-            'fecha_registro' => now()->toDateString()
+            'fecha_registro' => now()->toDateString(),
+            'es_principal' => true,
         ]);
 
         Auth::guard('restaurante')->login($usuario);
@@ -171,22 +182,26 @@ class AuthController extends Controller
     public function updatePerfilComensal(Request $request)
     {
         $comensal = Auth::guard('comensal')->user();
-        
+
         $validated = $request->validate([
             'nombre' => 'required|string|max:100',
+            'apellido_paterno' => 'required|string|max:100',
+            'apellido_materno' => 'required|string|max:100',
             'email' => 'required|string|email|max:150|unique:comensales,email,'.$comensal->id,
-            'telefono' => 'nullable|string|max:20',
+            'telefono' => 'required|string|max:20',
             'password' => 'nullable|string|min:6',
         ]);
-        
+
         $comensal->nombre = $validated['nombre'];
+        $comensal->apellido_paterno = $validated['apellido_paterno'];
+        $comensal->apellido_materno = $validated['apellido_materno'];
         $comensal->email = $validated['email'];
         $comensal->telefono = $validated['telefono'];
         if (!empty($validated['password'])) {
             $comensal->password = Hash::make($validated['password']);
         }
         $comensal->save();
-        
+
         return back()->with('success', 'Perfil actualizado exitosamente.');
     }
 }

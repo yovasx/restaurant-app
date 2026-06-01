@@ -61,11 +61,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
                         <label class="text-xs font-bold text-[#59413d] uppercase tracking-wider">Nombre del local</label>
-                        <input name="nombre" value="{{ old('nombre') }}" class="w-full bg-[#f3ede7] border-0 rounded-lg py-3 px-4 focus:ring-2 focus:ring-[#9e2016] transition-all" placeholder="Ej: Gustu" type="text" required>
+                        <input id="r_name" name="nombre" value="{{ old('nombre') }}" class="w-full bg-[#f3ede7] border-0 rounded-lg py-3 px-4 focus:ring-2 focus:ring-[#9e2016] transition-all" placeholder="Ej: Gustu" type="text" required oninput="psUpdate('r_name','r_email','r_password')">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-xs font-bold text-[#59413d] uppercase tracking-wider">NIT (Opcional)</label>
-                        <input name="nit" value="{{ old('nit') }}" class="w-full bg-[#f3ede7] border-0 rounded-lg py-3 px-4 focus:ring-2 focus:ring-[#9e2016] transition-all" placeholder="Número de Identidad" type="text">
+                        <label class="text-xs font-bold text-[#59413d] uppercase tracking-wider">NIT</label>
+                        <input name="nit" value="{{ old('nit') }}" class="w-full bg-[#f3ede7] border-0 rounded-lg py-3 px-4 focus:ring-2 focus:ring-[#9e2016] transition-all" placeholder="Número de Identidad" type="text" required>
                     </div>
                     <div class="space-y-2 md:col-span-2">
                         <label class="text-xs font-bold text-[#59413d] uppercase tracking-wider">Descripción del Restaurante</label>
@@ -73,7 +73,7 @@
                     </div>
                     <div class="space-y-2 md:col-span-2">
                         <label class="text-xs font-bold text-[#59413d] uppercase tracking-wider">Correo Electrónico (Tu cuenta)</label>
-                        <input name="email" value="{{ old('email') }}" class="w-full bg-[#f3ede7] border-0 rounded-lg py-3 px-4 focus:ring-2 focus:ring-[#9e2016] transition-all" placeholder="admin@local.com" type="email" required>
+                        <input id="r_email" name="email" value="{{ old('email') }}" class="w-full bg-[#f3ede7] border-0 rounded-lg py-3 px-4 focus:ring-2 focus:ring-[#9e2016] transition-all" placeholder="admin@local.com" type="email" required oninput="psUpdate('r_name','r_email','r_password')">
                     </div>
                     <div class="space-y-2">
                         <label class="text-xs font-bold text-[#59413d] uppercase tracking-wider">Teléfono Principal</label>
@@ -81,7 +81,17 @@
                     </div>
                     <div class="space-y-2">
                         <label class="text-xs font-bold text-[#59413d] uppercase tracking-wider">Contraseña</label>
-                        <input name="password" class="w-full bg-[#f3ede7] border-0 rounded-lg py-3 px-4 focus:ring-2 focus:ring-[#9e2016] transition-all" type="password" required minlength="6">
+                        <input id="r_password" name="password" class="w-full bg-[#f3ede7] border-0 rounded-lg py-3 px-4 focus:ring-2 focus:ring-[#9e2016] transition-all" type="password" required minlength="6">
+                        @include('partials.password-suggestion', [
+                            'nameId' => 'r_name',
+                            'emailId' => 'r_email',
+                            'passwordId' => 'r_password',
+                            'passwordConfirmationId' => 'r_password_confirmation',
+                        ])
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-[#59413d] uppercase tracking-wider">Confirmar Contraseña</label>
+                        <input id="r_password_confirmation" name="password_confirmation" class="w-full bg-[#f3ede7] border-0 rounded-lg py-3 px-4 focus:ring-2 focus:ring-[#9e2016] transition-all" type="password" required minlength="6">
                     </div>
                     <div class="space-y-2 md:col-span-2">
                         <label class="text-xs font-bold text-[#59413d] uppercase tracking-wider">Foto de Portada</label>
@@ -179,7 +189,7 @@
                         <label class="text-xs font-bold text-[#59413d] uppercase tracking-wider">Email de Reservas</label>
                         <div class="relative">
                             <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400">mail</span>
-                            <input name="email_reservas" class="w-full bg-[#e8e1dc] border-0 rounded-lg py-3 pl-12 pr-4 focus:ring-2 focus:ring-[#9e2016] transition-all" placeholder="reservas@tu-restaurante.com" type="email">
+                            <input name="email_reservas" class="w-full bg-[#e8e1dc] border-0 rounded-lg py-3 pl-12 pr-4 focus:ring-2 focus:ring-[#9e2016] transition-all" placeholder="reservas@tu-restaurante.com" type="email" required>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

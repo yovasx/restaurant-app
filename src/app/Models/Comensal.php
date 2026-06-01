@@ -13,6 +13,8 @@ class Comensal extends Authenticatable
 
     protected $fillable = [
         'nombre',
+        'apellido_paterno',
+        'apellido_materno',
         'email',
         'password',
         'telefono',
@@ -22,4 +24,9 @@ class Comensal extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    public function getNombreCompletoAttribute(): string
+    {
+        return trim("{$this->nombre} {$this->apellido_paterno} {$this->apellido_materno}");
+    }
 }

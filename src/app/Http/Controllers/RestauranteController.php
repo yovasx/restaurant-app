@@ -14,20 +14,29 @@ class RestauranteController extends Controller
     private function getRestaurante()
     {
         $usuario = Auth::guard('restaurante')->user();
-        return Restaurante::where('usuario_id', $usuario->id)->first();
+        $sucursalId = session('restaurante_sucursal_id');
+        if ($sucursalId) {
+            $sucursal = $usuario->restaurantes()->where('id', $sucursalId)->first();
+            if ($sucursal) {
+                return $sucursal;
+            }
+        }
+        return $usuario->restaurantes()->where('es_principal', true)->first()
+            ?? $usuario->restaurantes()->first();
     }
 
     public function dashboard()
     {
         $usuario = Auth::guard('restaurante')->user();
         $restaurante = $this->getRestaurante();
-        $productos = Producto::where('usuario_id', $usuario->id)
-            ->with('categoria')
-            ->latest()
-            ->paginate(10);
+        $restauranteId = $restaurante?->id;
+
+        $productos = $restauranteId
+            ? Producto::where('restaurante_id', $restauranteId)->with('categoria')->latest()->paginate(10)
+            : new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
         $categorias = Categoria::where('estado', 'activo')->orderBy('nombre_categoria')->get();
-        $totalProductos = Producto::where('usuario_id', $usuario->id)->count();
-        
+        $totalProductos = $productos->total();
+
         return view('restaurante.dashboard', compact('usuario', 'restaurante', 'productos', 'categorias', 'totalProductos'));
     }
 
@@ -35,7 +44,8 @@ class RestauranteController extends Controller
     {
         $usuario = Auth::guard('restaurante')->user();
         $restaurante = $this->getRestaurante();
-        return view('restaurante.configuracion', compact('usuario', 'restaurante'));
+        $perfil = $usuario->perfilRestaurante;
+        return view('restaurante.configuracion', compact('usuario', 'restaurante', 'perfil'));
     }
 
     public function updateConfiguracion(Request $request)
@@ -46,7 +56,7 @@ class RestauranteController extends Controller
         $validated = $request->validate([
             'nombre'                      => 'required|string|max:150',
             'descripcion'                 => 'nullable|string',
-            'telefono'                    => 'nullable|string|max:20',
+            'telefono'                    => 'required|string|max:20',
             'direccion'                   => 'nullable|string|max:255',
             'zona'                        => 'nullable|string|max:100',
             'latitud'                     => 'nullable|numeric',
@@ -57,14 +67,14 @@ class RestauranteController extends Controller
             'hora_cierre_sabado'          => 'nullable|string',
             'hora_apertura_domingo'       => 'nullable|string',
             'hora_cierre_domingo'         => 'nullable|string',
-            'email_reservas'              => 'nullable|email',
+            'email_reservas'              => 'required|email',
             'instagram'                   => 'nullable|string',
             'facebook_url'                => 'nullable|string',
             'foto_portada'                => 'nullable|file|mimes:jpeg,png,jpg,webp|max:5120',
             'password'                    => 'nullable|string|min:6',
+            'nit'                         => 'required|string',
         ]);
 
-        // Update login email
         if ($request->email && $request->email !== $usuario->email) {
             $request->validate(['email' => 'email|unique:usuarios,email,'.$usuario->id]);
             $usuario->email = $request->email;
@@ -74,7 +84,16 @@ class RestauranteController extends Controller
         }
         $usuario->save();
 
-        // Handle cover photo
+        $perfil = $usuario->perfilRestaurante;
+        if ($perfil) {
+            $perfil->update(['nit' => $validated['nit']]);
+        } else {
+            \App\Models\PerfilRestaurante::create([
+                'usuario_id' => $usuario->id,
+                'nit' => $validated['nit'],
+            ]);
+        }
+
         $portadaPath = $restaurante ? $restaurante->foto_portada : null;
         if ($request->hasFile('foto_portada')) {
             $portadaPath = $request->file('foto_portada')->store('portadas', 'public');
@@ -107,6 +126,7 @@ class RestauranteController extends Controller
                 'usuario_id'     => $usuario->id,
                 'estado'         => 'activo',
                 'fecha_registro' => now()->toDateString(),
+                'es_principal'   => true,
             ]));
         }
 

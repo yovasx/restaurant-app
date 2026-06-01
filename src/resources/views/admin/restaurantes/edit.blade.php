@@ -28,7 +28,12 @@
 
             <div class="space-y-2">
                 <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Teléfono</label>
-                <input name="telefono" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" value="{{ old('telefono', $usuario->telefono) }}"/>
+                <input name="telefono" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" required value="{{ old('telefono', $usuario->telefono) }}"/>
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">NIT</label>
+                <input name="nit" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary font-medium text-on-surface" type="text" required value="{{ old('nit', optional($usuario->perfilRestaurante)->nit) }}"/>
             </div>
 
             <div class="space-y-2">

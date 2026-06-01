@@ -6,6 +6,7 @@ use App\Http\Requests\StoreProductoRequest;
 use App\Http\Requests\UpdateProductoRequest;
 use App\Models\Categoria;
 use App\Models\Producto;
+use App\Models\Restaurante;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -22,12 +23,24 @@ class ProductoController extends Controller
         return redirect()->route($fallbackRoute);
     }
 
-    public function index()
+    private function getRestauranteId()
     {
         $usuario = Auth::guard('restaurante')->user();
-        $productos = Producto::where('usuario_id', $usuario->id)
-            ->with('categoria')
-            ->paginate(10);
+        $sucursalId = session('restaurante_sucursal_id');
+        if ($sucursalId) {
+            $sucursal = $usuario->restaurantes()->where('id', $sucursalId)->first();
+            if ($sucursal) return $sucursal->id;
+        }
+        $principal = $usuario->restaurantes()->where('es_principal', true)->first();
+        return $principal?->id ?? $usuario->restaurantes()->first()?->id;
+    }
+
+    public function index()
+    {
+        $restauranteId = $this->getRestauranteId();
+        $productos = $restauranteId
+            ? Producto::where('restaurante_id', $restauranteId)->with('categoria')->paginate(10)
+            : new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
         $categorias = Categoria::where('estado', 'activo')->orderBy('nombre_categoria')->get();
 
         return view('productos.index', compact('productos', 'categorias'));
@@ -41,6 +54,11 @@ class ProductoController extends Controller
 
     public function store(Request $request)
     {
+        $restauranteId = $this->getRestauranteId();
+        if (!$restauranteId) {
+            return back()->with('error', 'Debes tener al menos una sucursal configurada.')->withInput();
+        }
+
         $validated = $request->validate([
             'nombre'       => 'required|string|max:255',
             'precio'       => 'required|numeric|min:0',
@@ -56,13 +74,13 @@ class ProductoController extends Controller
         }
 
         Producto::create([
+            'restaurante_id' => $restauranteId,
             'nombre'       => $validated['nombre'],
             'precio'       => $validated['precio'],
             'stock'        => $validated['stock'],
             'categoria_id' => $validated['categoria_id'],
             'descripcion'  => $validated['descripcion'],
             'foto'         => $fotoPath,
-            'usuario_id'   => Auth::guard('restaurante')->id(),
         ]);
 
         return $this->redirectTo($request, 'restaurante.dashboard')
@@ -94,7 +112,7 @@ class ProductoController extends Controller
         if ($request->hasFile('foto')) {
             $validated['foto'] = $request->file('foto')->store('productos', 'public');
         } else {
-            unset($validated['foto']); // keep existing if no new upload
+            unset($validated['foto']);
         }
 
         $producto->update($validated);

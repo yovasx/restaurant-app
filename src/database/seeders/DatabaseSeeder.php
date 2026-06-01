@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('admin123'),
                 'telefono' => '70000000',
                 'estado' => 'activo',
-                'rol_id' => 1
+                'rol_id' => 1,
             ]);
         }
     }

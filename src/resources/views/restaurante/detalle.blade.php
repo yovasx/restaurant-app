@@ -27,6 +27,21 @@
                 </div>
             </div>
 
+            <div class="flex flex-wrap gap-4 mb-6 text-sm text-stone-600">
+                @if($restaurante->telefono)
+                    <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[#9e2016] text-base">call</span> +591 {{ $restaurante->telefono }}</span>
+                @endif
+                @if($restaurante->email_reservas)
+                    <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[#9e2016] text-base">mail</span> {{ $restaurante->email_reservas }}</span>
+                @endif
+                @if($restaurante->instagram)
+                    <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[#9e2016] text-base">camera_alt</span> {{ $restaurante->instagram }}</span>
+                @endif
+                @if($restaurante->facebook_url)
+                    <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[#9e2016] text-base">language</span> {{ $restaurante->facebook_url }}</span>
+                @endif
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="md:col-span-2">
                     <h2 class="text-xl font-bold mb-4">Menú</h2>

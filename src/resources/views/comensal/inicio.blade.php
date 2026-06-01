@@ -13,7 +13,7 @@
             <a class="text-on-surface-variant/80 hover:text-primary-container transition-colors" href="{{ route('comensal.perfil') ?? '#' }}">Perfil</a>
         </nav>
         <div class="flex items-center space-x-4">
-            <a href="{{ route('comensal.perfil') ?? '#' }}" class="p-2 rounded-full hover:bg-surface-container transition-colors duration-300 scale-95 active:scale-90 hidden md:block text-on-surface-variant font-bold text-sm">Hola, {{ Auth::guard('comensal')->check() ? Auth::guard('comensal')->user()->nombre : 'Comensal' }}</a>
+            <a href="{{ route('comensal.perfil') ?? '#' }}" class="p-2 rounded-full hover:bg-surface-container transition-colors duration-300 scale-95 active:scale-90 hidden md:block text-on-surface-variant font-bold text-sm">Hola, {{ Auth::guard('comensal')->check() ? Auth::guard('comensal')->user()->nombre_completo : 'Comensal' }}</a>
             @if(Auth::guard('comensal')->check())
             <form method="POST" action="{{ route('logout.comensal') }}" class="inline">@csrf<button type="submit" class="p-2 rounded-full hover:bg-surface-container transition-colors flex items-center gap-1 group text-on-surface-variant font-bold" title="Cerrar sesión"><span class="material-symbols-outlined text-on-surface-variant group-hover:text-error">logout</span></button></form>
             @endif
