@@ -8,16 +8,26 @@ use App\Http\Controllers\ComensalController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    $guards = [];
+
     if (auth()->guard('comensal')->check()) {
-        return redirect()->route('comensal.inicio');
+        $guards[] = 'comensal';
     }
 
-    if (auth()->guard('usuario')->check()) {
-        $rol = auth()->guard('usuario')->user()->rol_id;
+    if (auth()->guard('admin')->check()) {
+        $guards[] = 'admin';
+    }
 
-        return $rol == 1
-            ? redirect()->route('admin.dashboard')
-            : redirect()->route('restaurante.dashboard');
+    if (auth()->guard('restaurante')->check()) {
+        $guards[] = 'restaurante';
+    }
+
+    if (count($guards) === 1) {
+        return match ($guards[0]) {
+            'comensal' => redirect()->route('comensal.inicio'),
+            'admin' => redirect()->route('admin.dashboard'),
+            'restaurante' => redirect()->route('restaurante.dashboard'),
+        };
     }
 
     $restaurants = \App\Models\Restaurante::where('estado', 'activo')
@@ -30,7 +40,9 @@ Route::get('/', function () {
 
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
-Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('logout/comensal', [AuthController::class, 'logoutComensal'])->name('logout.comensal');
+Route::post('logout/admin', [AuthController::class, 'logoutAdmin'])->name('logout.admin');
+Route::post('logout/restaurante', [AuthController::class, 'logoutRestaurante'])->name('logout.restaurante');
 
 Route::get('/setup', function() {
     \Illuminate\Support\Facades\Artisan::call('route:clear');
@@ -67,8 +79,8 @@ Route::middleware('auth:comensal')->group(function () {
 
 });
 
-// Rutas de Restaurante / Usuario
-Route::middleware(['auth:usuario'])->group(function () {
+// Rutas de Restaurante
+Route::middleware('auth:restaurante')->group(function () {
     Route::get('/restaurante/panel', [RestauranteController::class, 'dashboard'])->name('restaurante.dashboard');
     Route::resource('productos', ProductoController::class)->except(['show']);
     Route::post('/productos/{producto}/toggle', [ProductoController::class, 'toggle'])->name('productos.toggle');
@@ -84,7 +96,7 @@ Route::middleware(['auth:usuario'])->group(function () {
 });
 
 // Rutas de Administrador
-Route::middleware(['auth:usuario', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/usuarios/create', [AdminController::class, 'createUsuario'])->name('usuarios.create');
     Route::post('/usuarios', [AdminController::class, 'storeUsuario'])->name('usuarios.store');

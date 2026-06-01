@@ -42,7 +42,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'usuario' => [
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'usuarios',
+        ],
+        'restaurante' => [
             'driver' => 'session',
             'provider' => 'usuarios',
         ],

@@ -29,14 +29,21 @@ class AuthController extends Controller
                 return redirect()->intended('inicio');
             }
         } else {
-            if (Auth::guard('usuario')->attempt($credentials, $request->boolean('remember'))) {
+            if (Auth::guard('admin')->attempt([
+                'email' => $credentials['email'],
+                'password' => $credentials['password'],
+                'rol_id' => 1,
+            ], $request->boolean('remember'))) {
                 $request->session()->regenerate();
-                
-                $rol = Auth::guard('usuario')->user()->rol_id;
-                if ($rol == 1) {
-                    return redirect()->route('admin.dashboard');
-                }
-                // Restaurante users (rol_id = 2)
+                return redirect()->route('admin.dashboard');
+            }
+
+            if (Auth::guard('restaurante')->attempt([
+                'email' => $credentials['email'],
+                'password' => $credentials['password'],
+                'rol_id' => 2,
+            ], $request->boolean('remember'))) {
+                $request->session()->regenerate();
                 return redirect()->route('restaurante.dashboard');
             }
         }
@@ -46,18 +53,21 @@ class AuthController extends Controller
         ])->withInput($request->only('email', 'login_type'));
     }
 
-    public function logout(Request $request)
+    public function logoutComensal()
     {
-        if (Auth::guard('comensal')->check()) {
-            Auth::guard('comensal')->logout();
-        }
-        if (Auth::guard('usuario')->check()) {
-            Auth::guard('usuario')->logout();
-        }
+        Auth::guard('comensal')->logout();
+        return redirect()->route('home');
+    }
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+    public function logoutAdmin()
+    {
+        Auth::guard('admin')->logout();
+        return redirect()->route('home');
+    }
 
+    public function logoutRestaurante()
+    {
+        Auth::guard('restaurante')->logout();
         return redirect()->route('home');
     }
 
@@ -153,7 +163,7 @@ class AuthController extends Controller
             'fecha_registro' => now()->toDateString()
         ]);
 
-        Auth::guard('usuario')->login($usuario);
+        Auth::guard('restaurante')->login($usuario);
 
         return redirect()->intended(route('restaurante.dashboard'));
     }

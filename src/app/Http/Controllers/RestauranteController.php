@@ -13,13 +13,13 @@ class RestauranteController extends Controller
 {
     private function getRestaurante()
     {
-        $usuario = Auth::guard('usuario')->user();
+        $usuario = Auth::guard('restaurante')->user();
         return Restaurante::where('usuario_id', $usuario->id)->first();
     }
 
     public function dashboard()
     {
-        $usuario = Auth::guard('usuario')->user();
+        $usuario = Auth::guard('restaurante')->user();
         $restaurante = $this->getRestaurante();
         $productos = Producto::where('usuario_id', $usuario->id)
             ->with('categoria')
@@ -33,14 +33,14 @@ class RestauranteController extends Controller
 
     public function configuracion()
     {
-        $usuario = Auth::guard('usuario')->user();
+        $usuario = Auth::guard('restaurante')->user();
         $restaurante = $this->getRestaurante();
         return view('restaurante.configuracion', compact('usuario', 'restaurante'));
     }
 
     public function updateConfiguracion(Request $request)
     {
-        $usuario = Auth::guard('usuario')->user();
+        $usuario = Auth::guard('restaurante')->user();
         $restaurante = $this->getRestaurante();
 
         $validated = $request->validate([

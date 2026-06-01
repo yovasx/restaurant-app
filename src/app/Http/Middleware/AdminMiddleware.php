@@ -11,7 +11,7 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::guard('usuario')->check() && Auth::guard('usuario')->user()->rol_id == 1) {
+        if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->rol_id == 1) {
             return $next($request);
         }
         

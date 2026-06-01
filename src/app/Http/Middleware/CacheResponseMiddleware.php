@@ -16,26 +16,27 @@ class CacheResponseMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Solo aplicar a peticiones GET (no a POST, PUT, DELETE para no interferir con acciones)
         if (!$request->isMethod('get')) {
             return $next($request);
         }
 
-        // Generar una clave de caché única por usuario (o 'guest') y por URL
-        $userId = auth()->id() ?? auth('usuario')->id() ?? 'guest';
-        $key = 'page_cache_' . $userId . '_' . md5($request->fullUrl());
+        if (
+            auth()->guard('comensal')->check() ||
+            auth()->guard('admin')->check() ||
+            auth()->guard('restaurante')->check()
+        ) {
+            return $next($request);
+        }
 
-        // Si existe en caché, devolver la respuesta cacheada inmediatamente (super rápido)
+        $key = 'page_cache_guest_' . md5($request->fullUrl());
+
         if (Cache::has($key)) {
             $cached = Cache::get($key);
             return response($cached['content'], $cached['status'], $cached['headers']);
         }
 
-        // Si no existe, procesar la petición normalmente
         $response = $next($request);
 
-        // Si fue exitosa (código 200), guardamos el resultado en caché por 30 segundos
-        // Suficiente para que no se sienta lento al navegar, pero sin mantener datos viejos por horas
         if ($response->isSuccessful()) {
             Cache::put($key, [
                 'content' => $response->getContent(),

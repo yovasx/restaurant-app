@@ -124,7 +124,7 @@
     </form>
 
     <div class="mt-8">
-        <form method="POST" action="{{ route('logout') }}" class="flex justify-center">
+        <form method="POST" action="{{ route('logout.comensal') }}" class="flex justify-center">
             @csrf
             <button type="submit" class="font-bold text-red-600 underline hover:text-red-800 transition-colors">
                 Cerrar Sesión Activa

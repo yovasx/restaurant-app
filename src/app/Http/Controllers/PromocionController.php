@@ -24,7 +24,7 @@ class PromocionController extends Controller
 
     private function getRestauranteId()
     {
-        $usuario = Auth::guard('usuario')->user();
+        $usuario = Auth::guard('restaurante')->user();
         $restaurante = Restaurante::where('usuario_id', $usuario->id)->first();
         return $restaurante ? $restaurante->id : null;
     }

@@ -100,8 +100,10 @@ cache-clear: ## Limpiar todos los cachés de Laravel
 ## ── Permisos ──────────────────────────────────────────────────
 
 permissions: ## Arreglar permisos de storage y bootstrap/cache
+	$(COMPOSE) exec app chown -R www-data:www-data storage bootstrap/cache
 	$(COMPOSE) exec app chmod -R 775 storage bootstrap/cache
-	$(COMPOSE) exec app chown -R appuser:appgroup storage bootstrap/cache
+	$(COMPOSE) exec app touch storage/logs/laravel.log
+	$(COMPOSE) exec app chmod 666 storage/logs/laravel.log
 
 ## ── Ayuda ─────────────────────────────────────────────────────
 

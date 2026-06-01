@@ -32,10 +32,10 @@
 
                 <div class="mt-5 flex items-center gap-3">
                     <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary-fixed font-bold text-primary shadow-sm">
-                        {{ substr(Auth::guard('usuario')->user()->nombre, 0, 1) }}
+                        {{ substr(Auth::guard('admin')->user()->nombre, 0, 1) }}
                     </div>
                     <div class="min-w-0">
-                        <p class="truncate font-headline text-sm font-bold text-on-surface">{{ Auth::guard('usuario')->user()->nombre }}</p>
+                        <p class="truncate font-headline text-sm font-bold text-on-surface">{{ Auth::guard('admin')->user()->nombre }}</p>
                         <p class="text-[10px] font-semibold uppercase tracking-[0.3em] text-stone-500">Super Admin</p>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                     <span class="material-symbols-outlined shrink-0">add_circle</span>
                     <span>Añadir Usuario</span>
                 </button>
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ route('logout.admin') }}">
                     @csrf
                     <button class="flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 font-headline text-sm font-medium text-stone-500 transition-all hover:bg-stone-100 hover:text-red-600">
                         <span class="material-symbols-outlined shrink-0">logout</span>
@@ -90,11 +90,11 @@
 
                     <div class="flex items-center gap-3 border-l border-stone-200 pl-5">
                         <div class="text-right">
-                            <p class="text-xs font-bold text-on-surface">{{ Auth::guard('usuario')->user()->nombre }}</p>
+                            <p class="text-xs font-bold text-on-surface">{{ Auth::guard('admin')->user()->nombre }}</p>
                             <p class="text-[10px] text-stone-500">Super Administrador</p>
                         </div>
                         <div class="flex h-11 w-11 items-center justify-center rounded-full bg-primary-fixed font-bold text-primary shadow-sm">
-                            {{ substr(Auth::guard('usuario')->user()->nombre, 0, 1) }}
+                            {{ substr(Auth::guard('admin')->user()->nombre, 0, 1) }}
                         </div>
                     </div>
                 </div>

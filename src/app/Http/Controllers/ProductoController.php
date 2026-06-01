@@ -24,7 +24,7 @@ class ProductoController extends Controller
 
     public function index()
     {
-        $usuario = Auth::guard('usuario')->user();
+        $usuario = Auth::guard('restaurante')->user();
         $productos = Producto::where('usuario_id', $usuario->id)
             ->with('categoria')
             ->paginate(10);
@@ -62,7 +62,7 @@ class ProductoController extends Controller
             'categoria_id' => $validated['categoria_id'],
             'descripcion'  => $validated['descripcion'],
             'foto'         => $fotoPath,
-            'usuario_id'   => Auth::guard('usuario')->id(),
+            'usuario_id'   => Auth::guard('restaurante')->id(),
         ]);
 
         return $this->redirectTo($request, 'restaurante.dashboard')

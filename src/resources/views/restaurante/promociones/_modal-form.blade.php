@@ -50,14 +50,14 @@
     <div class="grid grid-cols-1 gap-6 {{ $isEditing ? 'md:grid-cols-3' : 'md:grid-cols-2' }}">
         <div class="space-y-2">
             <label class="text-xs font-bold text-[#59413d] uppercase tracking-wider">Fecha de Inicio</label>
-            <input name="fecha_inicio" value="{{ old('fecha_inicio', $promocion->fecha_inicio?->format('Y-m-d')) }}"
+            <input name="fecha_inicio" value="{{ old('fecha_inicio', $promocion?->fecha_inicio?->format('Y-m-d')) }}"
                 class="w-full bg-[#f3ede7] border-0 rounded-xl py-3 px-4 focus:ring-2 focus:ring-[#9e2016] transition-all"
                 type="date">
         </div>
 
         <div class="space-y-2">
             <label class="text-xs font-bold text-[#59413d] uppercase tracking-wider">Fecha de Fin</label>
-            <input name="fecha_fin" value="{{ old('fecha_fin', $promocion->fecha_fin?->format('Y-m-d')) }}"
+            <input name="fecha_fin" value="{{ old('fecha_fin', $promocion?->fecha_fin?->format('Y-m-d')) }}"
                 class="w-full bg-[#f3ede7] border-0 rounded-xl py-3 px-4 focus:ring-2 focus:ring-[#9e2016] transition-all"
                 type="date">
         </div>

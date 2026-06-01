@@ -16,7 +16,7 @@
 </head>
 <body class="min-h-screen bg-background text-on-background">
 @php
-    $showPublicNav = !auth()->guard('comensal')->check() && !auth()->guard('usuario')->check();
+    $showPublicNav = !auth()->guard('comensal')->check() && !auth()->guard('admin')->check() && !auth()->guard('restaurante')->check();
     $flushContent = trim($__env->yieldContent('layout-flush')) === 'true';
 @endphp
 

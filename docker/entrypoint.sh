@@ -29,7 +29,7 @@ elif id www-data >/dev/null 2>&1; then
 fi
 
 chmod -R 777 storage bootstrap/cache || true
-chmod 664 storage/logs/laravel.log || true || true
+chmod 666 storage/logs/laravel.log || true
 
 # Instala dependencias composer si no existe autoload
 if [ ! -f vendor/autoload.php ]; then

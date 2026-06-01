@@ -11,26 +11,25 @@
         body { font-family: 'Inter', sans-serif; background-color: #f9f2ec; }
         .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .nav-active { @apply bg-[#C0392B] text-white shadow-sm; }
     </style>
 </head>
 <body class="bg-surface-container-low text-on-surface min-h-screen overflow-hidden">
 
 @php
     $route = Route::currentRouteName();
-    $sideRestaurante = \App\Models\Restaurante::where('usuario_id', Auth::guard('usuario')->id())->first();
+    $sideRestaurante = \App\Models\Restaurante::where('usuario_id', Auth::guard('restaurante')->id())->first();
     $sidebarCategorias = \App\Models\Categoria::where('estado', 'activo')->orderBy('nombre_categoria')->get();
 @endphp
 
-<div class="workspace-shell">
+<div class="flex min-h-screen w-full">
     <!-- SideNavBar -->
-    <aside class="workspace-sidebar hidden lg:flex sticky top-0 h-screen shrink-0 flex-col border-r border-stone-200 bg-[#FFF8F2] py-6">
+    <aside class="hidden lg:flex sticky top-0 h-screen w-72 shrink-0 flex-col border-r border-stone-200 bg-[#FFF8F2] py-6">
         <div class="px-4 pb-8">
             <div class="flex items-center gap-3">
                 <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-container text-white shadow-lg shadow-primary/20">
                     <span class="material-symbols-outlined">restaurant_menu</span>
                 </div>
-                <div class="sidebar-copy min-w-0">
+                <div class="min-w-0">
                     <h1 class="font-black text-[#C0392B] text-2xl tracking-tighter font-headline">GastroGuía</h1>
                     <p class="text-[10px] uppercase tracking-[0.3em] text-stone-500 font-semibold">Panel de Control</p>
                 </div>
@@ -41,11 +40,11 @@
                     @if($sideRestaurante && $sideRestaurante->foto_portada)
                         <img class="w-full h-full object-cover" src="{{ asset('storage/'.$sideRestaurante->foto_portada) }}" alt="Foto Restaurante">
                     @else
-                        {{ substr(Auth::guard('usuario')->user()->nombre ?? 'R', 0, 1) }}
+                        {{ substr(Auth::guard('restaurante')->user()->nombre ?? 'R', 0, 1) }}
                     @endif
                 </div>
-                <div class="sidebar-user-copy min-w-0">
-                    <p class="font-headline font-bold text-sm text-on-surface leading-tight truncate">{{ Auth::guard('usuario')->user()->nombre ?? 'Restaurante' }}</p>
+                <div class="min-w-0">
+                    <p class="font-headline font-bold text-sm text-on-surface leading-tight truncate">{{ Auth::guard('restaurante')->user()->nombre ?? 'Restaurante' }}</p>
                     <p class="text-[10px] uppercase tracking-[0.3em] text-stone-500 font-semibold">Panel de Control</p>
                 </div>
             </div>
@@ -53,49 +52,49 @@
 
         <nav class="flex-1 space-y-1 px-3">
             <a href="{{ route('restaurante.dashboard') }}"
-               class="sidebar-item {{ str_starts_with($route, 'restaurante.dashboard') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
+               class="{{ str_starts_with($route, 'restaurante.dashboard') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
                 <span class="material-symbols-outlined shrink-0">dashboard</span>
-                <span class="sidebar-label font-headline font-medium text-sm">Panel</span>
+                <span class="font-headline font-medium text-sm">Panel</span>
             </a>
             <a href="{{ route('productos.index') }}"
-               class="sidebar-item {{ str_starts_with($route, 'productos') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
+               class="{{ str_starts_with($route, 'productos') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
                 <span class="material-symbols-outlined shrink-0">restaurant</span>
-                <span class="sidebar-label font-headline font-medium text-sm">Menú</span>
+                <span class="font-headline font-medium text-sm">Menú</span>
             </a>
             <a href="{{ route('restaurante.promociones.index') }}"
-               class="sidebar-item {{ str_starts_with($route, 'restaurante.promociones') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
+               class="{{ str_starts_with($route, 'restaurante.promociones') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
                 <span class="material-symbols-outlined shrink-0">local_offer</span>
-                <span class="sidebar-label font-headline font-medium text-sm">Promociones</span>
+                <span class="font-headline font-medium text-sm">Promociones</span>
             </a>
             <a href="{{ route('restaurante.resenas') }}"
-               class="sidebar-item {{ $route === 'restaurante.resenas' ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
+               class="{{ $route === 'restaurante.resenas' ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
                 <span class="material-symbols-outlined shrink-0">star</span>
-                <span class="sidebar-label font-headline font-medium text-sm">Reseñas</span>
+                <span class="font-headline font-medium text-sm">Reseñas</span>
             </a>
             <a href="{{ route('restaurante.configuracion') }}"
-               class="sidebar-item {{ str_starts_with($route, 'restaurante.configuracion') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
+               class="{{ str_starts_with($route, 'restaurante.configuracion') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
                 <span class="material-symbols-outlined shrink-0">settings</span>
-                <span class="sidebar-label font-headline font-medium text-sm">Ajustes</span>
+                <span class="font-headline font-medium text-sm">Ajustes</span>
             </a>
         </nav>
 
         <div class="px-3 mt-auto space-y-3">
-            <button type="button" data-modal-open="restaurante-producto-create-modal" class="sidebar-action w-full flex items-center gap-3 bg-primary text-white py-3 px-4 rounded-2xl font-headline font-bold text-sm shadow-md transition hover:bg-[#c0392b]">
+            <button type="button" data-modal-open="restaurante-producto-create-modal" class="w-full flex items-center gap-3 bg-primary text-white py-3 px-4 rounded-2xl font-headline font-bold text-sm shadow-md transition hover:bg-[#c0392b]">
                 <span class="material-symbols-outlined text-sm shrink-0">add</span>
-                <span class="sidebar-action-label">Nuevo Plato</span>
+                <span>Nuevo Plato</span>
             </button>
-            <form method="POST" action="{{ route('logout') }}">
+            <form method="POST" action="{{ route('logout.restaurante') }}">
                 @csrf
-                <button class="sidebar-action w-full flex items-center gap-3 py-3 px-4 rounded-2xl font-headline font-medium text-sm text-stone-500 hover:bg-stone-100 hover:text-red-600 transition-all">
+                <button class="w-full flex items-center gap-3 py-3 px-4 rounded-2xl font-headline font-medium text-sm text-stone-500 hover:bg-stone-100 hover:text-red-600 transition-all">
                     <span class="material-symbols-outlined text-sm shrink-0">logout</span>
-                    <span class="sidebar-action-label">Cerrar Sesión</span>
+                    <span>Cerrar Sesión</span>
                 </button>
             </form>
         </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="workspace-main flex flex-col h-screen overflow-y-auto pb-20 lg:pb-0">
+    <main class="flex-1 min-w-0 flex flex-col h-screen overflow-y-auto pb-20 lg:pb-0">
         <!-- Top Header -->
         <header class="sticky top-0 z-30 bg-[#FFF8F2]/95 w-full border-b border-stone-200/80 shadow-sm backdrop-blur">
             <div class="flex justify-between items-center w-full px-6 py-4">
