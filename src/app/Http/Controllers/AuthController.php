@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Comensal;
 use App\Models\PerfilRestaurante;
 use App\Models\Restaurante;
+use App\Services\Admin\AuditLogger;
 
 class AuthController extends Controller
 {
@@ -37,6 +38,7 @@ class AuthController extends Controller
                 'rol_id' => 1,
             ], $request->boolean('remember'))) {
                 $request->session()->regenerate();
+                app(AuditLogger::class)->log('auth', 'login_exitoso', null, null, "Admin {$credentials['email']} inició sesión");
                 return redirect()->route('admin.dashboard');
             }
 
@@ -48,6 +50,8 @@ class AuthController extends Controller
                 $request->session()->regenerate();
                 return redirect()->route('restaurante.dashboard');
             }
+
+            app(AuditLogger::class)->log('auth', 'login_fallido', null, null, "Intento fallido de inicio de sesión: {$credentials['email']}");
         }
 
         return back()->withErrors([
@@ -63,6 +67,10 @@ class AuthController extends Controller
 
     public function logoutAdmin()
     {
+        $user = Auth::guard('admin')->user();
+        if ($user) {
+            app(AuditLogger::class)->log('auth', 'logout', null, null, "Admin {$user->email} cerró sesión");
+        }
         Auth::guard('admin')->logout();
         return redirect()->route('home');
     }

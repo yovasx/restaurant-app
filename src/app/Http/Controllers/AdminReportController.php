@@ -43,12 +43,21 @@ class AdminReportController extends Controller
 
         config(['excel.temporary_files.local_path' => '/tmp/laravel-excel']);
 
-        $data = $service->generate($validated);
+        try {
+            $data = $service->generate($validated);
 
-        return Excel::download(
-            new GlobalReportExport($data),
-            'reporte_global_' . now()->format('Ymd_His') . '.xlsx'
-        );
+            $filename = 'reporte_global_' . now()->format('Ymd_His') . '.xlsx';
+            app(\App\Services\Admin\AuditLogger::class)->log('reportes', 'exportar_excel', 'Reporte', null, 'Reporte global exportado a Excel', null, null, ['filtros' => $validated, 'archivo' => $filename]);
+
+            return Excel::download(
+                new GlobalReportExport($data),
+                $filename
+            );
+        } catch (\Exception $e) {
+            app(\App\Services\Admin\AuditLogger::class)->log('reportes', 'error_excel', null, null, 'Error al exportar Excel: ' . $e->getMessage());
+            return redirect()->route('admin.reportes.index')
+                ->with('error', 'Error al exportar Excel: ' . $e->getMessage());
+        }
     }
 
     public function exportPdf(Request $request, GlobalReportService $service)
@@ -61,11 +70,20 @@ class AdminReportController extends Controller
             'score' => 'nullable|integer|between:1,5',
         ]);
 
-        $data = $service->generate($validated);
+        try {
+            $data = $service->generate($validated);
 
-        $pdf = Pdf::loadView('admin.reportes.pdf', $data);
-        $pdf->setPaper('a4', 'portrait');
+            $filename = 'reporte_global_' . now()->format('Ymd_His') . '.pdf';
+            app(\App\Services\Admin\AuditLogger::class)->log('reportes', 'exportar_pdf', 'Reporte', null, 'Reporte global exportado a PDF', null, null, ['filtros' => $validated, 'archivo' => $filename]);
 
-        return $pdf->download('reporte_global_' . now()->format('Ymd_His') . '.pdf');
+            $pdf = Pdf::loadView('admin.reportes.pdf', $data);
+            $pdf->setPaper('a4', 'portrait');
+
+            return $pdf->download($filename);
+        } catch (\Exception $e) {
+            app(\App\Services\Admin\AuditLogger::class)->log('reportes', 'error_pdf', null, null, 'Error al exportar PDF: ' . $e->getMessage());
+            return redirect()->route('admin.reportes.index')
+                ->with('error', 'Error al exportar PDF: ' . $e->getMessage());
+        }
     }
 }

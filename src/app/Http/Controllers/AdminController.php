@@ -7,6 +7,8 @@ use App\Models\Usuario;
 use App\Models\Comensal;
 use App\Models\Categoria;
 use App\Models\PerfilRestaurante;
+use App\Services\Admin\AdminDashboardService;
+use App\Services\Admin\AuditLogger;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -24,11 +26,10 @@ class AdminController extends Controller
         return redirect()->route($fallbackRoute);
     }
 
-    public function dashboard()
+    public function dashboard(AdminDashboardService $service)
     {
-        $totalRestaurantes = Usuario::where('rol_id', 2)->count();
-        $totalComensales = Comensal::count();
-        return view('admin.dashboard', compact('totalRestaurantes', 'totalComensales'));
+        $data = $service->generate();
+        return view('admin.dashboard', $data);
     }
 
     public function restaurantes(Request $request)
@@ -51,8 +52,10 @@ class AdminController extends Controller
     public function destroyRestaurante(Request $request, $id)
     {
         $usuario = Usuario::findOrFail($id);
+        $antes = ['estado' => $usuario->estado];
         $usuario->estado = 'inactivo';
         $usuario->save();
+        app(\App\Services\Admin\AuditLogger::class)->log('restaurantes', 'archivar', 'Usuario', $id, "Restaurante \"{$usuario->nombre}\u201d movido a inactivos", $antes, ['estado' => 'inactivo']);
         return $this->redirectTo($request, 'admin.restaurantes.index')->with('success', 'Restaurante movido a inactivos correctamente.');
     }
 
@@ -68,6 +71,14 @@ class AdminController extends Controller
             'password' => 'nullable|string|min:6',
             'nit' => 'required|string',
         ]);
+
+        $antes = [
+            'nombre' => $usuario->nombre,
+            'email' => $usuario->email,
+            'telefono' => $usuario->telefono,
+            'estado' => $usuario->estado,
+            'nit' => $usuario->perfilRestaurante?->nit,
+        ];
 
         $usuario->nombre = $validated['nombre'];
         $usuario->email = $validated['email'];
@@ -89,6 +100,22 @@ class AdminController extends Controller
                 'nit' => $validated['nit'],
             ]);
         }
+
+        $despues = [
+            'nombre' => $usuario->nombre,
+            'email' => $usuario->email,
+            'telefono' => $usuario->telefono,
+            'estado' => $usuario->estado,
+            'nit' => $usuario->perfilRestaurante?->nit,
+        ];
+
+        $cambios = array_filter($despues, fn($v, $k) => ($antes[$k] ?? null) !== $v, ARRAY_FILTER_USE_BOTH);
+        $desc = "Restaurante #{$id} actualizado";
+        if (isset($cambios['estado'])) {
+            $desc .= " | estado: {$antes['estado']} -> {$cambios['estado']}";
+        }
+
+        app(\App\Services\Admin\AuditLogger::class)->log('restaurantes', 'actualizar', 'Usuario', $id, $desc, $antes, $despues);
 
         return $this->redirectTo($request, 'admin.restaurantes.index')->with('success', 'Registro del local actualizado exitosamente.');
     }
@@ -113,8 +140,10 @@ class AdminController extends Controller
     public function destroyComensal(Request $request, $id)
     {
         $comensal = Comensal::findOrFail($id);
+        $antes = ['estado' => $comensal->estado];
         $comensal->estado = 'inactivo';
         $comensal->save();
+        app(\App\Services\Admin\AuditLogger::class)->log('comensales', 'archivar', 'Comensal', $id, "Comensal \"{$comensal->nombre}\u201d movido a inactivos", $antes, ['estado' => 'inactivo']);
         return $this->redirectTo($request, 'admin.comensales.index')->with('success', 'Usuario movido a inactivos correctamente.');
     }
 
@@ -132,6 +161,14 @@ class AdminController extends Controller
             'password' => 'nullable|string|min:6',
         ]);
 
+        $antes = [
+            'nombre' => $comensal->nombre,
+            'apellido_paterno' => $comensal->apellido_paterno,
+            'email' => $comensal->email,
+            'telefono' => $comensal->telefono,
+            'estado' => $comensal->estado,
+        ];
+
         $comensal->nombre = $validated['nombre'];
         $comensal->apellido_paterno = $validated['apellido_paterno'];
         $comensal->apellido_materno = $validated['apellido_materno'];
@@ -144,6 +181,23 @@ class AdminController extends Controller
         }
 
         $comensal->save();
+
+        $despues = [
+            'nombre' => $comensal->nombre,
+            'apellido_paterno' => $comensal->apellido_paterno,
+            'email' => $comensal->email,
+            'telefono' => $comensal->telefono,
+            'estado' => $comensal->estado,
+        ];
+
+        $cambios = array_filter($despues, fn($v, $k) => ($antes[$k] ?? null) !== $v, ARRAY_FILTER_USE_BOTH);
+        $desc = "Comensal #{$id} actualizado";
+        if (isset($cambios['estado'])) {
+            $desc .= " | estado: {$antes['estado']} -> {$cambios['estado']}";
+        }
+
+        app(\App\Services\Admin\AuditLogger::class)->log('comensales', 'actualizar', 'Comensal', $id, $desc, $antes, $despues);
+
         return $this->redirectTo($request, 'admin.comensales.index')->with('success', 'Comensal actualizado exitosamente.');
     }
 
@@ -154,6 +208,9 @@ class AdminController extends Controller
             'user_id' => 'required|integer',
             'new_role' => 'required|in:1,2,comensal',
         ]);
+
+        $roleMap = ['1' => 'admin', '2' => 'restaurante', 'comensal' => 'comensal'];
+        $antes = ['rol' => $request->user_type === 'comensal' ? 'comensal' : ($roleMap[Usuario::find($request->user_id)?->rol_id ?? 'comensal'] ?? 'desconocido')];
 
         DB::beginTransaction();
         try {
@@ -196,6 +253,10 @@ class AdminController extends Controller
                 }
             }
             DB::commit();
+
+            $despues = ['rol' => $roleMap[$request->new_role] ?? $request->new_role];
+            app(\App\Services\Admin\AuditLogger::class)->log('roles', 'cambiar_rol', $request->user_type, $request->user_id, "Rol cambiado: {$antes['rol']} -> {$despues['rol']}", $antes, $despues);
+
             return $this->redirectTo($request, 'admin.dashboard')->with('success', 'Rol modificado y transferido de ser necesario.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -219,6 +280,9 @@ class AdminController extends Controller
             'user_type' => 'required|in:1,2,comensal',
         ]);
 
+        $tipoMap = ['1' => 'admin', '2' => 'restaurante', 'comensal' => 'comensal'];
+        $tipo = $tipoMap[$validated['user_type']] ?? $validated['user_type'];
+
         if ($validated['user_type'] === 'comensal') {
             $rules = [
                 'apellido_paterno' => 'required|string|max:100',
@@ -230,7 +294,7 @@ class AdminController extends Controller
                 return back()->withErrors(['email' => 'El correo ya está en uso por otro comensal.'])->withInput();
             }
 
-            Comensal::create([
+            $comensal = Comensal::create([
                 'nombre' => $validated['nombre'],
                 'apellido_paterno' => $extra['apellido_paterno'],
                 'apellido_materno' => $extra['apellido_materno'],
@@ -239,6 +303,7 @@ class AdminController extends Controller
                 'telefono' => $validated['telefono'],
                 'estado' => $validated['estado'],
             ]);
+            app(\App\Services\Admin\AuditLogger::class)->log('usuarios', 'crear', 'Comensal', $comensal->id, "Comensal \"{$comensal->nombre}\u201d creado", null, ['tipo' => $tipo, 'email' => $validated['email']]);
         } else {
             if (Usuario::where('email', $validated['email'])->exists()) {
                 return back()->withErrors(['email' => 'El correo ya está en uso por otro usuario/restaurante.'])->withInput();
@@ -260,6 +325,7 @@ class AdminController extends Controller
                     'nit' => $nitData['nit'],
                 ]);
             }
+            app(\App\Services\Admin\AuditLogger::class)->log('usuarios', 'crear', 'Usuario', $usuario->id, "Usuario \"{$usuario->nombre}\u201d creado como {$tipo}", null, ['tipo' => $tipo, 'email' => $validated['email']]);
         }
 
         return $this->redirectTo($request, 'admin.dashboard')->with('success', 'Usuario creado exitosamente.');
@@ -283,11 +349,12 @@ class AdminController extends Controller
             'descripcion' => 'nullable|string',
         ]);
 
-        Categoria::create([
+        $categoria = Categoria::create([
             'nombre_categoria' => $validated['nombre_categoria'],
             'descripcion' => $validated['descripcion'],
             'estado' => 'activo',
         ]);
+        app(\App\Services\Admin\AuditLogger::class)->log('categorias', 'crear', 'Categoria', $categoria->id, "Categor\u00eda \"{$categoria->nombre_categoria}\u201d creada", null, $validated);
         return $this->redirectTo($request, 'admin.categorias.index')->with('success', 'Categoría creada exitosamente.');
     }
 
@@ -306,15 +373,19 @@ class AdminController extends Controller
             'estado' => 'required|in:activo,inactivo',
         ]);
 
+        $antes = ['nombre_categoria' => $categoria->nombre_categoria, 'descripcion' => $categoria->descripcion, 'estado' => $categoria->estado];
         $categoria->update($validated);
+        app(\App\Services\Admin\AuditLogger::class)->log('categorias', 'actualizar', 'Categoria', $id, "Categor\u00eda #{$id} actualizada", $antes, $validated);
         return $this->redirectTo($request, 'admin.categorias.index')->with('success', 'Categoría actualizada correctamente.');
     }
 
     public function destroyCategoria(Request $request, $id)
     {
         $categoria = Categoria::findOrFail($id);
+        $antes = ['estado' => $categoria->estado];
         $categoria->estado = 'inactivo';
         $categoria->save();
+        app(\App\Services\Admin\AuditLogger::class)->log('categorias', 'archivar', 'Categoria', $id, "Categor\u00eda \"{$categoria->nombre_categoria}\u201d movida a inactivos", $antes, ['estado' => 'inactivo']);
         return $this->redirectTo($request, 'admin.categorias.index')->with('success', 'Categoría movida a inactivos.');
     }
 }

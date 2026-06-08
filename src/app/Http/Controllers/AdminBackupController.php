@@ -45,6 +45,8 @@ class AdminBackupController extends Controller
             abort(404, 'Backup no encontrado.');
         }
 
+        app(\App\Services\Admin\AuditLogger::class)->log('backups', 'descargar_backup', 'Backup', null, "Backup descargado: {$file}");
+
         return response()->download($fullPath, $file);
     }
 
@@ -52,9 +54,11 @@ class AdminBackupController extends Controller
     {
         try {
             $filename = $service->generate();
+            app(\App\Services\Admin\AuditLogger::class)->log('backups', 'generar_backup', 'Backup', null, "Backup generado: {$filename}", null, null, ['archivo' => $filename]);
             return redirect()->route('admin.backups.index')
                 ->with('success', "Backup generado exitosamente: {$filename}");
         } catch (\Exception $e) {
+            app(\App\Services\Admin\AuditLogger::class)->log('backups', 'error_backup', null, null, 'Error al generar backup: ' . $e->getMessage());
             return redirect()->route('admin.backups.index')
                 ->with('error', 'Error al generar backup: ' . $e->getMessage());
         }

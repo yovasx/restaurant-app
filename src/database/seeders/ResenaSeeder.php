@@ -14,7 +14,7 @@ class ResenaSeeder extends Seeder
         $comensales = Comensal::all()->pluck('id')->toArray();
         $menus = Menu::all()->groupBy('restaurante_id');
 
-        $comentarios = [
+        $comentariosPositivos = [
             'Excelente atención, la comida deliciosa. Volveré sin duda.',
             'Muy buena relación calidad-precio. Recomendado.',
             'El plato estrella es increíble, superó mis expectativas.',
@@ -25,11 +25,17 @@ class ResenaSeeder extends Seeder
             'Muy recomendable, el sabor es auténtico.',
             'Atención rápida y comida deliciosa. 5 estrellas.',
             'Me encantó, definitivamente mi nuevo lugar favorito.',
+        ];
+
+        $comentariosNeutros = [
             'Bueno pero puede mejorar. La atención fue un poco lenta.',
             'La comida estaba bien, pero el ambiente es ruidoso.',
             'Precios un poco elevados para la porción que sirven.',
             'Buen servicio aunque tardaron un poco en atendernos.',
             'La comida es buena pero esperaba más variedad en el menú.',
+        ];
+
+        $comentariosNegativos = [
             'La comida no era lo que esperaba. Muy salada.',
             'Mala atención, nos hicieron esperar demasiado.',
             'Los precios son caros para la calidad que ofrecen.',
@@ -40,14 +46,46 @@ class ResenaSeeder extends Seeder
         $total = 0;
 
         foreach ($menus as $restauranteId => $restMenus) {
-            $numReviews = random_int(3, 5);
+            $numReviews = random_int(4, 8);
             $usedComensales = [];
 
-            for ($i = 0; $i < $numReviews; $i++) {
+            // Ensure at least one review of each score bucket per restaurant
+            $forcedScores = [1, 3, 5];
+            foreach ($forcedScores as $fs) {
                 $available = array_diff($comensales, $usedComensales);
-                if (empty($available)) {
-                    break;
-                }
+                if (empty($available)) break;
+
+                $comensalId = $available[array_rand($available)];
+                $usedComensales[] = $comensalId;
+                $menu = $restMenus->random();
+
+                $comentario = match (true) {
+                    $fs >= 4 => $comentariosPositivos[array_rand($comentariosPositivos)],
+                    $fs >= 3 => $comentariosNeutros[array_rand($comentariosNeutros)],
+                    default  => $comentariosNegativos[array_rand($comentariosNegativos)],
+                };
+
+                $offset = random_int(0, 44);
+                $createdAt = now()->subDays($offset)->addHours(random_int(8, 22))->addMinutes(random_int(0, 59));
+
+                $resena = new Resena([
+                    'comensal_id' => $comensalId,
+                    'menu_id'     => $menu->id,
+                    'score'       => $fs,
+                    'comentario'  => $comentario,
+                ]);
+                $resena->created_at = $createdAt;
+                $resena->updated_at = $createdAt;
+                $resena->save();
+                $total++;
+            }
+
+            // Fill remaining reviews randomly
+            $remaining = $numReviews - count($forcedScores);
+            for ($i = 0; $i < $remaining; $i++) {
+                $available = array_diff($comensales, $usedComensales);
+                if (empty($available)) break;
+
                 $comensalId = $available[array_rand($available)];
                 $usedComensales[] = $comensalId;
 
@@ -55,17 +93,23 @@ class ResenaSeeder extends Seeder
 
                 $score = $this->weightedScore();
                 $comentario = match (true) {
-                    $score >= 4 => $comentarios[array_rand(array_slice($comentarios, 0, 10))],
-                    $score >= 3 => $comentarios[10 + array_rand(array_slice($comentarios, 10, 5))],
-                    default     => $comentarios[15 + array_rand(array_slice($comentarios, 15))],
+                    $score >= 4 => $comentariosPositivos[array_rand($comentariosPositivos)],
+                    $score >= 3 => $comentariosNeutros[array_rand($comentariosNeutros)],
+                    default     => $comentariosNegativos[array_rand($comentariosNegativos)],
                 };
 
-                Resena::create([
+                $offset = random_int(0, 44);
+                $createdAt = now()->subDays($offset)->addHours(random_int(8, 22))->addMinutes(random_int(0, 59));
+
+                $resena = new Resena([
                     'comensal_id' => $comensalId,
                     'menu_id'     => $menu->id,
                     'score'       => $score,
                     'comentario'  => $comentario,
                 ]);
+                $resena->created_at = $createdAt;
+                $resena->updated_at = $createdAt;
+                $resena->save();
                 $total++;
             }
         }

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Producto;
 use App\Models\Categoria;
 use App\Models\Restaurante;
+use App\Services\Restaurante\RestaurantDashboardService;
 
 class RestauranteController extends Controller
 {
@@ -37,7 +38,13 @@ class RestauranteController extends Controller
         $categorias = Categoria::where('estado', 'activo')->orderBy('nombre_categoria')->get();
         $totalProductos = $productos->total();
 
-        return view('restaurante.dashboard', compact('usuario', 'restaurante', 'productos', 'categorias', 'totalProductos'));
+        $dashboard = $restauranteId
+            ? app(RestaurantDashboardService::class)->generate($restauranteId)
+            : app(RestaurantDashboardService::class)->empty();
+
+        return view('restaurante.dashboard', array_merge(compact(
+            'usuario', 'restaurante', 'productos', 'categorias', 'totalProductos'
+        ), $dashboard));
     }
 
     public function configuracion()

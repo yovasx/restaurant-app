@@ -147,4 +147,6 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     Route::get('/backups', [AdminBackupController::class, 'index'])->name('backups.index');
     Route::post('/backups/generate', [AdminBackupController::class, 'generate'])->name('backups.generate');
     Route::get('/backups/{file}', [AdminBackupController::class, 'download'])->name('backups.download');
+
+    Route::get('/auditoria', [\App\Http\Controllers\AdminAuditController::class, 'index'])->name('auditoria.index');
 });
