@@ -58,6 +58,14 @@
                     <span class="material-symbols-outlined shrink-0">category</span>
                     <span class="font-headline text-sm font-medium">Categorías</span>
                 </a>
+                <a class="{{ request()->routeIs('admin.reportes.*') ? 'bg-white text-[#C0392B] font-bold shadow-sm' : 'text-stone-500 hover:bg-white/80 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all" href="{{ route('admin.reportes.index') }}">
+                    <span class="material-symbols-outlined shrink-0">analytics</span>
+                    <span class="font-headline text-sm font-medium">Reportes</span>
+                </a>
+                <a class="{{ request()->routeIs('admin.backups.*') ? 'bg-white text-[#C0392B] font-bold shadow-sm' : 'text-stone-500 hover:bg-white/80 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all" href="{{ route('admin.backups.index') }}">
+                    <span class="material-symbols-outlined shrink-0">backup</span>
+                    <span class="font-headline text-sm font-medium">Backups</span>
+                </a>
             </nav>
 
             <div class="mt-auto space-y-3 px-3">

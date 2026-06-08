@@ -14,6 +14,8 @@ echo "[entrypoint] arrancando en $(pwd)"
 # Asegurar carpetas existan
 mkdir -p storage/logs bootstrap/cache vendor || true
 mkdir -p storage/framework/views storage/framework/cache || true
+mkdir -p /tmp/laravel-excel || true
+mkdir -p storage/app/backups/database || true
 
 # Crear fichero de log si no existe
 touch storage/logs/laravel.log || true

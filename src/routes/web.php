@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminReportController;
+use App\Http\Controllers\AdminBackupController;
 use App\Http\Controllers\RestauranteController;
 use App\Http\Controllers\ComensalController;
 use Illuminate\Support\Facades\Route;
@@ -137,4 +139,12 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     Route::post('/categorias/{id}/delete', [AdminController::class, 'destroyCategoria'])->name('categorias.destroy');
     
     Route::post('/roles/change', [AdminController::class, 'changeRole'])->name('roles.change');
+
+    Route::get('/reportes', [AdminReportController::class, 'index'])->name('reportes.index');
+    Route::get('/reportes/export/excel', [AdminReportController::class, 'exportExcel'])->name('reportes.export.excel');
+    Route::get('/reportes/export/pdf', [AdminReportController::class, 'exportPdf'])->name('reportes.export.pdf');
+
+    Route::get('/backups', [AdminBackupController::class, 'index'])->name('backups.index');
+    Route::post('/backups/generate', [AdminBackupController::class, 'generate'])->name('backups.generate');
+    Route::get('/backups/{file}', [AdminBackupController::class, 'download'])->name('backups.download');
 });
