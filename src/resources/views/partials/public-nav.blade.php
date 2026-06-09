@@ -55,7 +55,7 @@
                     </summary>
 
                     <div class="absolute right-0 mt-3 w-72 overflow-hidden rounded-3xl border border-stone-200 bg-white p-3 shadow-2xl shadow-stone-900/10">
-                        <a href="{{ route('login', ['role' => 'usuario']) }}" class="flex items-start gap-3 rounded-2xl px-4 py-3 transition hover:bg-stone-50">
+                        <a href="{{ route('login', ['role' => 'restaurante']) }}" class="flex items-start gap-3 rounded-2xl px-4 py-3 transition hover:bg-stone-50">
                             <span class="material-symbols-outlined mt-0.5 text-[#9e2016]">login</span>
                             <span>
                                 <span class="block font-headline text-sm font-extrabold text-[#1e1b18]">Iniciar sesión restaurante</span>

@@ -53,6 +53,9 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::get('login/admin', function () {
+    return redirect()->route('login', ['role' => 'admin']);
+})->name('login.admin');
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout/comensal', [AuthController::class, 'logoutComensal'])->name('logout.comensal');
 Route::post('logout/admin', [AuthController::class, 'logoutAdmin'])->name('logout.admin');
@@ -96,6 +99,10 @@ Route::middleware('auth:comensal')->group(function () {
 // Rutas de Restaurante
 Route::middleware('auth:restaurante')->group(function () {
     Route::get('/restaurante/panel', [RestauranteController::class, 'dashboard'])->name('restaurante.dashboard');
+
+    Route::get('/restaurante/reportes', [\App\Http\Controllers\RestaurantReportController::class, 'index'])->name('restaurante.reportes.index');
+    Route::get('/restaurante/reportes/export/excel', [\App\Http\Controllers\RestaurantReportController::class, 'exportExcel'])->name('restaurante.reportes.export.excel');
+    Route::get('/restaurante/reportes/export/pdf', [\App\Http\Controllers\RestaurantReportController::class, 'exportPdf'])->name('restaurante.reportes.export.pdf');
     Route::resource('productos', ProductoController::class)->except(['show']);
     Route::post('/productos/{producto}/toggle', [ProductoController::class, 'toggle'])->name('productos.toggle');
     Route::get('/restaurante/configuracion', [RestauranteController::class, 'configuracion'])->name('restaurante.configuracion');

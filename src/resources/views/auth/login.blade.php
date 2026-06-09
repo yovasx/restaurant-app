@@ -1,5 +1,6 @@
 @php
     $selectedRole = old('login_type', request('role', 'comensal'));
+    if ($selectedRole === 'usuario') $selectedRole = 'restaurante';
 @endphp
 
 <!DOCTYPE html>
@@ -101,11 +102,11 @@
 
             <!-- Role Toggle -->
             <div class="bg-surface-container-high p-1 rounded-xl flex gap-1 mb-6">
-                <button type="button" onclick="setRole('comensal')" id="btn-comensal" class="flex-1 py-2 px-4 rounded-lg {{ $selectedRole === 'usuario' ? 'text-on-surface-variant font-semibold hover:bg-surface-container-highest' : 'bg-surface-container-lowest text-primary font-bold shadow-sm' }} flex items-center justify-center gap-2 transition-all">
+                <button type="button" onclick="setRole('comensal')" id="btn-comensal" class="flex-1 py-2 px-4 rounded-lg {{ $selectedRole === 'comensal' ? 'bg-surface-container-lowest text-primary font-bold shadow-sm' : 'text-on-surface-variant font-semibold hover:bg-surface-container-highest' }} flex items-center justify-center gap-2 transition-all">
                     <span class="material-symbols-outlined text-xl" data-icon="person">person</span>
                     <span class="font-label text-sm uppercase tracking-wider">Comensal</span>
                 </button>
-                <button type="button" onclick="setRole('usuario')" id="btn-usuario" class="flex-1 py-2 px-4 rounded-lg {{ $selectedRole === 'usuario' ? 'bg-surface-container-lowest text-primary font-bold shadow-sm' : 'text-on-surface-variant font-semibold hover:bg-surface-container-highest' }} flex items-center justify-center gap-2 transition-all">
+                <button type="button" onclick="setRole('restaurante')" id="btn-restaurante" class="flex-1 py-2 px-4 rounded-lg {{ $selectedRole === 'restaurante' ? 'bg-surface-container-lowest text-primary font-bold shadow-sm' : 'text-on-surface-variant font-semibold hover:bg-surface-container-highest' }} flex items-center justify-center gap-2 transition-all">
                     <span class="material-symbols-outlined text-xl" data-icon="restaurant">restaurant</span>
                     <span class="font-label text-sm uppercase tracking-wider">Restaurante</span>
                 </button>
@@ -124,7 +125,7 @@
             <!-- Form Section -->
             <form action="{{ route('login') }}" method="POST" class="space-y-6">
                 @csrf
-                <input type="hidden" name="login_type" id="login_type" value="{{ $selectedRole === 'usuario' ? 'usuario' : 'comensal' }}">
+                <input type="hidden" name="login_type" id="login_type" value="{{ $selectedRole }}">
                 <div class="space-y-4">
                     <div class="group">
                         <label class="block text-sm font-semibold text-on-surface-variant mb-1 ml-1 font-label uppercase tracking-widest" for="email">Correo Electrónico</label>
@@ -157,11 +158,11 @@
             </form>
             
             <div class="mt-6 text-center" id="register-link-container">
-                <p class="text-sm text-stone-500 {{ $selectedRole === 'usuario' ? 'hidden' : '' }}" id="register-text">
+                <p class="text-sm text-stone-500 {{ $selectedRole === 'comensal' ? '' : 'hidden' }}" id="register-text">
                     ¿No tienes una cuenta de Comensal? 
                     <a class="text-primary font-bold hover:underline ml-1" href="{{ route('register.comensal') }}">Regístrate gratis</a>
                 </p>
-                <p class="text-sm text-stone-500 {{ $selectedRole === 'usuario' ? '' : 'hidden' }}" id="register-rest-text">
+                <p class="text-sm text-stone-500 {{ $selectedRole === 'restaurante' ? '' : 'hidden' }}" id="register-rest-text">
                     ¿Tu restaurante no está registrado? 
                     <a class="text-primary font-bold hover:underline ml-1" href="{{ route('register.restaurante') }}">Únete aquí</a>
                 </p>
@@ -191,25 +192,19 @@
 <script>
     function setRole(role) {
         document.getElementById('login_type').value = role;
-        const btnComensal = document.getElementById('btn-comensal');
-        const btnUsuario = document.getElementById('btn-usuario');
-        const registerDiv = document.getElementById('register-link-container');
-        
-        if (role === 'comensal') {
-            btnComensal.className = "flex-1 py-2 px-4 rounded-lg bg-surface-container-lowest text-primary font-bold shadow-sm flex items-center justify-center gap-2 transition-all";
-            btnUsuario.className = "flex-1 py-2 px-4 rounded-lg text-on-surface-variant font-semibold hover:bg-surface-container-highest flex items-center justify-center gap-2 transition-all";
-            document.getElementById('register-text').classList.remove('hidden');
-            document.getElementById('register-rest-text').classList.add('hidden');
-        } else {
-            btnUsuario.className = "flex-1 py-2 px-4 rounded-lg bg-surface-container-lowest text-primary font-bold shadow-sm flex items-center justify-center gap-2 transition-all";
-            btnComensal.className = "flex-1 py-2 px-4 rounded-lg text-on-surface-variant font-semibold hover:bg-surface-container-highest flex items-center justify-center gap-2 transition-all";
-            document.getElementById('register-text').classList.add('hidden');
-            document.getElementById('register-rest-text').classList.remove('hidden');
-        }
+        const baseClass = "flex-1 py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-all";
+        const activeClass = "bg-surface-container-lowest text-primary font-bold shadow-sm";
+        const inactiveClass = "text-on-surface-variant font-semibold hover:bg-surface-container-highest";
+
+        document.getElementById('btn-comensal').className = baseClass + ' ' + (role === 'comensal' ? activeClass : inactiveClass);
+        document.getElementById('btn-restaurante').className = baseClass + ' ' + (role === 'restaurante' ? activeClass : inactiveClass);
+
+        document.getElementById('register-text').classList.toggle('hidden', role !== 'comensal');
+        document.getElementById('register-rest-text').classList.toggle('hidden', role !== 'restaurante');
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        setRole('{{ $selectedRole === 'usuario' ? 'usuario' : 'comensal' }}');
+        setRole('{{ $selectedRole }}');
     });
 </script>
 </body>

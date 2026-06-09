@@ -51,6 +51,80 @@
     </div>
 </div>
 
+<div class="mb-8">
+    <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-5">
+        <h4 class="font-headline text-base font-bold text-on-surface mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-indigo-500 text-lg">monitoring</span>
+            Actividad 30 días
+        </h4>
+        @if(count($series['visitas_por_dia'] ?? []) > 0 || count($series['resenas_por_dia'] ?? []) > 0)
+            @include('admin.partials._activity-chart', [
+                'visitas' => $series['visitas_por_dia'] ?? [],
+                'resenas' => $series['resenas_por_dia'] ?? [],
+            ])
+        @else
+            <p class="text-sm text-stone-400">Sin datos de actividad en los últimos 30 días.</p>
+        @endif
+    </div>
+</div>
+
+{{-- Donuts row --}}
+@php
+    $scoreSegments = [];
+    $distTotal = array_sum($rankings['distribucion_score'] ?? []);
+    $scoreColors = [1 => '#ef4444', 2 => '#f97316', 3 => '#eab308', 4 => '#84cc16', 5 => '#22c55e'];
+    foreach (($rankings['distribucion_score'] ?? []) as $score => $total) {
+        if ($total > 0) {
+            $scoreSegments[] = ['label' => $score . '★', 'value' => $total, 'color' => $scoreColors[$score] ?? '#a1a1aa'];
+        }
+    }
+
+    $promoSegments = [];
+    $promoMap = ['activas' => ['label' => 'Activas', 'color' => '#22c55e'], 'inactivas' => ['label' => 'Inactivas', 'color' => '#a1a1aa'], 'vencidas' => ['label' => 'Vencidas', 'color' => '#ef4444']];
+    foreach ($promoMap as $key => $cfg) {
+        $count = $key === 'activas' ? count($rankings['promociones']['activas'] ?? []) : ($key === 'vencidas' ? count($rankings['promociones']['vencidas'] ?? []) : count($rankings['promociones']['inactivas'] ?? []));
+        if ($count > 0) {
+            $promoSegments[] = ['label' => $cfg['label'], 'value' => $count, 'color' => $cfg['color']];
+        }
+    }
+
+    $prodSegments = [];
+    $prodMap = ['activos' => ['label' => 'Activos', 'color' => '#22c55e'], 'inactivos' => ['label' => 'Inactivos', 'color' => '#a1a1aa'], 'sin_stock' => ['label' => 'Sin stock', 'color' => '#ef4444']];
+    foreach ($prodMap as $key => $cfg) {
+        $count = (int) ($rankings['productos'][$key] ?? 0);
+        if ($count > 0) {
+            $prodSegments[] = ['label' => $cfg['label'], 'value' => $count, 'color' => $cfg['color']];
+        }
+    }
+@endphp
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-4">
+        <h5 class="font-headline text-sm font-bold text-on-surface mb-3 text-center">Distribución de Score</h5>
+        @if (count($scoreSegments) > 0)
+            @include('admin.partials._donut-chart', ['segments' => $scoreSegments])
+        @else
+            <p class="text-sm text-stone-400 text-center">Sin reseñas en los últimos 30 días.</p>
+        @endif
+    </div>
+    <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-4">
+        <h5 class="font-headline text-sm font-bold text-on-surface mb-3 text-center">Promociones</h5>
+        @if (count($promoSegments) > 0)
+            @include('admin.partials._donut-chart', ['segments' => $promoSegments])
+        @else
+            <p class="text-sm text-stone-400 text-center">Sin promociones registradas.</p>
+        @endif
+    </div>
+    <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-4">
+        <h5 class="font-headline text-sm font-bold text-on-surface mb-3 text-center">Productos</h5>
+        @if (count($prodSegments) > 0)
+            @include('admin.partials._donut-chart', ['segments' => $prodSegments])
+        @else
+            <p class="text-sm text-stone-400 text-center">Sin productos registrados.</p>
+        @endif
+    </div>
+</div>
+
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
     <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-5">
         <h4 class="font-headline text-base font-bold text-on-surface mb-4 flex items-center gap-2">
@@ -143,15 +217,22 @@
             <span class="material-symbols-outlined text-primary text-lg">trending_up</span>
             Top Restaurantes por Visitas
         </h4>
+        @php $maxVisitas = count($rankings['top_visitas']) > 0 ? max(array_map(fn($i) => $i->total, $rankings['top_visitas'])) : 1; @endphp
         @if(count($rankings['top_visitas']) > 0)
-            <div class="space-y-2">
+            <div class="space-y-3">
                 @foreach($rankings['top_visitas'] as $i => $item)
-                    <div class="flex items-center justify-between py-1.5 border-b border-stone-100 last:border-0">
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs font-bold text-stone-400 w-5">{{ $i + 1 }}</span>
-                            <span class="text-sm font-medium text-on-surface">{{ $item->nombre }}</span>
+                    @php $pct = round($item->total / $maxVisitas * 100, 1); @endphp
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="text-xs font-bold text-stone-400 w-5 shrink-0">{{ $i + 1 }}</span>
+                                <span class="text-sm font-medium text-on-surface truncate">{{ $item->nombre }}</span>
+                            </div>
+                            <span class="text-sm font-bold text-primary shrink-0 ml-2">{{ $item->total }}</span>
                         </div>
-                        <span class="text-sm font-bold text-primary">{{ $item->total }}</span>
+                        <div class="w-full h-2 bg-stone-100 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full bg-gradient-to-r from-indigo-400 to-indigo-600 transition-all" style="width: {{ $pct }}%"></div>
+                        </div>
                     </div>
                 @endforeach
             </div>
@@ -180,54 +261,6 @@
         @else
             <p class="text-sm text-stone-400">Sin datos suficientes.</p>
         @endif
-    </div>
-</div>
-
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-5">
-        <h4 class="font-headline text-base font-bold text-on-surface mb-4 flex items-center gap-2">
-            <span class="material-symbols-outlined text-amber-500 text-lg">stars</span>
-            Distribución de Score
-        </h4>
-        @php $distTotal = array_sum($rankings['distribucion_score']); @endphp
-        @if($distTotal > 0)
-            <div class="space-y-2">
-                @foreach($rankings['distribucion_score'] as $score => $total)
-                    @php $pct = round($total / $distTotal * 100); @endphp
-                    <div class="flex items-center gap-3">
-                        <span class="text-xs font-bold text-stone-500 w-6">{{ $score }}★</span>
-                        <div class="flex-1 h-4 bg-stone-100 rounded-full overflow-hidden">
-                            <div class="h-full rounded-full {{ $score >= 4 ? 'bg-green-500' : ($score >= 3 ? 'bg-yellow-500' : 'bg-red-500') }}" style="width: {{ $pct }}%"></div>
-                        </div>
-                        <span class="text-xs font-bold text-stone-500 w-10 text-right">{{ $total }}</span>
-                    </div>
-                @endforeach
-            </div>
-        @else
-            <p class="text-sm text-stone-400">Sin reseñas en los últimos 30 días.</p>
-        @endif
-    </div>
-
-    <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-5">
-        <h4 class="font-headline text-base font-bold text-on-surface mb-4">Inventario</h4>
-        <div class="grid grid-cols-2 gap-4">
-            <div class="bg-green-50 rounded-xl p-4 text-center">
-                <p class="text-2xl font-black text-green-600">{{ $rankings['productos']['activos'] ?? 0 }}</p>
-                <p class="text-xs font-bold text-stone-500 uppercase mt-1">Productos Activos</p>
-            </div>
-            <div class="bg-red-50 rounded-xl p-4 text-center">
-                <p class="text-2xl font-black text-red-500">{{ $rankings['productos']['sin_stock'] ?? 0 }}</p>
-                <p class="text-xs font-bold text-stone-500 uppercase mt-1">Sin Stock</p>
-            </div>
-            <div class="bg-green-50 rounded-xl p-4 text-center">
-                <p class="text-2xl font-black text-green-600">{{ count($rankings['promociones']['activas'] ?? []) }}</p>
-                <p class="text-xs font-bold text-stone-500 uppercase mt-1">Promociones Activas</p>
-            </div>
-            <div class="bg-red-50 rounded-xl p-4 text-center">
-                <p class="text-2xl font-black text-red-500">{{ count($rankings['promociones']['vencidas'] ?? []) }}</p>
-                <p class="text-xs font-bold text-stone-500 uppercase mt-1">Vencidas</p>
-            </div>
-        </div>
     </div>
 </div>
 @endsection

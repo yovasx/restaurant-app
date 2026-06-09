@@ -16,9 +16,14 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
         ]);
 
-        $middleware->web(append: [
-            \App\Http\Middleware\CacheResponseMiddleware::class,
-        ]);
+        $middleware->web(
+            prepend: [
+                \App\Http\Middleware\RoleSessionMiddleware::class,
+            ],
+            append: [
+                \App\Http\Middleware\CacheResponseMiddleware::class,
+            ],
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

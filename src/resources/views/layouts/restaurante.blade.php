@@ -88,6 +88,11 @@
                 <span class="material-symbols-outlined shrink-0">star</span>
                 <span class="font-headline font-medium text-sm">Reseñas</span>
             </a>
+            <a href="{{ route('restaurante.reportes.index') }}"
+               class="{{ str_starts_with($route, 'restaurante.reportes') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
+                <span class="material-symbols-outlined shrink-0">bar_chart</span>
+                <span class="font-headline font-medium text-sm">Reportes</span>
+            </a>
             <a href="{{ route('restaurante.sucursales.index') }}"
                class="{{ str_starts_with($route, 'restaurante.sucursales') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
                 <span class="material-symbols-outlined shrink-0">store</span>

@@ -26,8 +26,13 @@ class AuditLogger
 
         $meta = array_merge($baseMeta, $meta ?? []);
 
+        $usuarioId = Auth::guard('admin')->id();
+        if ($usuarioId !== null && !\App\Models\Usuario::where('id', $usuarioId)->exists()) {
+            $usuarioId = null;
+        }
+
         return Auditoria::create([
-            'usuario_id' => Auth::guard('admin')->id(),
+            'usuario_id' => $usuarioId,
             'modulo' => $modulo,
             'accion' => $accion,
             'entidad' => $entidad,

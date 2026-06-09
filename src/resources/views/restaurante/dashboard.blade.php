@@ -7,6 +7,18 @@
 @php $redirectTo = request()->fullUrl(); @endphp
 
 <div class="space-y-8">
+    <!-- Scope Selector -->
+    <div class="flex justify-end">
+        <form method="GET" action="{{ route('restaurante.dashboard') }}" class="flex items-center gap-3">
+            <label class="text-xs font-bold text-stone-500 uppercase tracking-wider">Alcance</label>
+            <select name="scope" onchange="this.form.submit()" class="bg-surface-container-highest border-0 rounded-xl py-2 px-4 text-sm font-bold text-on-surface focus:ring-2 focus:ring-primary">
+                <option value="sucursal_activa" {{ ($scope ?? 'sucursal_activa') === 'sucursal_activa' ? 'selected' : '' }}>Sucursal activa</option>
+                <option value="todas_mis_sucursales" {{ ($scope ?? '') === 'todas_mis_sucursales' ? 'selected' : '' }}>Todas mis sucursales</option>
+            </select>
+            <noscript><button type="submit" class="bg-primary text-white px-3 py-2 rounded-lg text-xs font-bold">Ir</button></noscript>
+        </form>
+    </div>
+
     <!-- KPI Strip -->
     <section class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
         <div class="bg-surface-container-lowest p-4 rounded-2xl shadow-sm border border-stone-100/50">
@@ -244,6 +256,127 @@
                     <a href="{{ route('restaurante.sucursales.index') }}" class="flex-1 text-center text-[10px] font-bold bg-stone-100 py-2 rounded-lg hover:bg-stone-200 transition-colors">Sucursales</a>
                 </div>
             </div>
+            @endif
+        </div>
+    </section>
+
+    <!-- Activity Chart -->
+    <section class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-5">
+        <h4 class="text-lg font-bold text-on-surface mb-4">Actividad (30 días)</h4>
+        @php
+            $chartVisitas = $series['visitas_por_dia'] ?? [];
+            $chartResenas = $series['resenas_por_dia'] ?? [];
+        @endphp
+        @if(count($chartVisitas) > 0 || count($chartResenas) > 0)
+            @include('admin.partials._activity-chart', [
+                'visitas' => $chartVisitas,
+                'resenas' => $chartResenas,
+            ])
+        @else
+            <p class="text-sm text-stone-400">Sin actividad en los últimos 30 días.</p>
+        @endif
+    </section>
+
+    <!-- Rankings Row -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-5">
+            <h4 class="text-lg font-bold text-on-surface mb-4">Top Platos más Reseñados</h4>
+            @if(count($tables['top_platos_resenas'] ?? []) > 0)
+                <div class="space-y-2">
+                    @foreach($tables['top_platos_resenas'] as $i => $item)
+                        <div class="flex items-center justify-between py-2 border-b border-stone-100 last:border-0">
+                            <div class="flex items-center gap-3">
+                                <span class="text-xs font-bold text-stone-400 w-5">{{ $i + 1 }}</span>
+                                <span class="font-medium text-on-surface text-sm">{{ $item->nombre }}</span>
+                            </div>
+                            <span class="text-sm font-bold text-primary">{{ $item->total }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-sm text-stone-400">Sin datos suficientes.</p>
+            @endif
+        </div>
+        <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-5">
+            <h4 class="text-lg font-bold text-on-surface mb-4">Mejor Calificados</h4>
+            @if(count($tables['top_platos_score'] ?? []) > 0)
+                <div class="space-y-2">
+                    @foreach($tables['top_platos_score'] as $i => $item)
+                        <div class="flex items-center justify-between py-2 border-b border-stone-100 last:border-0">
+                            <div class="flex items-center gap-3">
+                                <span class="text-xs font-bold text-stone-400 w-5">{{ $i + 1 }}</span>
+                                <span class="font-medium text-on-surface text-sm">{{ $item->nombre }}</span>
+                            </div>
+                            <span class="text-sm font-bold text-green-600">{{ number_format($item->promedio, 1) }} ({{ $item->total_resenas }})</span>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-sm text-stone-400">Sin datos suficientes.</p>
+            @endif
+        </div>
+    </section>
+
+    <!-- Donuts Row -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-5">
+            <h4 class="text-lg font-bold text-on-surface mb-4 text-center">Distribución Score</h4>
+            @php
+                $scoreDist = $scoreDistribution ?? [];
+                $scoreSegments = [];
+                $scoreColors = ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e'];
+                foreach ($scoreDist as $s => $c) {
+                    if ($c > 0) {
+                        $scoreSegments[] = ['label' => (string)$s, 'value' => $c, 'color' => $scoreColors[$s - 1]];
+                    }
+                }
+            @endphp
+            @if(count($scoreSegments) > 0)
+                @include('admin.partials._donut-chart', [
+                    'segments' => $scoreSegments,
+                    'size' => 140,
+                    'strokeWidth' => 18,
+                ])
+            @else
+                <p class="text-sm text-stone-400 text-center py-8">Sin datos</p>
+            @endif
+        </div>
+        <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-5">
+            <h4 class="text-lg font-bold text-on-surface mb-4 text-center">Promociones</h4>
+            @php
+                $promos = $breakdowns['promociones_por_estado'] ?? ['activas' => [], 'inactivas' => [], 'vencidas' => []];
+                $promoSegments = [];
+                if (count($promos['activas']) > 0) $promoSegments[] = ['label' => 'Activas', 'value' => count($promos['activas']), 'color' => '#22c55e'];
+                if (count($promos['inactivas']) > 0) $promoSegments[] = ['label' => 'Inactivas', 'value' => count($promos['inactivas']), 'color' => '#a8a29e'];
+                if (count($promos['vencidas']) > 0) $promoSegments[] = ['label' => 'Vencidas', 'value' => count($promos['vencidas']), 'color' => '#ef4444'];
+            @endphp
+            @if(count($promoSegments) > 0)
+                @include('admin.partials._donut-chart', [
+                    'segments' => $promoSegments,
+                    'size' => 140,
+                    'strokeWidth' => 18,
+                ])
+            @else
+                <p class="text-sm text-stone-400 text-center py-8">Sin promociones</p>
+            @endif
+        </div>
+        <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-5">
+            <h4 class="text-lg font-bold text-on-surface mb-4 text-center">Productos</h4>
+            @php
+                $prods = $breakdowns['productos_por_estado'] ?? ['activos' => 0, 'inactivos' => 0, 'sin_stock' => 0];
+                $prodSegments = [];
+                if ($prods['activos'] > 0) $prodSegments[] = ['label' => 'Activos', 'value' => $prods['activos'], 'color' => '#22c55e'];
+                if ($prods['inactivos'] > 0) $prodSegments[] = ['label' => 'Inactivos', 'value' => $prods['inactivos'], 'color' => '#a8a29e'];
+                if ($prods['sin_stock'] > 0) $prodSegments[] = ['label' => 'Sin Stock', 'value' => $prods['sin_stock'], 'color' => '#ef4444'];
+            @endphp
+            @if(count($prodSegments) > 0)
+                @include('admin.partials._donut-chart', [
+                    'segments' => $prodSegments,
+                    'size' => 140,
+                    'strokeWidth' => 18,
+                ])
+            @else
+                <p class="text-sm text-stone-400 text-center py-8">Sin productos</p>
             @endif
         </div>
     </section>

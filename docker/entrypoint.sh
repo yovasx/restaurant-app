@@ -73,6 +73,11 @@ if [ "$MIGRATE_ON_START" = "1" ]; then
   php artisan migrate --force || true
 fi
 
+# Ejecutar semilla en cada levantamiento si se solicita 
+if [ "$SEED_ON_START" = "1" ]; then
+  echo "[entrypoint] ejecutando seeders: php artisan db:seed --force"
+  php artisan db:seed --force || true
+fi
 echo "[entrypoint] listo — ejecutando: $@"
 
 exec "$@"

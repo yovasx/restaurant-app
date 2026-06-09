@@ -20,11 +20,14 @@ class AdminDashboardService
         $from = now()->subDays(30)->startOfDay();
         $to = now()->endOfDay();
 
+        $reportData = $this->reportData($from, $to);
+
         return [
             'kpis' => $this->kpis($from, $to),
             'alerts' => $this->alerts($from),
             'latestAudits' => $this->latestAudits(),
-            'rankings' => $this->rankings($from, $to),
+            'rankings' => $reportData['rankings'],
+            'series' => $reportData['series'],
         ];
     }
 
@@ -106,7 +109,7 @@ class AdminDashboardService
             ->toArray();
     }
 
-    private function rankings(Carbon $from, Carbon $to): array
+    private function reportData(Carbon $from, Carbon $to): array
     {
         $reportService = app(GlobalReportService::class);
         $filters = [
@@ -116,11 +119,52 @@ class AdminDashboardService
         $data = $reportService->generate($filters);
 
         return [
-            'top_visitas' => $data['tables']['top_restaurantes_visitas'] ?? [],
-            'peor_rating' => $data['tables']['bottom_restaurantes_rating'] ?? [],
-            'distribucion_score' => $data['tables']['resenas_por_score'] ?? [],
-            'promociones' => $data['tables']['promociones_por_estado'] ?? [],
-            'productos' => $data['tables']['productos_por_estado'] ?? [],
+            'rankings' => [
+                'top_visitas' => $data['tables']['top_restaurantes_visitas'] ?? [],
+                'peor_rating' => $data['tables']['bottom_restaurantes_rating'] ?? [],
+                'distribucion_score' => $data['tables']['resenas_por_score'] ?? [],
+                'promociones' => $data['tables']['promociones_por_estado'] ?? [],
+                'productos' => $data['tables']['productos_por_estado'] ?? [],
+            ],
+            'series' => [
+                'visitas_por_dia' => $this->fillDateGaps(
+                    $data['series']['visitas_por_dia'] ?? [],
+                    $from, $to
+                ),
+                'resenas_por_dia' => $this->fillDateGaps(
+                    $data['series']['resenas_por_dia'] ?? [],
+                    $from, $to
+                ),
+                'altas_restaurantes' => $this->fillDateGaps(
+                    $data['series']['altas_restaurantes'] ?? [],
+                    $from, $to
+                ),
+                'altas_comensales' => $this->fillDateGaps(
+                    $data['series']['altas_comensales'] ?? [],
+                    $from, $to
+                ),
+            ],
         ];
+    }
+
+    private function fillDateGaps(array $rows, Carbon $from, Carbon $to): array
+    {
+        $indexed = [];
+        foreach ($rows as $r) {
+            $indexed[$r->fecha] = (int) $r->total;
+        }
+
+        $filled = [];
+        $current = $from->copy();
+        while ($current->lte($to)) {
+            $key = $current->toDateString();
+            $filled[] = (object) [
+                'fecha' => $key,
+                'total' => $indexed[$key] ?? 0,
+            ];
+            $current->addDay();
+        }
+
+        return $filled;
     }
 }

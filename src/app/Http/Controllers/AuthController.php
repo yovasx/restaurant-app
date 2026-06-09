@@ -24,14 +24,18 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        $type = $request->input('login_type', 'comensal');
+        $type = match ($request->input('login_type', 'comensal')) {
+            'admin', '1' => 'admin',
+            'restaurante', 'usuario', '2' => 'restaurante',
+            default => 'comensal',
+        };
 
         if ($type === 'comensal') {
             if (Auth::guard('comensal')->attempt($credentials, $request->boolean('remember'))) {
                 $request->session()->regenerate();
                 return redirect()->intended('inicio');
             }
-        } else {
+        } elseif ($type === 'admin') {
             if (Auth::guard('admin')->attempt([
                 'email' => $credentials['email'],
                 'password' => $credentials['password'],
@@ -41,7 +45,7 @@ class AuthController extends Controller
                 app(AuditLogger::class)->log('auth', 'login_exitoso', null, null, "Admin {$credentials['email']} inició sesión");
                 return redirect()->route('admin.dashboard');
             }
-
+        } else {
             if (Auth::guard('restaurante')->attempt([
                 'email' => $credentials['email'],
                 'password' => $credentials['password'],
@@ -50,7 +54,9 @@ class AuthController extends Controller
                 $request->session()->regenerate();
                 return redirect()->route('restaurante.dashboard');
             }
+        }
 
+        if ($type !== 'comensal') {
             app(AuditLogger::class)->log('auth', 'login_fallido', null, null, "Intento fallido de inicio de sesión: {$credentials['email']}");
         }
 

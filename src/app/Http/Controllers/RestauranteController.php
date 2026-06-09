@@ -26,11 +26,18 @@ class RestauranteController extends Controller
             ?? $usuario->restaurantes()->first();
     }
 
-    public function dashboard()
+    public function dashboard(Request $request)
     {
         $usuario = Auth::guard('restaurante')->user();
         $restaurante = $this->getRestaurante();
         $restauranteId = $restaurante?->id;
+
+        $scope = $request->input('scope', 'sucursal_activa');
+        $ids = $restauranteId ? [$restauranteId] : [];
+
+        if ($scope === 'todas_mis_sucursales') {
+            $ids = $usuario->restaurantes()->pluck('id')->toArray();
+        }
 
         $productos = $restauranteId
             ? Producto::where('restaurante_id', $restauranteId)->with('categoria')->latest()->paginate(10)
@@ -38,12 +45,12 @@ class RestauranteController extends Controller
         $categorias = Categoria::where('estado', 'activo')->orderBy('nombre_categoria')->get();
         $totalProductos = $productos->total();
 
-        $dashboard = $restauranteId
-            ? app(RestaurantDashboardService::class)->generate($restauranteId)
+        $dashboard = count($ids) > 0
+            ? app(RestaurantDashboardService::class)->generate($ids)
             : app(RestaurantDashboardService::class)->empty();
 
         return view('restaurante.dashboard', array_merge(compact(
-            'usuario', 'restaurante', 'productos', 'categorias', 'totalProductos'
+            'usuario', 'restaurante', 'productos', 'categorias', 'totalProductos', 'scope'
         ), $dashboard));
     }
 
