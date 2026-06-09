@@ -61,18 +61,6 @@ Route::post('logout/comensal', [AuthController::class, 'logoutComensal'])->name(
 Route::post('logout/admin', [AuthController::class, 'logoutAdmin'])->name('logout.admin');
 Route::post('logout/restaurante', [AuthController::class, 'logoutRestaurante'])->name('logout.restaurante');
 
-Route::get('/setup', function() {
-    \Illuminate\Support\Facades\Artisan::call('route:clear');
-    \Illuminate\Support\Facades\Artisan::call('config:clear');
-    \Illuminate\Support\Facades\Artisan::call('view:clear');
-    \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
-    try {
-        \Illuminate\Support\Facades\Artisan::call('storage:link', ['--force' => true]);
-    } catch (\Exception $e) { /* symlink may already exist */ }
-
-    return "¡Listo! La caché fue limpiada y la Base de Datos fue re-migrada e insertada (admin@admin.com creado). Ya puedes ir a la vista de Login presionando la flecha atrás del navegador, ingresar con Restaurante usando el correo 'admin@admin.com' y clave 'admin123'.";
-});
-
 Route::get('register', [AuthController::class, 'showRegisterComensal'])->name('register.comensal');
 Route::post('register', [AuthController::class, 'registerComensal'])->name('register.comensal.post');
 
@@ -83,9 +71,16 @@ Route::post('register/restaurante', [AuthController::class, 'registerRestaurante
 Route::get('/restaurantes/nearby', [ComensalController::class, 'nearby'])->name('restaurantes.nearby');
 Route::get('/restaurante/{id}', [ComensalController::class, 'show'])->where('id', '[0-9]+')->name('restaurante.show');
 
+// Inicio publico para invitados y dashboard para comensal autenticado
+Route::get('/inicio', function (\Illuminate\Http\Request $request) {
+    if (auth()->guard('comensal')->check()) {
+        return app(\App\Http\Controllers\ComensalController::class)->index($request);
+    }
+    return redirect()->route('home');
+})->name('comensal.inicio');
+
 // Rutas protegidas para comensal
 Route::middleware('auth:comensal')->group(function () {
-    Route::get('/inicio', [ComensalController::class, 'index'])->name('comensal.inicio');
     Route::get('/explorar', [ComensalController::class, 'explorar'])->name('comensal.explorar');
 
     Route::get('/perfil', function () {

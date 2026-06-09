@@ -86,6 +86,10 @@ class RoleSessionMiddleware
             return 'restaurante';
         }
 
+        if ($path === 'login' && $request->isMethod('post')) {
+            return $this->normalizeRole($request->input('login_type', 'comensal'));
+        }
+
         return 'comensal';
     }
 
