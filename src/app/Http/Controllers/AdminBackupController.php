@@ -53,10 +53,16 @@ class AdminBackupController extends Controller
     public function generate(DatabaseBackupService $service)
     {
         try {
-            $filename = $service->generate();
-            app(\App\Services\Admin\AuditLogger::class)->log('backups', 'generar_backup', 'Backup', null, "Backup generado: {$filename}", null, null, ['archivo' => $filename]);
+            $result = $service->generate();
+            $dumpFile = $result['dump'];
+            $sqlFile = $result['sql'];
+            $message = "Backups generados: {$dumpFile}, {$sqlFile}";
+            if ($result['cloud']) {
+                $message .= ' — Subidos a la nube.';
+            }
+            app(\App\Services\Admin\AuditLogger::class)->log('backups', 'generar_backup', 'Backup', null, $message, null, null, ['archivos' => [$dumpFile, $sqlFile]]);
             return redirect()->route('admin.backups.index')
-                ->with('success', "Backup generado exitosamente: {$filename}");
+                ->with('success', $message);
         } catch (\Exception $e) {
             app(\App\Services\Admin\AuditLogger::class)->log('backups', 'error_backup', null, null, 'Error al generar backup: ' . $e->getMessage());
             return redirect()->route('admin.backups.index')

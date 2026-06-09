@@ -13,8 +13,15 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
-        // Refresh materialized view hourly (adjust as needed)
+        // Refresh materialized view hourly
         $schedule->command('materialized:refresh')->hourly();
+
+        // Database backup — nightly
+        if (config('backups.schedule_enabled')) {
+            $schedule->command('backup:database')
+                ->dailyAt(config('backups.schedule_time', '02:00'))
+                ->withoutOverlapping();
+        }
     }
 
     protected function commands()

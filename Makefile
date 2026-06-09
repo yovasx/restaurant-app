@@ -66,6 +66,14 @@ migrate-fresh: ## ⚠ Eliminar TODAS las tablas y volver a migrar
 psql: ## Abrir consola interactiva de PostgreSQL
 	$(COMPOSE) exec postgres psql -U laravel_user -d laravel_db
 
+## ── Scheduler y Backups ────────────────────────────────────────
+
+logs-scheduler: ## Ver logs del scheduler
+	$(COMPOSE) logs --tail=100 -f scheduler
+
+backup-now: ## Ejecutar backup de base de datos inmediatamente
+	$(COMPOSE) exec app php artisan backup:database
+
 ## ── Setup inicial ─────────────────────────────────────────────
 
 setup: ## Primera vez: copia .env, instala deps, genera clave y migra

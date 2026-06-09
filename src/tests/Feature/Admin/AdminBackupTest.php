@@ -6,6 +6,7 @@ use Tests\TestCase;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Services\Admin\DatabaseBackupService;
 
 class AdminBackupTest extends TestCase
 {
@@ -57,14 +58,54 @@ class AdminBackupTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 
-    public function test_generate_backup_creates_file(): void
+    public function test_generate_backup_success(): void
     {
+        $this->mock(DatabaseBackupService::class, function ($mock) {
+            $mock->shouldReceive('generate')
+                ->once()
+                ->andReturn([
+                    'dump' => 'laravel_db_test.dump',
+                    'sql'  => 'laravel_db_test.sql.gz',
+                    'cloud' => false,
+                ]);
+        });
+
         $response = $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class)
             ->post(route('admin.backups.generate'));
         $response->assertRedirect(route('admin.backups.index'));
         $response->assertSessionHas('success');
+        $response->assertSessionHas('success', fn ($msg) => str_contains($msg, 'laravel_db_test.dump'));
+    }
 
-        $files = glob(storage_path('app/backups/database/*.dump'));
-        $this->assertGreaterThan(0, count($files));
+    public function test_generate_backup_cloud_upload_message(): void
+    {
+        $this->mock(DatabaseBackupService::class, function ($mock) {
+            $mock->shouldReceive('generate')
+                ->once()
+                ->andReturn([
+                    'dump' => 'laravel_db_test.dump',
+                    'sql'  => 'laravel_db_test.sql.gz',
+                    'cloud' => true,
+                ]);
+        });
+
+        $response = $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class)
+            ->post(route('admin.backups.generate'));
+        $response->assertRedirect(route('admin.backups.index'));
+        $response->assertSessionHas('success', fn ($msg) => str_contains($msg, 'Subidos a la nube'));
+    }
+
+    public function test_generate_backup_error(): void
+    {
+        $this->mock(DatabaseBackupService::class, function ($mock) {
+            $mock->shouldReceive('generate')
+                ->once()
+                ->andThrow(new \RuntimeException('pg_dump falló'));
+        });
+
+        $response = $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class)
+            ->post(route('admin.backups.generate'));
+        $response->assertRedirect(route('admin.backups.index'));
+        $response->assertSessionHas('error', fn ($msg) => str_contains($msg, 'pg_dump falló'));
     }
 }
