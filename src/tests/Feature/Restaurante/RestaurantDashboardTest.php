@@ -84,9 +84,8 @@ class RestaurantDashboardTest extends TestCase
         $response->assertSee('Platos Activos');
         $response->assertSee('1');
         $response->assertSee('Promociones');
-        $response->assertSee('Visitas (30d)');
-        $response->assertSee('Score Promedio');
-        $response->assertSee('Total Platos');
+        $response->assertSee('Visitas');
+        $response->assertSee('Score Prom');
     }
 
     public function test_dashboard_kpis_are_correct(): void
@@ -140,10 +139,10 @@ class RestaurantDashboardTest extends TestCase
         $service = app(RestaurantDashboardService::class);
         $data = $service->generate($this->restaurante->id);
 
-        $this->assertEquals(2, $data['kpis']['productos_activos']);
-        $this->assertEquals(1, $data['kpis']['productos_sin_stock']);
-        $this->assertEquals(1, $data['kpis']['promociones_activas']);
-        $this->assertEquals(1, $data['kpis']['visitas_30d']);
+        $this->assertEquals(2, $data['kpis']['platosActivos']['current']);
+        $this->assertEquals(1, $data['kpis']['sinStock']['current']);
+        $this->assertEquals(1, $data['kpis']['promocionesActivas']['current']);
+        $this->assertEquals(1, $data['kpis']['visitas']['current']);
     }
 
     public function test_dashboard_shows_alerts_when_applicable(): void
@@ -158,7 +157,7 @@ class RestaurantDashboardTest extends TestCase
 
         $response = $this->get(route('restaurante.dashboard'));
         $response->assertStatus(200);
-        $response->assertSee('Atención requerida');
+        $response->assertSee('Alertas');
         $response->assertSee('Productos sin stock');
     }
 
@@ -241,7 +240,7 @@ class RestaurantDashboardTest extends TestCase
 
         $response = $this->get(route('restaurante.dashboard'));
         $response->assertStatus(200);
-        $response->assertSee('Distribución Score');
+        $response->assertSee('Distribución de Score');
         $response->assertSee('5');
         $response->assertSee('3');
     }
@@ -268,7 +267,7 @@ class RestaurantDashboardTest extends TestCase
         $service = app(RestaurantDashboardService::class);
         $data = $service->generate(9999);
 
-        $this->assertEquals(0, $data['kpis']['productos_activos']);
+        $this->assertEquals(0, $data['kpis']['platosActivos']['current']);
         $this->assertEmpty($data['alerts']);
         $this->assertNull($data['branchSummary']);
     }

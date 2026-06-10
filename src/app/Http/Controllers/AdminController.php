@@ -26,9 +26,28 @@ class AdminController extends Controller
         return redirect()->route($fallbackRoute);
     }
 
-    public function dashboard(AdminDashboardService $service)
+    public function dashboard(Request $request, AdminDashboardService $service)
     {
-        $data = $service->generate();
+        $range = (int) $request->query('range', 30);
+        $range = in_array($range, [7, 14, 30, 60, 90]) ? $range : 30;
+        $estadoFilter = $request->query('estado');
+
+        $from = now()->subDays($range)->startOfDay();
+        $to = now()->endOfDay();
+
+        $data = $service->generate($from, $to, $estadoFilter);
+        $data['selectedRange'] = $range;
+        $data['selectedEstado'] = $estadoFilter;
+        $data['pendingRestaurantes'] = Usuario::where('rol_id', 2)
+            ->where('estado', 'activo')
+            ->orderByDesc('created_at')
+            ->limit(5)
+            ->get();
+        $data['pendingComensales'] = Comensal::where('estado', 'activo')
+            ->orderByDesc('created_at')
+            ->limit(5)
+            ->get();
+
         return view('admin.dashboard', $data);
     }
 

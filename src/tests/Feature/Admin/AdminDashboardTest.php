@@ -56,22 +56,22 @@ class AdminDashboardTest extends TestCase
 
         $response = $this->get(route('admin.dashboard'));
         $response->assertStatus(200);
-        $response->assertSee('Restaurantes Activos');
-        $response->assertSee('Comensales Activos');
+        $response->assertSee('Restaurantes');
+        $response->assertSee('Comensales');
     }
 
     public function test_dashboard_shows_audit_section(): void
     {
         $response = $this->get(route('admin.dashboard'));
         $response->assertStatus(200);
-        $response->assertSee('Últimos eventos de auditoría');
+        $response->assertSee('Últimos eventos');
     }
 
     public function test_dashboard_shows_alerts_section(): void
     {
         $response = $this->get(route('admin.dashboard'));
         $response->assertStatus(200);
-        $response->assertSee('Atención Requerida');
+        $response->assertSee('Alertas');
     }
 
     public function test_unauthenticated_user_cannot_access_dashboard(): void
@@ -85,7 +85,7 @@ class AdminDashboardTest extends TestCase
     {
         $response = $this->get(route('admin.dashboard'));
         $response->assertStatus(200);
-        $response->assertSee('Top Restaurantes por Visitas');
+        $response->assertSee('Top Visitas');
         $response->assertSee('Distribución de Score');
     }
 
@@ -93,7 +93,7 @@ class AdminDashboardTest extends TestCase
     {
         $response = $this->get(route('admin.dashboard'));
         $response->assertStatus(200);
-        $response->assertSee('Actividad 30 días');
+        $response->assertSee('Actividad');
     }
 
     public function test_dashboard_chart_shows_with_seeded_data(): void
@@ -153,7 +153,7 @@ class AdminDashboardTest extends TestCase
 
         $response = $this->get(route('admin.dashboard'));
         $response->assertStatus(200);
-        $response->assertSee('Actividad 30 días');
+        $response->assertSee('Actividad');
         $response->assertSee('Visitas');
         $response->assertSee('Reseñas');
     }

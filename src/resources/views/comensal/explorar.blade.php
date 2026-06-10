@@ -15,23 +15,27 @@
     .me-marker svg{ display:block; width:18px; height:18px; }
 </style>
 
-<!-- el top del navegador que tiene iconos y la barra de busqueda -->
-<nav class="bg-surface/95 backdrop-blur-md shadow-sm flex justify-between items-center w-full px-6 py-4 sticky top-0 z-50">
+<!-- Top Navigation -->
+<nav class="bg-surface/95 backdrop-blur-md shadow-sm flex justify-between items-center w-full px-6 py-3 sticky top-0 z-50 border-b border-stone-200/60">
     <div class="flex items-center gap-6">
-        <a class="text-on-surface-variant/80 font-medium hover:bg-surface-container-high transition-colors duration-300 px-3 py-1 rounded-lg" href="{{ route('comensal.inicio') }}">Inicio</a>
-        <div class="hidden md:flex items-center space-gap-6 gap-6">
-            <a class="text-primary-container font-bold border-b-2 border-primary-container pb-1" href="{{ route('comensal.explorar') }}">Explorar</a>
-            <a class="text-on-surface-variant/80 font-medium hover:bg-surface-container-high transition-colors duration-300 px-3 py-1 rounded-lg" href="#">Favoritos</a>
-            <a class="text-on-surface-variant/80 font-medium hover:bg-surface-container-high transition-colors duration-300 px-3 py-1 rounded-lg" href="#">Reservas</a>
+        <div class="flex items-center gap-2">
+            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-white shadow-sm">
+                <span class="material-symbols-outlined text-sm">restaurant_menu</span>
+            </div>
+            <span class="text-base font-black text-primary tracking-tighter font-headline hidden sm:block">GastroGuía</span>
+        </div>
+        <div class="hidden md:flex items-center gap-4 font-headline font-bold text-sm">
+            <a class="text-stone-500 hover:text-primary transition-colors" href="{{ route('comensal.inicio') }}">Inicio</a>
+            <a class="text-primary border-b-2 border-primary pb-1" href="{{ route('comensal.explorar') }}">Explorar</a>
+            <a class="text-stone-500 hover:text-primary transition-colors" href="{{ route('comensal.perfil') }}">Perfil</a>
         </div>
     </div>
-    <div class="flex items-center gap-4">
-        <div class="hidden sm:flex items-center bg-surface-container px-4 py-2 rounded-full gap-2 w-64">
-            <span class="material-symbols-outlined text-on-surface-variant text-sm">search</span>
-            <input id="globalSearch" class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-on-surface-variant/60" placeholder="Buscar en La Paz..." type="text"/>
+    <div class="flex items-center gap-3">
+        <div class="hidden sm:flex items-center bg-stone-100 px-3 py-1.5 rounded-full gap-1.5 w-56">
+            <span class="material-symbols-outlined text-stone-400 text-sm">search</span>
+            <input id="globalSearch" class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-stone-400 outline-none" placeholder="Buscar en La Paz..." type="text"/>
         </div>
-        <button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-container-high rounded-full">notifications</button>
-        <button id="openFilters" class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-container-high rounded-full">tune</button>
+        <button id="openFilters" class="material-symbols-outlined text-stone-500 p-1.5 hover:bg-stone-100 rounded-full">tune</button>
     </div>
 </nav>
 
@@ -59,9 +63,6 @@
                 </button>
                 <button id="openAdvanced" class="flex items-center gap-2 bg-surface-container-lowest text-on-surface-variant px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap hover:bg-stone-100">
                     <span class="material-symbols-outlined text-sm">filter_list</span> Filtros
-                </button>
-                <button id="openAdvanced" class="flex items-center gap-2 bg-surface-container-lowest text-on-surface-variant px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap hover:bg-stone-100">
-                    <span class="material-symbols-outlined text-sm">distance</span> Distancia
                 </button>
             </div>
         </div>

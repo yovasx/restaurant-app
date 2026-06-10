@@ -94,7 +94,7 @@ class AdminAuditTest extends TestCase
 
         $response = $this->get(route('admin.dashboard'));
         $response->assertStatus(200);
-        $response->assertSee('Últimos eventos de auditoría');
+        $response->assertSee('Últimos eventos');
         $response->assertSee('Backup desde test');
     }
 

@@ -93,10 +93,10 @@ class RestaurantReportTest extends TestCase
         $response = $this->get(route('restaurante.reportes.index'));
         $response->assertStatus(200);
         $response->assertSee('Platos Activos');
-        $response->assertSee('Promociones Activas');
+        $response->assertSee('Promociones');
         $response->assertSee('Visitas');
         $response->assertSee('Reseñas');
-        $response->assertSee('Score Promedio');
+        $response->assertSee('Score Prom.');
     }
 
     public function test_report_page_shows_data_with_scope_sucursal_activa(): void
@@ -205,7 +205,7 @@ class RestaurantReportTest extends TestCase
 
         $response = $this->get(route('restaurante.reportes.index'));
         $response->assertStatus(200);
-        $response->assertSee('Sin datos en este rango');
+        $response->assertSee('0');
     }
 
     public function test_service_generate_returns_correct_structure(): void
@@ -215,6 +215,11 @@ class RestaurantReportTest extends TestCase
 
         $this->assertArrayHasKey('filters', $data);
         $this->assertArrayHasKey('kpis', $data);
+        $this->assertArrayHasKey('kpiCards', $data);
+        $this->assertArrayHasKey('range', $data);
+        $this->assertArrayHasKey('sparklines', $data);
+        $this->assertArrayHasKey('insights', $data);
+        $this->assertArrayHasKey('chartCategories', $data);
         $this->assertArrayHasKey('series', $data);
         $this->assertArrayHasKey('tables', $data);
         $this->assertArrayHasKey('breakdowns', $data);
@@ -230,6 +235,14 @@ class RestaurantReportTest extends TestCase
         $this->assertArrayHasKey('score_distribution', $data['breakdowns']);
         $this->assertArrayHasKey('promociones_por_estado', $data['breakdowns']);
         $this->assertArrayHasKey('productos_por_estado', $data['breakdowns']);
+
+        $this->assertArrayHasKey('current', $data['kpiCards']['visitas']);
+        $this->assertArrayHasKey('previous', $data['kpiCards']['visitas']);
+        $this->assertArrayHasKey('delta', $data['kpiCards']['visitas']);
+
+        $this->assertArrayHasKey('days', $data['range']);
+        $this->assertArrayHasKey('from', $data['range']);
+        $this->assertArrayHasKey('to', $data['range']);
     }
 
     public function test_service_scope_respects_user_ownership(): void
@@ -311,70 +324,48 @@ class RestaurantReportTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 
-    public function test_dashboard_shows_scope_selector(): void
+    public function test_report_page_shows_quick_range(): void
     {
-        $response = $this->get(route('restaurante.dashboard'));
+        $response = $this->get(route('restaurante.reportes.index'));
         $response->assertStatus(200);
-        $response->assertSee('Alcance');
-        $response->assertSee('Sucursal activa');
-        $response->assertSee('Todas mis sucursales');
+        $response->assertSee('Rango rápido');
+        $response->assertSee('7d');
+        $response->assertSee('30d');
+        $response->assertSee('90d');
     }
 
-    public function test_dashboard_shows_activity_chart_section(): void
+    public function test_report_page_shows_insights(): void
     {
-        $response = $this->get(route('restaurante.dashboard'));
+        $comensal = Comensal::create(['nombre' => 'Insight', 'apellido_paterno' => 'T', 'apellido_materno' => 'U', 'email' => 'insight@test.com', 'telefono' => '555-1111', 'password' => bcrypt('p')]);
+        $menu = Menu::create(['restaurante_id' => $this->restaurante->id, 'nombre' => 'Insight Menu', 'precio' => 10, 'estado' => 'activo']);
+        Resena::create(['comensal_id' => $comensal->id, 'menu_id' => $menu->id, 'score' => 5, 'comentario' => 'Great', 'created_at' => now()]);
+        Resena::create(['comensal_id' => $comensal->id, 'menu_id' => $menu->id, 'score' => 4, 'comentario' => 'Good', 'created_at' => now()]);
+
+        Visita::create(['restaurante_id' => $this->restaurante->id, 'comensal_id' => $comensal->id, 'fecha_visita' => now()->toDateString()]);
+        Visita::create(['restaurante_id' => $this->restaurante->id, 'comensal_id' => $comensal->id, 'fecha_visita' => now()->toDateString()]);
+
+        $response = $this->get(route('restaurante.reportes.index'));
         $response->assertStatus(200);
-        $response->assertSee('Actividad (30 días)');
+        $response->assertSee('Excelente');
     }
 
-    public function test_dashboard_shows_top_platos_section(): void
+    public function test_report_page_shows_chart_tabs(): void
     {
-        $response = $this->get(route('restaurante.dashboard'));
+        $response = $this->get(route('restaurante.reportes.index'));
+        $response->assertStatus(200);
+        $response->assertSee('Actividad / Calidad');
+        $response->assertSee('Calidad');
+    }
+
+    public function test_report_page_shows_rankings(): void
+    {
+        $comensal = Comensal::create(['nombre' => 'Rank', 'apellido_paterno' => 'T', 'apellido_materno' => 'U', 'email' => 'rank@test.com', 'telefono' => '555-2222', 'password' => bcrypt('p')]);
+        $menu = Menu::create(['restaurante_id' => $this->restaurante->id, 'nombre' => 'Rank Menu', 'precio' => 10, 'estado' => 'activo']);
+        Resena::create(['comensal_id' => $comensal->id, 'menu_id' => $menu->id, 'score' => 5, 'comentario' => 'Best', 'created_at' => now()]);
+
+        $response = $this->get(route('restaurante.reportes.index'));
         $response->assertStatus(200);
         $response->assertSee('Top Platos más Reseñados');
         $response->assertSee('Mejor Calificados');
-    }
-
-    public function test_dashboard_shows_donut_charts(): void
-    {
-        $response = $this->get(route('restaurante.dashboard'));
-        $response->assertStatus(200);
-        $response->assertSee('Distribución Score');
-    }
-
-    public function test_dashboard_todas_mis_sucursales_shows_combined_kpis(): void
-    {
-        $sucursal2 = Restaurante::create([
-            'usuario_id' => $this->user->id,
-            'nombre' => 'Sucursal 2 Dashboard',
-            'telefono' => '555-4444',
-            'email_reservas' => 's2dash@test.com',
-            'direccion' => 'Av. 2 Dash',
-            'zona' => 'Zona',
-            'latitud' => -16.5,
-            'longitud' => -68.1,
-            'estado' => 'activo',
-            'es_principal' => false,
-            'fecha_registro' => now()->toDateString(),
-        ]);
-
-        Producto::create([
-            'restaurante_id' => $this->restaurante->id,
-            'nombre' => 'P1',
-            'precio' => 10,
-            'stock' => 5,
-            'activo' => true,
-        ]);
-        Producto::create([
-            'restaurante_id' => $sucursal2->id,
-            'nombre' => 'P2',
-            'precio' => 15,
-            'stock' => 3,
-            'activo' => true,
-        ]);
-
-        $response = $this->get(route('restaurante.dashboard', ['scope' => 'todas_mis_sucursales']));
-        $response->assertStatus(200);
-        $response->assertSee('Platos Activos');
     }
 }

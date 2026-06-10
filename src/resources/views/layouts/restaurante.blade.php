@@ -132,10 +132,10 @@
                     <h2 class="font-headline font-bold text-xl text-on-surface">@yield('page-title', 'Panel de Control')</h2>
                 </div>
                 <div class="flex items-center gap-4">
-                    <div class="hidden sm:flex items-center bg-surface-container-highest px-3 py-1.5 rounded-full">
+                    <form action="{{ route('productos.index') }}" method="GET" class="hidden sm:flex items-center bg-surface-container-highest px-3 py-1.5 rounded-full">
                         <span class="material-symbols-outlined text-stone-500 text-xl">search</span>
-                        <input class="bg-transparent border-none focus:ring-0 text-sm w-40 font-body outline-none" placeholder="Buscar platos..." type="text"/>
-                    </div>
+                        <input name="q" class="bg-transparent border-none focus:ring-0 text-sm w-40 font-body outline-none" placeholder="Buscar platos..." type="text"/>
+                    </form>
                     <a href="{{ route('restaurante.configuracion') }}" class="p-2 text-stone-600 hover:bg-stone-100 rounded-full transition-colors">
                         <span class="material-symbols-outlined">account_circle</span>
                     </a>
@@ -170,19 +170,44 @@
 @include('partials.screen-toast')
 
 <!-- Mobile Bottom Nav -->
-<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-safe pt-3 bg-white/80 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.05)] rounded-t-2xl">
-    <a href="{{ route('restaurante.dashboard') }}" class="flex flex-col items-center text-{{ str_starts_with(Route::currentRouteName(), 'restaurante.dashboard') ? '[#C0392B]' : 'stone-400' }}">
-        <span class="material-symbols-outlined">dashboard</span>
-        <span class="text-[10px] font-semibold uppercase tracking-widest mt-1">Panel</span>
-    </a>
-    <a href="{{ route('productos.index') }}" class="flex flex-col items-center text-{{ str_starts_with(Route::currentRouteName(), 'productos') ? '[#C0392B]' : 'stone-400' }}">
-        <span class="material-symbols-outlined">restaurant</span>
-        <span class="text-[10px] font-semibold uppercase tracking-widest mt-1">Menú</span>
-    </a>
-    <a href="{{ route('restaurante.configuracion') }}" class="flex flex-col items-center text-{{ str_starts_with(Route::currentRouteName(), 'restaurante.') ? '[#C0392B]' : 'stone-400' }}">
-        <span class="material-symbols-outlined">settings</span>
-        <span class="text-[10px] font-semibold uppercase tracking-widest mt-1">Ajustes</span>
-    </a>
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.05)] rounded-t-2xl safe-area-pb">
+    <div class="flex items-center justify-around overflow-x-auto px-1 py-2 gap-0.5">
+        <a href="{{ route('restaurante.dashboard') }}"
+           class="flex flex-col items-center px-2 py-0.5 shrink-0 {{ str_starts_with(Route::currentRouteName(), 'restaurante.dashboard') ? 'text-[#C0392B]' : 'text-stone-400' }}">
+            <span class="material-symbols-outlined text-xl">dashboard</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Panel</span>
+        </a>
+        <a href="{{ route('productos.index') }}"
+           class="flex flex-col items-center px-2 py-0.5 shrink-0 {{ str_starts_with(Route::currentRouteName(), 'productos') ? 'text-[#C0392B]' : 'text-stone-400' }}">
+            <span class="material-symbols-outlined text-xl">restaurant</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Menú</span>
+        </a>
+        <a href="{{ route('restaurante.promociones.index') }}"
+           class="flex flex-col items-center px-2 py-0.5 shrink-0 {{ str_starts_with(Route::currentRouteName(), 'restaurante.promociones') ? 'text-[#C0392B]' : 'text-stone-400' }}">
+            <span class="material-symbols-outlined text-xl">local_offer</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Promos</span>
+        </a>
+        <a href="{{ route('restaurante.resenas') }}"
+           class="flex flex-col items-center px-2 py-0.5 shrink-0 {{ Route::currentRouteName() === 'restaurante.resenas' ? 'text-[#C0392B]' : 'text-stone-400' }}">
+            <span class="material-symbols-outlined text-xl">star</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Reseñas</span>
+        </a>
+        <a href="{{ route('restaurante.reportes.index') }}"
+           class="flex flex-col items-center px-2 py-0.5 shrink-0 {{ str_starts_with(Route::currentRouteName(), 'restaurante.reportes') ? 'text-[#C0392B]' : 'text-stone-400' }}">
+            <span class="material-symbols-outlined text-xl">bar_chart</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Reportes</span>
+        </a>
+        <a href="{{ route('restaurante.sucursales.index') }}"
+           class="flex flex-col items-center px-2 py-0.5 shrink-0 {{ str_starts_with(Route::currentRouteName(), 'restaurante.sucursales') ? 'text-[#C0392B]' : 'text-stone-400' }}">
+            <span class="material-symbols-outlined text-xl">store</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Sucursales</span>
+        </a>
+        <a href="{{ route('restaurante.configuracion') }}"
+           class="flex flex-col items-center px-2 py-0.5 shrink-0 {{ Route::currentRouteName() === 'restaurante.configuracion' ? 'text-[#C0392B]' : 'text-stone-400' }}">
+            <span class="material-symbols-outlined text-xl">settings</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Ajustes</span>
+        </a>
+    </div>
 </nav>
 
 </body>

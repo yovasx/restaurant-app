@@ -25,9 +25,36 @@
     @include('partials.public-nav')
 @endif
 
-<main class="{{ $flushContent ? '' : 'mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8' }}">
+<main class="{{ $flushContent ? '' : 'mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8' }}{{ $isComensalRoute ? ' pb-24 lg:pb-0' : '' }}">
     @yield('content')
 </main>
+
+@if($isComensalRoute && Auth::guard('comensal')->check())
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.05)] rounded-t-2xl safe-area-pb">
+    <div class="flex items-center justify-around overflow-x-auto px-1 py-2 gap-0.5">
+        <a href="{{ route('comensal.inicio') }}"
+           class="flex flex-col items-center px-2 py-0.5 shrink-0 {{ $routeName === 'comensal.inicio' ? 'text-[#C0392B]' : 'text-stone-400' }}">
+            <span class="material-symbols-outlined text-xl">home</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Inicio</span>
+        </a>
+        <a href="{{ route('comensal.explorar') }}"
+           class="flex flex-col items-center px-2 py-0.5 shrink-0 {{ $routeName === 'comensal.explorar' ? 'text-[#C0392B]' : 'text-stone-400' }}">
+            <span class="material-symbols-outlined text-xl">explore</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Explorar</span>
+        </a>
+        <a href="{{ route('comensal.inicio') }}#favoritos"
+           class="flex flex-col items-center px-2 py-0.5 shrink-0 text-stone-400">
+            <span class="material-symbols-outlined text-xl">favorite</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Favoritos</span>
+        </a>
+        <a href="{{ route('comensal.perfil') }}"
+           class="flex flex-col items-center px-2 py-0.5 shrink-0 {{ $routeName === 'comensal.perfil' ? 'text-[#C0392B]' : 'text-stone-400' }}">
+            <span class="material-symbols-outlined text-xl">person</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Perfil</span>
+        </a>
+    </div>
+</nav>
+@endif
 
 @include('partials.screen-toast')
 </body>

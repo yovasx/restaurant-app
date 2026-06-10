@@ -32,6 +32,14 @@ class RestauranteController extends Controller
         $restaurante = $this->getRestaurante();
         $restauranteId = $restaurante?->id;
 
+        $selectedRange = (int) $request->input('range', 30);
+        if (!in_array($selectedRange, [7, 14, 30, 60, 90], true)) {
+            $selectedRange = 30;
+        }
+
+        $from = now()->subDays($selectedRange)->startOfDay();
+        $to = now()->endOfDay();
+
         $scope = $request->input('scope', 'sucursal_activa');
         $ids = $restauranteId ? [$restauranteId] : [];
 
@@ -46,11 +54,11 @@ class RestauranteController extends Controller
         $totalProductos = $productos->total();
 
         $dashboard = count($ids) > 0
-            ? app(RestaurantDashboardService::class)->generate($ids)
-            : app(RestaurantDashboardService::class)->empty();
+            ? app(RestaurantDashboardService::class)->generate($ids, $from, $to)
+            : app(RestaurantDashboardService::class)->empty($from, $to);
 
         return view('restaurante.dashboard', array_merge(compact(
-            'usuario', 'restaurante', 'productos', 'categorias', 'totalProductos', 'scope'
+            'usuario', 'restaurante', 'productos', 'categorias', 'totalProductos', 'scope', 'selectedRange'
         ), $dashboard));
     }
 

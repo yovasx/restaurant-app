@@ -6,8 +6,12 @@ use App\Models\Categoria;
 use App\Models\Producto;
 use App\Models\Promocion;
 use App\Models\Restaurante;
+use App\Models\Resena;
+use App\Models\Favorito;
+use App\Models\Visita;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class ComensalController extends Controller
 {
@@ -28,7 +32,23 @@ class ComensalController extends Controller
 
         $restaurants = $query->paginate(12);
 
-        return view('comensal.inicio', compact('restaurants', 'categorias'));
+        $dashboard = [];
+        if (Auth::guard('comensal')->check()) {
+            $user = Auth::guard('comensal')->user();
+            $dashboard = [
+                'totalFavoritos' => Favorito::where('comensal_id', $user->id)->count(),
+                'totalResenas' => Resena::where('comensal_id', $user->id)->count(),
+                'totalVisitas' => Visita::where('comensal_id', $user->id)->count(),
+                'recentFavoritos' => Favorito::where('comensal_id', $user->id)
+                    ->with('restaurante')
+                    ->latest()->limit(5)->get(),
+                'recentResenas' => Resena::where('comensal_id', $user->id)
+                    ->with('menu:id,nombre')
+                    ->latest()->limit(5)->get(),
+            ];
+        }
+
+        return view('comensal.inicio', array_merge(compact('restaurants', 'categorias'), $dashboard));
     }
 
     public function explorar()
@@ -54,35 +74,34 @@ class ComensalController extends Controller
         $lat = (float) $request->query('lat');
         $lng = (float) $request->query('lng');
 
-        $radiusKm = 50;
-        $latDelta = $radiusKm / 111;
-        $lngDelta = abs($radiusKm / (111 * cos(deg2rad($lat))));
-
-        $minLat = $lat - $latDelta;
-        $maxLat = $lat + $latDelta;
-        $minLng = $lng - $lngDelta;
-        $maxLng = $lng + $lngDelta;
-
-        $restaurants = Restaurante::selectRaw(
-            "restaurantes.*, ( 6371 * acos( cos( radians(?) ) * cos( radians( latitud ) ) * cos( radians( longitud ) - radians(?) ) + sin( radians(?) ) * sin( radians( latitud ) ) ) ) AS distance, stats.avg_rating AS avg_rating, stats.avg_price AS avg_price",
-            [$lat, $lng, $lat]
-        )
-        ->leftJoin('restaurantes_stats as stats', 'stats.restaurante_id', '=', 'restaurantes.id')
-        ->where('estado', 'activo')
-        ->whereBetween('latitud', [$minLat, $maxLat])
-        ->whereBetween('longitud', [$minLng, $maxLng])
-        ->whereNotNull('latitud')
-        ->whereNotNull('longitud')
-        ->orderBy('distance')
-        ->limit(50)
-        ->get();
-
         $cacheKey = 'nearby:'.round($lat,4).':'.round($lng,4);
-        $cached = cache()->remember($cacheKey, 30, function() use ($restaurants) {
-            return $restaurants;
+
+        $data = Cache::remember($cacheKey, 30, function() use ($lat, $lng) {
+            $radiusKm = 50;
+            $latDelta = $radiusKm / 111;
+            $lngDelta = abs($radiusKm / (111 * cos(deg2rad($lat))));
+
+            $minLat = $lat - $latDelta;
+            $maxLat = $lat + $latDelta;
+            $minLng = $lng - $lngDelta;
+            $maxLng = $lng + $lngDelta;
+
+            return Restaurante::selectRaw(
+                "restaurantes.*, ( 6371 * acos( cos( radians(?) ) * cos( radians( latitud ) ) * cos( radians( longitud ) - radians(?) ) + sin( radians(?) ) * sin( radians( latitud ) ) ) ) AS distance, stats.avg_rating AS avg_rating, stats.avg_price AS avg_price",
+                [$lat, $lng, $lat]
+            )
+            ->leftJoin('restaurantes_stats as stats', 'stats.restaurante_id', '=', 'restaurantes.id')
+            ->where('estado', 'activo')
+            ->whereBetween('latitud', [$minLat, $maxLat])
+            ->whereBetween('longitud', [$minLng, $maxLng])
+            ->whereNotNull('latitud')
+            ->whereNotNull('longitud')
+            ->orderBy('distance')
+            ->limit(50)
+            ->get();
         });
 
-        return response()->json(['data' => $cached]);
+        return response()->json(['data' => $data]);
     }
 
     public function show($id)

@@ -1,4 +1,5 @@
 import './bootstrap';
+import ApexCharts from 'apexcharts';
 
 const MODAL_OPEN_CLASS = 'overflow-hidden';
 
@@ -155,10 +156,92 @@ function initToasts() {
     window.setTimeout(dismiss, Number(toast.dataset.timeout || 3500));
 }
 
+function initSingleChart(chartEl) {
+    function buildOpts(series) {
+        var categories;
+        try { categories = JSON.parse(chartEl.dataset.categories); } catch(e) { categories = []; }
+        var chartType = chartEl.dataset.chartType || 'area';
+        var stacking = chartType === 'bar' ? { bar: { columnWidth: '60%' } } : {};
+        return {
+            chart: { type: chartType, height: 280, toolbar: { show: false }, zoom: { enabled: false }, fontFamily: 'Inter, sans-serif', stacked: chartEl.dataset.stacked === 'true', ...stacking },
+            series: series,
+            colors: ['#6366f1', '#10b981', '#f97316', '#7c3aed', '#ef4444'],
+            dataLabels: { enabled: false },
+            stroke: { curve: 'smooth', width: chartType === 'bar' ? 0 : 2.5 },
+            fill: { type: 'solid', opacity: chartType === 'area' ? 0.08 : 1 },
+            markers: { size: chartType === 'area' ? 0 : 4, hover: { size: 5 } },
+            xaxis: { categories: categories, labels: { show: chartEl.dataset.showXLabels === 'true', style: { fontSize: '10px', colors: '#a1a1aa' } }, axisBorder: { show: false }, axisTicks: { show: false } },
+            yaxis: { labels: { style: { fontSize: '10px', colors: '#a1a1aa' } } },
+            grid: { borderColor: '#f0f0f0', strokeDashArray: 4 },
+            tooltip: { shared: true, intersect: false, x: { format: 'dd/MM' } },
+            legend: { position: 'top', horizontalAlign: 'left', fontSize: '12px', fontWeight: 600, markers: { width: 8, height: 8, radius: 2 } },
+        };
+    }
+
+    var currentTab = chartEl.dataset.defaultTab || 'actividad';
+    var activeSeries;
+    try { activeSeries = JSON.parse(chartEl.dataset['series' + currentTab.charAt(0).toUpperCase() + currentTab.slice(1)]); } catch(e) { activeSeries = []; }
+    var chart = new ApexCharts(chartEl, buildOpts(activeSeries));
+    chart.render();
+
+    var tabContainer = chartEl.parentElement.querySelector('.chart-tabs, [data-chart-tabs]');
+    if (!tabContainer) tabContainer = document.getElementById('chartTabs');
+    if (tabContainer) {
+        tabContainer.addEventListener('click', function(e) {
+            var btn = e.target.closest('[data-tab]');
+            if (!btn) return;
+            var tab = btn.dataset.tab;
+            if (tab === currentTab) return;
+
+            tabContainer.querySelectorAll('[data-tab]').forEach(function(b) {
+                b.classList.remove('bg-indigo-100', 'text-indigo-700');
+                b.classList.add('bg-stone-100', 'text-stone-500');
+            });
+            btn.classList.remove('bg-stone-100', 'text-stone-500');
+            btn.classList.add('bg-indigo-100', 'text-indigo-700');
+
+            currentTab = tab;
+            var key = 'series' + tab.charAt(0).toUpperCase() + tab.slice(1);
+            var newSeries;
+            try { newSeries = JSON.parse(chartEl.dataset[key]); } catch(e) { newSeries = []; }
+            chart.updateSeries(newSeries);
+        });
+    }
+}
+
+function initDashboardCharts() {
+    document.querySelectorAll('[data-dashboard-chart]').forEach(initSingleChart);
+    // fallback for legacy #mainChart
+    var legacy = document.getElementById('mainChart');
+    if (legacy && !legacy.hasAttribute('data-dashboard-chart')) {
+        legacy.setAttribute('data-dashboard-chart', '');
+        initSingleChart(legacy);
+    }
+
+    // Sparklines
+    document.querySelectorAll('[data-sparkline]').forEach(function(el) {
+        var data;
+        try { data = JSON.parse(el.dataset.sparkline); } catch(e) { data = []; }
+        if (data.length === 0) return;
+        var color = el.dataset.color || '#6366f1';
+        var options = {
+            chart: { type: 'line', height: 32, width: '100%', sparkline: { enabled: true }, fontFamily: 'Inter, sans-serif' },
+            series: [{ data: data }],
+            stroke: { curve: 'smooth', width: 1.5 },
+            colors: [color],
+            fill: { opacity: 0 },
+            markers: { size: 0 },
+            tooltip: { enabled: false },
+        };
+        new ApexCharts(el, options).render();
+    });
+}
+
 function boot() {
     initDropzones();
     initModals();
     initToasts();
+    initDashboardCharts();
 }
 
 if (document.readyState === 'loading') {
