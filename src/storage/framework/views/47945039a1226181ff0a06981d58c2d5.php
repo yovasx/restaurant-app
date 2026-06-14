@@ -1,19 +1,17 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', $restaurante->nombre); ?>
+<?php $__env->startSection('layout-flush', 'true'); ?>
 
-@section('title', $restaurante->nombre)
-@section('layout-flush', 'true')
-
-@php
+<?php
     $theme = $restaurante->resolvedTheme();
     $hasCoordinates = is_numeric($restaurante->latitud) && is_numeric($restaurante->longitud);
-@endphp
+?>
 
-@section('page-theme')
+<?php $__env->startSection('page-theme'); ?>
 <style>
     :root {
-        --brand-primary: {{ $theme['primary'] }};
-        --brand-secondary: {{ $theme['secondary'] }};
-        --brand-accent: {{ $theme['accent'] }};
+        --brand-primary: <?php echo e($theme['primary']); ?>;
+        --brand-secondary: <?php echo e($theme['secondary']); ?>;
+        --brand-accent: <?php echo e($theme['accent']); ?>;
     }
 
     .route-map-shell {
@@ -32,20 +30,20 @@
         align-items: center;
         gap: 0.5rem;
         border-radius: 9999px;
-        border: 1px solid #e7e5e4;
-        background: #ffffff;
+        border: 1px solid color-mix(in srgb, var(--brand-primary) 18%, white);
+        background: color-mix(in srgb, var(--brand-accent) 12%, white);
         color: var(--brand-primary);
-        padding: 0.55rem 0.9rem;
-        font-size: 0.875rem;
-        font-weight: 700;
+        padding: 0.55rem 0.95rem;
+        font-size: 0.82rem;
+        font-weight: 800;
         line-height: 1;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-        transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease;
+        transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
     }
 
     .route-chip:hover {
-        border-color: #fecaca;
-        background-color: #fffaf6;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 20px rgba(158, 32, 22, 0.12);
+        filter: brightness(1.01);
     }
 
     .route-directions details[open] summary .route-disclosure-icon {
@@ -122,26 +120,26 @@
         }
     }
 </style>
-@if ($hasCoordinates)
+<?php if($hasCoordinates): ?>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-@endif
-@endsection
+<?php endif; ?>
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <section class="max-w-7xl mx-auto px-4 pb-16 sm:px-6 lg:px-8">
     <div class="mb-6 mt-6">
-        <a href="{{ auth()->guard('comensal')->check() ? route('comensal.inicio') : route('home') }}" class="inline-flex items-center gap-2 text-sm font-bold hover:underline" style="color:var(--brand-primary)">
+        <a href="<?php echo e(auth()->guard('comensal')->check() ? route('comensal.inicio') : route('home')); ?>" class="inline-flex items-center gap-2 text-sm font-bold hover:underline" style="color:var(--brand-primary)">
             <span class="material-symbols-outlined">arrow_back</span> Volver
         </a>
     </div>
 
     <div class="overflow-hidden rounded-[28px] bg-white shadow-sm ring-1 ring-stone-100">
         <div class="relative h-64 w-full overflow-hidden bg-stone-200 sm:h-72 lg:h-80">
-            @if($restaurante->logo_url_resolved)
-            <img class="absolute left-4 top-4 h-14 w-14 rounded-2xl bg-white/85 object-contain p-1.5 shadow-sm backdrop-blur sm:h-16 sm:w-16" src="{{ $restaurante->logo_url_resolved }}" alt="{{ $restaurante->nombre }}" />
-            @endif
-            <img class="h-full w-full object-cover" src="{{ media_url($restaurante->foto_portada) ?: 'https://via.placeholder.com/1600x600?text=Restaurante' }}" alt="{{ $restaurante->nombre }}" />
+            <?php if($restaurante->logo_url_resolved): ?>
+            <img class="absolute left-4 top-4 h-14 w-14 rounded-2xl bg-white/85 object-contain p-1.5 shadow-sm backdrop-blur sm:h-16 sm:w-16" src="<?php echo e($restaurante->logo_url_resolved); ?>" alt="<?php echo e($restaurante->nombre); ?>" />
+            <?php endif; ?>
+            <img class="h-full w-full object-cover" src="<?php echo e(media_url($restaurante->foto_portada) ?: 'https://via.placeholder.com/1600x600?text=Restaurante'); ?>" alt="<?php echo e($restaurante->nombre); ?>" />
             <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent"></div>
         </div>
 
@@ -152,10 +150,10 @@
                         <span class="material-symbols-outlined text-base">place</span>
                         Destino destacado
                     </div>
-                    <h1 class="font-headline text-3xl font-extrabold tracking-tight text-on-surface sm:text-4xl">{{ $restaurante->nombre }}</h1>
-                    <p class="mt-3 text-sm leading-6 text-stone-600 sm:text-base">{{ $restaurante->direccion ?: 'Dirección no disponible' }}{{ $restaurante->zona ? ' · '.$restaurante->zona : '' }}</p>
+                    <h1 class="font-headline text-3xl font-extrabold tracking-tight text-on-surface sm:text-4xl"><?php echo e($restaurante->nombre); ?></h1>
+                    <p class="mt-3 text-sm leading-6 text-stone-600 sm:text-base"><?php echo e($restaurante->direccion ?: 'Dirección no disponible'); ?><?php echo e($restaurante->zona ? ' · '.$restaurante->zona : ''); ?></p>
                     <div class="mt-3 flex flex-wrap items-center gap-3">
-                        @if ($hasCoordinates)
+                        <?php if($hasCoordinates): ?>
                             <button
                                 id="openRouteModalButton"
                                 type="button"
@@ -165,85 +163,89 @@
                                 <span class="material-symbols-outlined text-base">near_me</span>
                                 Cómo llegar
                             </button>
-                        @else
+                        <?php else: ?>
                             <span class="inline-flex items-center gap-2 rounded-full border border-dashed border-stone-300 bg-white px-3 py-2 text-xs font-bold uppercase tracking-[0.18em] text-stone-500">
                                 <span class="material-symbols-outlined text-base">location_off</span>
                                 Ubicación pendiente
                             </span>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="rounded-3xl bg-surface-container-low px-5 py-4 text-left shadow-inner ring-1 ring-stone-100 lg:min-w-[220px] lg:text-right">
                     <p class="text-xs font-bold uppercase tracking-[0.3em] text-stone-500">Promociones</p>
-                    <p class="mt-1 text-3xl font-black text-on-surface">{{ $promociones->count() }}</p>
+                    <p class="mt-1 text-3xl font-black text-on-surface"><?php echo e($promociones->count()); ?></p>
                     <p class="text-sm text-stone-500">activas ahora</p>
                 </div>
             </div>
 
             <div class="mb-10 flex flex-wrap gap-3 text-sm text-stone-600">
-                @if($restaurante->telefono)
-                    <span class="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 shadow-sm"><span class="material-symbols-outlined text-base" style="color:var(--brand-primary)">call</span> +591 {{ $restaurante->telefono }}</span>
-                @endif
-                @if($restaurante->email_reservas)
-                    <span class="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 shadow-sm"><span class="material-symbols-outlined text-base" style="color:var(--brand-primary)">mail</span> {{ $restaurante->email_reservas }}</span>
-                @endif
-                @if($restaurante->instagram)
-                    <span class="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 shadow-sm"><span class="material-symbols-outlined text-base" style="color:var(--brand-primary)">camera_alt</span> {{ $restaurante->instagram }}</span>
-                @endif
-                @if($restaurante->facebook_url)
-                    <span class="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 shadow-sm"><span class="material-symbols-outlined text-base" style="color:var(--brand-primary)">language</span> {{ $restaurante->facebook_url }}</span>
-                @endif
+                <?php if($restaurante->telefono): ?>
+                    <span class="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 shadow-sm"><span class="material-symbols-outlined text-base" style="color:var(--brand-primary)">call</span> +591 <?php echo e($restaurante->telefono); ?></span>
+                <?php endif; ?>
+                <?php if($restaurante->email_reservas): ?>
+                    <span class="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 shadow-sm"><span class="material-symbols-outlined text-base" style="color:var(--brand-primary)">mail</span> <?php echo e($restaurante->email_reservas); ?></span>
+                <?php endif; ?>
+                <?php if($restaurante->instagram): ?>
+                    <span class="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 shadow-sm"><span class="material-symbols-outlined text-base" style="color:var(--brand-primary)">camera_alt</span> <?php echo e($restaurante->instagram); ?></span>
+                <?php endif; ?>
+                <?php if($restaurante->facebook_url): ?>
+                    <span class="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 shadow-sm"><span class="material-symbols-outlined text-base" style="color:var(--brand-primary)">language</span> <?php echo e($restaurante->facebook_url); ?></span>
+                <?php endif; ?>
             </div>
 
             <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
                 <div class="md:col-span-2">
                     <h2 class="mb-4 text-xl font-bold">Menú</h2>
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        @forelse($productos as $p)
+                        <?php $__empty_1 = true; $__currentLoopData = $productos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $p): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <div class="flex items-center gap-4 rounded-2xl bg-surface-container-lowest p-4 ring-1 ring-stone-100">
                             <div class="h-20 w-20 overflow-hidden rounded-xl bg-stone-100">
-                                <img src="{{ media_url($p->foto) ?: 'https://via.placeholder.com/240x160?text=Plato' }}" class="h-full w-full object-cover" alt="{{ $p->nombre }}" />
+                                <img src="<?php echo e(media_url($p->foto) ?: 'https://via.placeholder.com/240x160?text=Plato'); ?>" class="h-full w-full object-cover" alt="<?php echo e($p->nombre); ?>" />
                             </div>
                             <div class="flex-1">
                                 <div class="flex items-start justify-between gap-4">
-                                    <h3 class="font-bold text-on-surface">{{ $p->nombre }}</h3>
-                                    <span class="font-black text-on-surface">{{ $p->precio }} Bs.</span>
+                                    <h3 class="font-bold text-on-surface"><?php echo e($p->nombre); ?></h3>
+                                    <span class="font-black text-on-surface"><?php echo e($p->precio); ?> Bs.</span>
                                 </div>
-                                <p class="mt-1 text-sm text-stone-500">{{ \Illuminate\Support\Str::limit($p->descripcion, 80) }}</p>
+                                <p class="mt-1 text-sm text-stone-500"><?php echo e(\Illuminate\Support\Str::limit($p->descripcion, 80)); ?></p>
                             </div>
                         </div>
-                        @empty
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <div class="rounded-2xl border border-dashed border-stone-200 bg-stone-50 px-5 py-8 text-center text-sm text-stone-500 md:col-span-2">
                             Este restaurante aún no publicó platos activos.
                         </div>
-                        @endforelse
+                        <?php endif; ?>
                     </div>
                 </div>
                 <aside class="md:col-span-1">
                     <h2 class="mb-4 text-xl font-bold">Promociones</h2>
-                    @forelse($promociones as $promo)
+                    <?php $__empty_1 = true; $__currentLoopData = $promociones; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $promo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <div class="mb-4 rounded-2xl bg-[#fff8f2] p-4 ring-1 ring-[color:var(--brand-accent)]/10">
-                        <h3 class="font-bold text-on-surface">{{ $promo->nombre }}</h3>
-                        <p class="mt-1 text-sm text-stone-600">{{ $promo->tipo }} · {{ $promo->valor }}</p>
-                        @if($promo->imagen)
+                        <h3 class="font-bold text-on-surface"><?php echo e($promo->nombre); ?></h3>
+                        <p class="mt-1 text-sm text-stone-600"><?php echo e($promo->tipo); ?> · <?php echo e($promo->valor); ?></p>
+                        <?php if($promo->imagen): ?>
                         <div class="mt-3">
-                            <img src="{{ media_url($promo->imagen) }}" class="h-32 w-full rounded-xl object-cover" alt="{{ $promo->nombre }}" />
+                            <img src="<?php echo e(media_url($promo->imagen)); ?>" class="h-32 w-full rounded-xl object-cover" alt="<?php echo e($promo->nombre); ?>" />
                         </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <p class="rounded-2xl border border-dashed border-stone-200 bg-stone-50 px-5 py-8 text-center text-sm text-stone-500">No hay promociones activas.</p>
-                    @endforelse
+                    <?php endif; ?>
                 </aside>
             </div>
 
-            @if ($hasCoordinates)
-                <x-modal
-                    id="restaurant-route-modal"
-                    title="Cómo llegar"
-                    subtitle="{{ $restaurante->nombre }} · {{ $restaurante->direccion ?: 'Dirección no disponible' }}"
-                    max-width="max-w-6xl"
-                >
+            <?php if($hasCoordinates): ?>
+                <?php if (isset($component)) { $__componentOriginal9f64f32e90b9102968f2bc548315018c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9f64f32e90b9102968f2bc548315018c = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.modal','data' => ['id' => 'restaurant-route-modal','title' => 'Cómo llegar','subtitle' => ''.e($restaurante->nombre).' · '.e($restaurante->direccion ?: 'Dirección no disponible').'','maxWidth' => 'max-w-6xl']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('modal'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'restaurant-route-modal','title' => 'Cómo llegar','subtitle' => ''.e($restaurante->nombre).' · '.e($restaurante->direccion ?: 'Dirección no disponible').'','max-width' => 'max-w-6xl']); ?>
                     <section class="overflow-hidden rounded-[28px] border border-[color:var(--brand-accent)]/20 bg-[#fffaf6] shadow-sm" aria-labelledby="route-section-title">
                         <div class="grid grid-cols-1 lg:grid-cols-[360px_minmax(0,1fr)]">
                             <aside class="border-b border-stone-200/70 p-5 sm:p-6 lg:border-b-0 lg:border-r">
@@ -264,8 +266,8 @@
                                         </div>
                                         <div class="min-w-0 flex-1">
                                             <p class="text-xs font-bold uppercase tracking-[0.25em] text-stone-500">Destino</p>
-                                            <p class="mt-1 text-sm font-extrabold text-on-surface">{{ $restaurante->nombre }}</p>
-                                            <p class="mt-1 text-sm leading-6 text-stone-600">{{ $restaurante->direccion ?: 'Dirección no disponible' }}</p>
+                                            <p class="mt-1 text-sm font-extrabold text-on-surface"><?php echo e($restaurante->nombre); ?></p>
+                                            <p class="mt-1 text-sm leading-6 text-stone-600"><?php echo e($restaurante->direccion ?: 'Dirección no disponible'); ?></p>
                                         </div>
                                     </div>
                                 </div>
@@ -347,23 +349,32 @@
                             </div>
                         </div>
                     </section>
-                </x-modal>
-            @endif
+                 <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9f64f32e90b9102968f2bc548315018c)): ?>
+<?php $attributes = $__attributesOriginal9f64f32e90b9102968f2bc548315018c; ?>
+<?php unset($__attributesOriginal9f64f32e90b9102968f2bc548315018c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9f64f32e90b9102968f2bc548315018c)): ?>
+<?php $component = $__componentOriginal9f64f32e90b9102968f2bc548315018c; ?>
+<?php unset($__componentOriginal9f64f32e90b9102968f2bc548315018c); ?>
+<?php endif; ?>
+            <?php endif; ?>
         </div>
     </div>
 </section>
 
-@if ($hasCoordinates)
+<?php if($hasCoordinates): ?>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const routeData = {
-        restaurantName: @json($restaurante->nombre),
-        address: @json($restaurante->direccion ?: 'Dirección no disponible'),
-        zone: @json($restaurante->zona),
-        lat: Number(@json((float) $restaurante->latitud)),
-        lng: Number(@json((float) $restaurante->longitud)),
-        brandPrimary: @json($theme['primary']),
-        brandSecondary: @json($theme['secondary']),
+        restaurantName: <?php echo json_encode($restaurante->nombre, 15, 512) ?>,
+        address: <?php echo json_encode($restaurante->direccion ?: 'Dirección no disponible', 15, 512) ?>,
+        zone: <?php echo json_encode($restaurante->zona, 15, 512) ?>,
+        lat: Number(<?php echo json_encode((float) $restaurante->latitud, 15, 512) ?>),
+        lng: Number(<?php echo json_encode((float) $restaurante->longitud, 15, 512) ?>),
+        brandPrimary: <?php echo json_encode($theme['primary'], 15, 512) ?>,
+        brandSecondary: <?php echo json_encode($theme['secondary'], 15, 512) ?>,
     };
 
     const elements = {
@@ -801,5 +812,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 </script>
-@endif
-@endsection
+<?php endif; ?>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\yovan\Proyecto-restaurant\src\resources\views/restaurante/detalle.blade.php ENDPATH**/ ?>
