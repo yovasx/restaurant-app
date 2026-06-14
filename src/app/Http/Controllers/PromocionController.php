@@ -125,8 +125,10 @@ class PromocionController extends Controller
     public function resenas()
     {
         $restauranteId = $this->getRestauranteId();
-        $resenas = \App\Models\Resena::whereHas('menu', function ($q) use ($restauranteId) {
-                $q->where('restaurante_id', $restauranteId);
+        $resenas = \App\Models\Resena::where(function ($q) use ($restauranteId) {
+                $q->whereHas('menu', function ($sub) use ($restauranteId) {
+                    $sub->where('restaurante_id', $restauranteId);
+                })->orWhere('restaurante_id', $restauranteId);
             })
             ->with(['comensal', 'menu'])
             ->latest()

@@ -1,14 +1,12 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Explorar - GastroGuía'); ?>
+<?php $__env->startSection('layout-flush', 'true'); ?>
 
-@section('title', 'Explorar - GastroGuía')
-@section('layout-flush', 'true')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <!-- Leaflet CSS/JS (se cargan aqui) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-@php
+<?php
     $iconos = [
         'Pizza' => 'local_pizza', 'Sushi' => 'set_meal', 'Burgers' => 'lunch_dining',
         'Parrilla' => 'outdoor_grill', 'Comida Boliviana' => 'restaurant_menu',
@@ -19,7 +17,7 @@
     ];
     $activeCategoria = request('categoria');
     $searchQuery = request('q');
-@endphp
+?>
  
 <style>
     .restaurant-marker{ width:48px; height:48px; border-radius:50%; overflow:hidden; box-shadow:0 4px 10px rgba(0,0,0,0.2); border:2px solid #fff; }
@@ -48,15 +46,15 @@
             <span class="text-base font-black text-primary tracking-tighter font-headline hidden sm:block">GastroGuía</span>
         </div>
         <div class="hidden md:flex items-center gap-4 font-headline font-bold text-sm">
-            <a class="text-stone-500 hover:text-primary transition-colors" href="{{ route('comensal.inicio') }}">Inicio</a>
-            <a class="text-primary border-b-2 border-primary pb-1" href="{{ route('comensal.explorar') }}">Explorar</a>
-            <a class="text-stone-500 hover:text-primary transition-colors" href="{{ route('comensal.perfil') }}">Perfil</a>
+            <a class="text-stone-500 hover:text-primary transition-colors" href="<?php echo e(route('comensal.inicio')); ?>">Inicio</a>
+            <a class="text-primary border-b-2 border-primary pb-1" href="<?php echo e(route('comensal.explorar')); ?>">Explorar</a>
+            <a class="text-stone-500 hover:text-primary transition-colors" href="<?php echo e(route('comensal.perfil')); ?>">Perfil</a>
         </div>
     </div>
     <div class="flex items-center gap-3">
         <div class="hidden sm:flex items-center bg-stone-100 px-3 py-1.5 rounded-full gap-1.5 w-56">
             <span class="material-symbols-outlined text-stone-400 text-sm">search</span>
-            <input id="globalSearch" class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-stone-400 outline-none" placeholder="Buscar en La Paz..." type="text" value="{{ $searchQuery }}"/>
+            <input id="globalSearch" class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-stone-400 outline-none" placeholder="Buscar en La Paz..." type="text" value="<?php echo e($searchQuery); ?>"/>
         </div>
         <button id="openFilters" class="material-symbols-outlined text-stone-500 p-1.5 hover:bg-stone-100 rounded-full">tune</button>
     </div>
@@ -105,17 +103,18 @@
 
             <!-- categories carousel -->
             <div class="flex gap-2 overflow-x-auto scrollbar-hide">
-                <a href="{{ route('comensal.explorar') }}"
-                   class="cat-chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap {{ !$activeCategoria ? 'bg-primary text-white' : 'bg-white text-stone-600 border border-stone-200' }}">
+                <a href="<?php echo e(route('comensal.explorar')); ?>"
+                   class="cat-chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap <?php echo e(!$activeCategoria ? 'bg-primary text-white' : 'bg-white text-stone-600 border border-stone-200'); ?>">
                     <span class="material-symbols-outlined text-sm">restaurant</span> Todas
                 </a>
-                @foreach($categorias ?? [] as $cat)
-                    <a href="{{ route('comensal.explorar', ['categoria' => $cat->id, 'q' => $searchQuery]) }}"
-                       class="cat-chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap {{ request('categoria') == $cat->id ? 'bg-primary text-white' : 'bg-white text-stone-600 border border-stone-200 hover:bg-stone-50' }}">
-                        <span class="material-symbols-outlined text-sm">{{ $iconos[$cat->nombre_categoria] ?? 'restaurant' }}</span>
-                        {{ $cat->nombre_categoria }}
+                <?php $__currentLoopData = $categorias ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <a href="<?php echo e(route('comensal.explorar', ['categoria' => $cat->id, 'q' => $searchQuery])); ?>"
+                       class="cat-chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap <?php echo e(request('categoria') == $cat->id ? 'bg-primary text-white' : 'bg-white text-stone-600 border border-stone-200 hover:bg-stone-50'); ?>">
+                        <span class="material-symbols-outlined text-sm"><?php echo e($iconos[$cat->nombre_categoria] ?? 'restaurant'); ?></span>
+                        <?php echo e($cat->nombre_categoria); ?>
+
                     </a>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
 
             <!-- active filter chips -->
@@ -195,9 +194,9 @@
             <div>
                 <label class="text-sm font-bold">Calificación mínima</label>
                 <div class="flex gap-2 mt-1">
-                    @for($i = 1; $i <= 5; $i++)
-                        <button class="rating-star-btn w-9 h-9 rounded-full border border-stone-200 text-xs font-bold text-stone-500 hover:bg-amber-50 hover:border-amber-300" data-rating="{{ $i }}">{{ $i }}+</button>
-                    @endfor
+                    <?php for($i = 1; $i <= 5; $i++): ?>
+                        <button class="rating-star-btn w-9 h-9 rounded-full border border-stone-200 text-xs font-bold text-stone-500 hover:bg-amber-50 hover:border-amber-300" data-rating="<?php echo e($i); ?>"><?php echo e($i); ?>+</button>
+                    <?php endfor; ?>
                 </div>
             </div>
 
@@ -264,10 +263,10 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function(){
-    const nearbyUrl = '{{ route('restaurantes.nearby') }}?ajax=1';
-    const detailBase = '{{ url('restaurante') }}';
-    const allRestaurants = @json($restaurants ?? []);
-    const categoriasData = @json($categorias ?? []);
+    const nearbyUrl = '<?php echo e(route('restaurantes.nearby')); ?>?ajax=1';
+    const detailBase = '<?php echo e(url('restaurante')); ?>';
+    const allRestaurants = <?php echo json_encode($restaurants ?? [], 15, 512) ?>;
+    const categoriasData = <?php echo json_encode($categorias ?? [], 15, 512) ?>;
     let nearbyRestaurants = [];
     let visibleRestaurants = [];
     let currentMarkers = L.layerGroup();
@@ -284,7 +283,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     // Filter state
     let filterState = {
-        query: '{{ $searchQuery }}' || '',
+        query: '<?php echo e($searchQuery); ?>' || '',
         sort: 'distance',
         useNearby: false,
         openNow: false,
@@ -292,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function(){
         zone: '',
         ratingMin: 0,
         priceRange: 'all',
-        categoria: '{{ $activeCategoria }}' || '',
+        categoria: '<?php echo e($activeCategoria); ?>' || '',
     };
     let hasNearbyResults = false;
 
@@ -1180,4 +1179,6 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\yovan\Proyecto-restaurant\src\resources\views/comensal/explorar.blade.php ENDPATH**/ ?>

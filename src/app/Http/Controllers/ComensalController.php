@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
-use App\Models\Producto;
+use App\Models\Menu;
 use App\Models\Promocion;
 use App\Models\Restaurante;
 use App\Models\Resena;
@@ -51,13 +51,33 @@ class ComensalController extends Controller
         return view('comensal.inicio', array_merge(compact('restaurants', 'categorias'), $dashboard));
     }
 
-    public function explorar()
+    public function explorar(Request $request)
     {
-        $restaurants = Restaurante::select('restaurantes.*', 'stats.avg_rating', 'stats.avg_price')
+        $categorias = Categoria::where('estado', 'activo')->get();
+
+        $query = Restaurante::select('restaurantes.*', 'stats.avg_rating', 'stats.avg_price')
             ->leftJoin('restaurantes_stats as stats', 'stats.restaurante_id', '=', 'restaurantes.id')
             ->where('restaurantes.estado', 'activo')
-            ->get();
-        return view('comensal.explorar', compact('restaurants'));
+            ->with('categorias');
+
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $query->where(function ($sub) use ($q) {
+                $sub->where('restaurantes.nombre', 'ilike', "%{$q}%")
+                    ->orWhere('restaurantes.descripcion', 'ilike', "%{$q}%")
+                    ->orWhere('restaurantes.zona', 'ilike', "%{$q}%");
+            });
+        }
+
+        if ($request->filled('categoria')) {
+            $query->whereHas('categorias', function ($sub) use ($request) {
+                $sub->where('categorias.id', $request->categoria);
+            });
+        }
+
+        $restaurants = $query->get();
+
+        return view('comensal.explorar', compact('restaurants', 'categorias'));
     }
 
     public function nearby(Request $request)
@@ -91,6 +111,7 @@ class ComensalController extends Controller
                 [$lat, $lng, $lat]
             )
             ->leftJoin('restaurantes_stats as stats', 'stats.restaurante_id', '=', 'restaurantes.id')
+            ->with('categorias')
             ->where('estado', 'activo')
             ->whereBetween('latitud', [$minLat, $maxLat])
             ->whereBetween('longitud', [$minLng, $maxLng])
@@ -106,10 +127,91 @@ class ComensalController extends Controller
 
     public function show($id)
     {
-        $restaurante = Restaurante::findOrFail($id);
-        $productos = Producto::where('restaurante_id', $restaurante->id)->where('activo', 1)->get();
+        $restaurante = Restaurante::with(['resenas.comensal', 'resenas.menu'])->findOrFail($id);
+        $menus = Menu::where('restaurante_id', $restaurante->id)->where('estado', 'activo')->orderBy('orden')->get();
         $promociones = Promocion::where('restaurante_id', $restaurante->id)->where('estado', 'activo')->get();
 
-        return view('restaurante.detalle', compact('restaurante', 'productos', 'promociones'));
+        $promedio = $restaurante->resenas->avg('score');
+        $totalResenas = $restaurante->resenas->count();
+        $resenasRecientes = $restaurante->resenas->sortByDesc('created_at')->take(5);
+
+        $miResena = null;
+        $miResenaPlatos = collect();
+        if (Auth::guard('comensal')->check()) {
+            $comensalId = Auth::guard('comensal')->user()->id;
+            $miResena = $restaurante->resenas
+                ->where('comensal_id', $comensalId)
+                ->whereNotNull('restaurante_id')
+                ->first();
+
+            $miResenaPlatos = Resena::where('comensal_id', $comensalId)
+                ->whereIn('menu_id', $menus->pluck('id'))
+                ->get()
+                ->keyBy('menu_id');
+        }
+
+        return view('restaurante.detalle', compact(
+            'restaurante', 'menus', 'promociones',
+            'promedio', 'totalResenas', 'resenasRecientes', 'miResena', 'miResenaPlatos'
+        ));
+    }
+
+    public function saveResena(Request $request, $id)
+    {
+        $restaurante = Restaurante::findOrFail($id);
+
+        $validated = $request->validate([
+            'score' => 'required|integer|min:1|max:5',
+            'comentario' => 'nullable|string|max:1000',
+            'menu_id' => 'nullable|integer|exists:menus,id',
+        ]);
+
+        $comensalId = Auth::guard('comensal')->id();
+
+        if ($request->filled('menu_id')) {
+            $menu = Menu::where('id', $request->menu_id)
+                ->where('restaurante_id', $restaurante->id)
+                ->firstOrFail();
+
+            $resena = Resena::where('comensal_id', $comensalId)
+                ->where('menu_id', $menu->id)
+                ->first();
+
+            if ($resena) {
+                $resena->update([
+                    'score' => $validated['score'],
+                    'comentario' => $validated['comentario'] ?? null,
+                ]);
+            } else {
+                Resena::create([
+                    'comensal_id' => $comensalId,
+                    'restaurante_id' => $restaurante->id,
+                    'menu_id' => $menu->id,
+                    'score' => $validated['score'],
+                    'comentario' => $validated['comentario'] ?? null,
+                ]);
+            }
+        } else {
+            $resena = Resena::where('comensal_id', $comensalId)
+                ->where('restaurante_id', $restaurante->id)
+                ->first();
+
+            if ($resena) {
+                $resena->update([
+                    'score' => $validated['score'],
+                    'comentario' => $validated['comentario'] ?? null,
+                ]);
+            } else {
+                Resena::create([
+                    'comensal_id' => $comensalId,
+                    'restaurante_id' => $restaurante->id,
+                    'score' => $validated['score'],
+                    'comentario' => $validated['comentario'] ?? null,
+                ]);
+            }
+        }
+
+        return redirect()->route('restaurante.show', $restaurante->id)
+            ->with('success', 'Tu reseña ha sido guardada.');
     }
 }

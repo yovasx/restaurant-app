@@ -195,22 +195,65 @@
                 @endif
             </div>
 
+            <div class="mb-8 rounded-2xl bg-white p-5 ring-1 ring-stone-100 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-0.5">
+                            @for ($i = 1; $i <= 5; $i++)
+                                <span class="material-symbols-outlined text-2xl {{ $i <= round($promedio ?? 0) ? 'text-amber-400' : 'text-stone-200' }}" style="font-variation-settings: 'FILL' 1;">star</span>
+                            @endfor
+                        </div>
+                        <div>
+                            <span class="text-2xl font-black text-on-surface">{{ $promedio ? number_format($promedio, 1) : '—' }}</span>
+                            <span class="text-sm text-stone-500"> · {{ $totalResenas }} reseña{{ $totalResenas !== 1 ? 's' : '' }}</span>
+                        </div>
+                    </div>
+                    @auth('comensal')
+                        @if ($miResena)
+                            <button id="editReviewBtn" data-score="{{ $miResena->score ?? 5 }}" data-comentario="{{ $miResena->comentario ?? '' }}" class="inline-flex items-center gap-2 rounded-full bg-primary text-white px-5 py-2 text-sm font-bold shadow-sm hover:brightness-110 transition-all">
+                                <span class="material-symbols-outlined text-sm">edit</span> Editar mi reseña
+                            </button>
+                        @else
+                            <button id="leaveReviewBtn" class="inline-flex items-center gap-2 rounded-full bg-primary text-white px-5 py-2 text-sm font-bold shadow-sm hover:brightness-110 transition-all">
+                                <span class="material-symbols-outlined text-sm">rate_review</span> Dejar reseña
+                            </button>
+                        @endif
+                    @endauth
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
                 <div class="md:col-span-2">
                     <h2 class="mb-4 text-xl font-bold">Menú</h2>
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        @forelse($productos as $p)
-                        <div class="flex items-center gap-4 rounded-2xl bg-surface-container-lowest p-4 ring-1 ring-stone-100">
-                            <div class="h-20 w-20 overflow-hidden rounded-xl bg-stone-100">
-                                <img src="{{ media_url($p->foto) ?: 'https://via.placeholder.com/240x160?text=Plato' }}" class="h-full w-full object-cover" alt="{{ $p->nombre }}" />
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex items-start justify-between gap-4">
-                                    <h3 class="font-bold text-on-surface">{{ $p->nombre }}</h3>
-                                    <span class="font-black text-on-surface">{{ $p->precio }} Bs.</span>
+                        @forelse($menus as $menu)
+                        <div class="flex flex-col gap-3 rounded-2xl bg-surface-container-lowest p-4 ring-1 ring-stone-100" data-menu-name="{{ $menu->nombre }}">
+                            <div class="flex items-center gap-4">
+                                <div class="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-stone-100">
+                                    <img src="{{ media_url($menu->foto_plato) ?: 'https://via.placeholder.com/240x160?text=Plato' }}" class="h-full w-full object-cover" alt="{{ $menu->nombre }}" />
                                 </div>
-                                <p class="mt-1 text-sm text-stone-500">{{ \Illuminate\Support\Str::limit($p->descripcion, 80) }}</p>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <h3 class="font-bold text-on-surface truncate">{{ $menu->nombre }}</h3>
+                                        <span class="shrink-0 font-black text-on-surface">{{ $menu->precio }} Bs.</span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-stone-500">{{ \Illuminate\Support\Str::limit($menu->descripcion, 80) }}</p>
+                                </div>
                             </div>
+                            @auth('comensal')
+                            <div class="flex justify-end">
+                                @php $menuResena = $miResenaPlatos->get($menu->id); @endphp
+                                @if ($menuResena)
+                                    <button type="button" class="menu-review-btn inline-flex items-center gap-1.5 rounded-full border border-amber-300 bg-amber-50 px-3.5 py-1.5 text-xs font-bold text-amber-700 transition-colors hover:bg-amber-100" data-menu-id="{{ $menu->id }}" data-score="{{ $menuResena->score }}" data-comentario="{{ $menuResena->comentario ?? '' }}" data-has-review="true">
+                                        <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1;">star</span> Editar reseña
+                                    </button>
+                                @else
+                                    <button type="button" class="menu-review-btn inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3.5 py-1.5 text-xs font-bold text-stone-600 transition-colors hover:border-primary/30 hover:text-primary" data-menu-id="{{ $menu->id }}" data-score="5" data-comentario="" data-has-review="false">
+                                        <span class="material-symbols-outlined text-sm">rate_review</span> Reseñar plato
+                                    </button>
+                                @endif
+                            </div>
+                            @endauth
                         </div>
                         @empty
                         <div class="rounded-2xl border border-dashed border-stone-200 bg-stone-50 px-5 py-8 text-center text-sm text-stone-500 md:col-span-2">
@@ -236,6 +279,84 @@
                     @endforelse
                 </aside>
             </div>
+
+            {{-- Reseñas --}}
+            <div class="mt-8">
+                <h2 class="mb-4 text-xl font-bold">Reseñas</h2>
+                @if ($resenasRecientes->count() > 0)
+                    <div class="space-y-4">
+                        @foreach ($resenasRecientes as $resena)
+                            <div class="rounded-2xl bg-white p-4 ring-1 ring-stone-100">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-primary text-sm">person</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-bold text-on-surface">{{ $resena->comensal->nombre ?? 'Comensal' }}</p>
+                                            <p class="text-[10px] text-stone-400">{{ $resena->created_at->diffForHumans() }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-0.5">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <span class="material-symbols-outlined text-sm {{ $i <= $resena->score ? 'text-amber-400' : 'text-stone-200' }}" style="font-variation-settings: 'FILL' 1;">star</span>
+                                        @endfor
+                                    </div>
+                                </div>
+                                @if ($resena->comentario)
+                                    <p class="text-sm text-stone-600 leading-relaxed">{{ $resena->comentario }}</p>
+                                @endif
+                                @if ($resena->menu_id && $resena->menu)
+                                    <p class="mt-2 text-xs text-stone-400 italic">Reseñó el plato: {{ $resena->menu->nombre }}</p>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="rounded-2xl border border-dashed border-stone-200 bg-stone-50 px-5 py-8 text-center text-sm text-stone-500">
+                        Aún no hay reseñas para este restaurante.
+                    </div>
+                @endif
+            </div>
+
+            {{-- Review form modal --}}
+            @auth('comensal')
+            <div id="reviewModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50"
+                 data-title-edit="Editar mi reseña"
+                 data-title-new="Dejar reseña"
+                 data-title-dish-edit="Editar reseña del plato"
+                 data-title-dish-new="Reseñar plato"
+                 data-subtitle-restaurant="Califica tu experiencia en {{ $restaurante->nombre }}."
+                 data-subtitle-restaurant="Califica tu experiencia en {{ $restaurante->nombre }}.">
+                <div class="bg-white rounded-xl p-6 w-11/12 max-w-md">
+                    <h3 id="reviewModalTitle" class="font-headline font-extrabold text-lg mb-1">{{ $miResena ? 'Editar mi reseña' : 'Dejar reseña' }}</h3>
+                    <p id="reviewModalSubtitle" class="text-xs text-stone-500 mb-4">Califica tu experiencia en {{ $restaurante->nombre }}.</p>
+                    <form method="POST" action="{{ route('comensal.resena.save', $restaurante->id) }}">
+                        @csrf
+                        <input type="hidden" name="menu_id" id="reviewMenuId" value="">
+                        <div class="mb-4">
+                            <label class="text-sm font-bold block mb-2">Puntuación</label>
+                            <div class="flex gap-2" id="reviewStarPicker">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <button type="button" class="review-star material-symbols-outlined text-3xl text-stone-300 hover:text-amber-400 transition-colors" data-value="{{ $i }}" style="font-variation-settings: 'FILL' 1;">star</button>
+                                @endfor
+                            </div>
+                            <input type="hidden" name="score" id="reviewScore" value="5">
+                            @error('score') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+                        <div class="mb-4">
+                            <label class="text-sm font-bold block mb-2">Comentario <span class="text-stone-400 font-normal">(opcional)</span></label>
+                            <textarea name="comentario" id="reviewComentario" rows="4" class="w-full bg-stone-100 border-0 rounded-lg p-3 text-sm resize-none" placeholder="Cuenta tu experiencia..." maxlength="1000"></textarea>
+                            @error('comentario') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+                        <div class="flex justify-end gap-2">
+                            <button type="button" id="closeReviewModal" class="px-4 py-2 rounded-full text-sm font-bold text-stone-500 hover:bg-stone-100 transition-colors">Cancelar</button>
+                            <button type="submit" class="px-6 py-2 rounded-full bg-primary text-white text-sm font-bold shadow-sm hover:brightness-110 transition-all">Guardar reseña</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            @endauth
 
             @if ($hasCoordinates)
                 <x-modal
@@ -802,4 +923,114 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endif
+
+@auth('comensal')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('reviewModal');
+    const closeBtn = document.getElementById('closeReviewModal');
+    const stars = document.querySelectorAll('.review-star');
+    const scoreInput = document.getElementById('reviewScore');
+    const menuIdInput = document.getElementById('reviewMenuId');
+    const comentarioInput = document.getElementById('reviewComentario');
+    const modalTitle = document.getElementById('reviewModalTitle');
+    const modalSubtitle = document.getElementById('reviewModalSubtitle');
+    const restaurantName = @json($restaurante->nombre);
+
+    function openReviewModal(menuId, score, comentario, hasReview, menuName) {
+        menuIdInput.value = menuId || '';
+        scoreInput.value = score || 5;
+
+        stars.forEach((st, i) => {
+            const val = Number(scoreInput.value);
+            if (i < val) {
+                st.classList.add('text-amber-400');
+                st.classList.remove('text-stone-300');
+            } else {
+                st.classList.remove('text-amber-400');
+                st.classList.add('text-stone-300');
+            }
+        });
+
+        comentarioInput.value = comentario || '';
+
+        if (menuId) {
+            modalTitle.textContent = hasReview ? modal.dataset.titleDishEdit : modal.dataset.titleDishNew;
+            modalSubtitle.textContent = 'Califica ' + (menuName || 'este plato') + ' en ' + restaurantName + '.';
+        } else {
+            modalTitle.textContent = hasReview ? modal.dataset.titleEdit : modal.dataset.titleNew;
+            modalSubtitle.textContent = modal.dataset.subtitleRestaurant;
+        }
+
+        modal.classList.remove('hidden');
+    }
+
+    // Restaurant review buttons
+    const leaveBtn = document.getElementById('leaveReviewBtn');
+    const editBtn = document.getElementById('editReviewBtn');
+    if (leaveBtn) {
+        leaveBtn.addEventListener('click', () => openReviewModal('', 5, '', false, ''));
+    }
+    if (editBtn) {
+        editBtn.addEventListener('click', () => {
+            const score = Number(editBtn.dataset.score) || 5;
+            const comentario = editBtn.dataset.comentario || '';
+            openReviewModal('', score, comentario, true, '');
+        });
+    }
+
+    // Dish review buttons
+    document.querySelectorAll('.menu-review-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const menuId = btn.dataset.menuId;
+            const score = Number(btn.dataset.score) || 5;
+            const comentario = btn.dataset.comentario || '';
+            const hasReview = btn.dataset.hasReview === 'true';
+            const menuName = btn.closest('[data-menu-name]')?.dataset.menuName || '';
+            openReviewModal(menuId, score, comentario, hasReview, menuName);
+        });
+    });
+
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+    }
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.add('hidden');
+        });
+    }
+
+    stars.forEach(s => {
+        s.addEventListener('click', () => {
+            const val = Number(s.dataset.value);
+            scoreInput.value = val;
+            stars.forEach((st, i) => {
+                if (i < val) {
+                    st.classList.add('text-amber-400');
+                    st.classList.remove('text-stone-300');
+                } else {
+                    st.classList.remove('text-amber-400');
+                    st.classList.add('text-stone-300');
+                }
+            });
+        });
+        s.addEventListener('mouseenter', () => {
+            const val = Number(s.dataset.value);
+            stars.forEach((st, i) => {
+                if (i < val) {
+                    st.classList.add('text-amber-300');
+                    st.classList.remove('text-stone-300');
+                } else {
+                    st.classList.remove('text-amber-300');
+                }
+            });
+        });
+        s.addEventListener('mouseleave', () => {
+            stars.forEach(st => st.classList.remove('text-amber-300'));
+        });
+    });
+});
+</script>
+@endauth
+
 @endsection

@@ -70,6 +70,11 @@ class Restaurante extends Model
         return $this->belongsToMany(Categoria::class, 'restaurante_categorias');
     }
 
+    public function resenas()
+    {
+        return $this->hasMany(Resena::class, 'restaurante_id');
+    }
+
     protected function fotoPortadaUrl(): Attribute
     {
         return Attribute::make(
@@ -82,6 +87,17 @@ class Restaurante extends Model
         return Attribute::make(
             get: fn () => media_url($this->logo_url),
         );
+    }
+
+    public function avgRatingAttribute()
+    {
+        $this->loadMissing('resenas');
+        return $this->resenas->avg('score');
+    }
+
+    public function resenasCount()
+    {
+        return $this->resenas()->count();
     }
 
     public function resolvedTheme(): array

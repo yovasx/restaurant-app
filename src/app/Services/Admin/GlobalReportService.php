@@ -66,10 +66,12 @@ class GlobalReportService
         $visitasRango = (clone $visitasQuery)->count();
 
         $resenasQuery = DB::table('resenas')
-            ->join('menus', 'menus.id', '=', 'resenas.menu_id')
-            ->join('restaurantes', 'restaurantes.id', '=', 'menus.restaurante_id')
+            ->leftJoin('menus', 'menus.id', '=', 'resenas.menu_id')
+            ->join('restaurantes', function ($j) {
+                $j->on('restaurantes.id', '=', DB::raw('COALESCE(resenas.restaurante_id, menus.restaurante_id)'));
+            })
             ->whereBetween('resenas.created_at', [$from, $to])
-            ->when($restauranteId, fn($q, $v) => $q->where('menus.restaurante_id', $v))
+            ->when($restauranteId, fn($q, $v) => $q->where(DB::raw('COALESCE(resenas.restaurante_id, menus.restaurante_id)'), $v))
             ->when($estadoRestaurante, fn($q, $v) => $q->where('restaurantes.estado', $v))
             ->when($score, fn($q, $v) => $q->where('resenas.score', $v));
         $resenasRango = (clone $resenasQuery)->count();
@@ -131,10 +133,12 @@ class GlobalReportService
     private function resenasPorDia(Carbon $from, Carbon $to, ?int $restauranteId, ?string $estadoRestaurante, ?int $score): array
     {
         return DB::table('resenas')
-            ->join('menus', 'menus.id', '=', 'resenas.menu_id')
-            ->join('restaurantes', 'restaurantes.id', '=', 'menus.restaurante_id')
+            ->leftJoin('menus', 'menus.id', '=', 'resenas.menu_id')
+            ->join('restaurantes', function ($j) {
+                $j->on('restaurantes.id', '=', DB::raw('COALESCE(resenas.restaurante_id, menus.restaurante_id)'));
+            })
             ->whereBetween('resenas.created_at', [$from, $to])
-            ->when($restauranteId, fn($q, $v) => $q->where('menus.restaurante_id', $v))
+            ->when($restauranteId, fn($q, $v) => $q->where(DB::raw('COALESCE(resenas.restaurante_id, menus.restaurante_id)'), $v))
             ->when($estadoRestaurante, fn($q, $v) => $q->where('restaurantes.estado', $v))
             ->when($score, fn($q, $v) => $q->where('resenas.score', $v))
             ->selectRaw('DATE(resenas.created_at) as fecha, COUNT(*) as total')
@@ -162,10 +166,12 @@ class GlobalReportService
     private function topRestaurantesRating(Carbon $from, Carbon $to, ?int $restauranteId, ?string $estadoRestaurante, ?int $score): array
     {
         return DB::table('resenas')
-            ->join('menus', 'menus.id', '=', 'resenas.menu_id')
-            ->join('restaurantes', 'restaurantes.id', '=', 'menus.restaurante_id')
+            ->leftJoin('menus', 'menus.id', '=', 'resenas.menu_id')
+            ->join('restaurantes', function ($j) {
+                $j->on('restaurantes.id', '=', DB::raw('COALESCE(resenas.restaurante_id, menus.restaurante_id)'));
+            })
             ->whereBetween('resenas.created_at', [$from, $to])
-            ->when($restauranteId, fn($q, $v) => $q->where('menus.restaurante_id', $v))
+            ->when($restauranteId, fn($q, $v) => $q->where(DB::raw('COALESCE(resenas.restaurante_id, menus.restaurante_id)'), $v))
             ->when($estadoRestaurante, fn($q, $v) => $q->where('restaurantes.estado', $v))
             ->when($score, fn($q, $v) => $q->where('resenas.score', $v))
             ->selectRaw('restaurantes.id, restaurantes.nombre, AVG(resenas.score) as promedio, COUNT(resenas.id) as total_resenas')
@@ -180,10 +186,12 @@ class GlobalReportService
     private function bottomRestaurantesRating(Carbon $from, Carbon $to, ?int $restauranteId, ?string $estadoRestaurante, ?int $score): array
     {
         return DB::table('resenas')
-            ->join('menus', 'menus.id', '=', 'resenas.menu_id')
-            ->join('restaurantes', 'restaurantes.id', '=', 'menus.restaurante_id')
+            ->leftJoin('menus', 'menus.id', '=', 'resenas.menu_id')
+            ->join('restaurantes', function ($j) {
+                $j->on('restaurantes.id', '=', DB::raw('COALESCE(resenas.restaurante_id, menus.restaurante_id)'));
+            })
             ->whereBetween('resenas.created_at', [$from, $to])
-            ->when($restauranteId, fn($q, $v) => $q->where('menus.restaurante_id', $v))
+            ->when($restauranteId, fn($q, $v) => $q->where(DB::raw('COALESCE(resenas.restaurante_id, menus.restaurante_id)'), $v))
             ->when($estadoRestaurante, fn($q, $v) => $q->where('restaurantes.estado', $v))
             ->when($score, fn($q, $v) => $q->where('resenas.score', $v))
             ->selectRaw('restaurantes.id, restaurantes.nombre, AVG(resenas.score) as promedio, COUNT(resenas.id) as total_resenas')
@@ -252,10 +260,12 @@ class GlobalReportService
     private function resenasPorScore(Carbon $from, Carbon $to, ?int $restauranteId, ?string $estadoRestaurante): array
     {
         $rows = DB::table('resenas')
-            ->join('menus', 'menus.id', '=', 'resenas.menu_id')
-            ->join('restaurantes', 'restaurantes.id', '=', 'menus.restaurante_id')
+            ->leftJoin('menus', 'menus.id', '=', 'resenas.menu_id')
+            ->join('restaurantes', function ($j) {
+                $j->on('restaurantes.id', '=', DB::raw('COALESCE(resenas.restaurante_id, menus.restaurante_id)'));
+            })
             ->whereBetween('resenas.created_at', [$from, $to])
-            ->when($restauranteId, fn($q, $v) => $q->where('menus.restaurante_id', $v))
+            ->when($restauranteId, fn($q, $v) => $q->where(DB::raw('COALESCE(resenas.restaurante_id, menus.restaurante_id)'), $v))
             ->when($estadoRestaurante, fn($q, $v) => $q->where('restaurantes.estado', $v))
             ->selectRaw('resenas.score, COUNT(*) as total')
             ->groupBy('resenas.score')

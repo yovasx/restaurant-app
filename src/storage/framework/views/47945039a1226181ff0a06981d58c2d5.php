@@ -30,20 +30,20 @@
         align-items: center;
         gap: 0.5rem;
         border-radius: 9999px;
-        border: 1px solid color-mix(in srgb, var(--brand-primary) 18%, white);
-        background: color-mix(in srgb, var(--brand-accent) 12%, white);
+        border: 1px solid #e7e5e4;
+        background: #ffffff;
         color: var(--brand-primary);
-        padding: 0.55rem 0.95rem;
-        font-size: 0.82rem;
-        font-weight: 800;
+        padding: 0.55rem 0.9rem;
+        font-size: 0.875rem;
+        font-weight: 700;
         line-height: 1;
-        transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+        transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease;
     }
 
     .route-chip:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 10px 20px rgba(158, 32, 22, 0.12);
-        filter: brightness(1.01);
+        border-color: #fecaca;
+        background-color: #fffaf6;
     }
 
     .route-directions details[open] summary .route-disclosure-icon {
@@ -193,22 +193,65 @@
                 <?php endif; ?>
             </div>
 
+            <div class="mb-8 rounded-2xl bg-white p-5 ring-1 ring-stone-100 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-0.5">
+                            <?php for($i = 1; $i <= 5; $i++): ?>
+                                <span class="material-symbols-outlined text-2xl <?php echo e($i <= round($promedio ?? 0) ? 'text-amber-400' : 'text-stone-200'); ?>" style="font-variation-settings: 'FILL' 1;">star</span>
+                            <?php endfor; ?>
+                        </div>
+                        <div>
+                            <span class="text-2xl font-black text-on-surface"><?php echo e($promedio ? number_format($promedio, 1) : '—'); ?></span>
+                            <span class="text-sm text-stone-500"> · <?php echo e($totalResenas); ?> reseña<?php echo e($totalResenas !== 1 ? 's' : ''); ?></span>
+                        </div>
+                    </div>
+                    <?php if(auth()->guard('comensal')->check()): ?>
+                        <?php if($miResena): ?>
+                            <button id="editReviewBtn" data-score="<?php echo e($miResena->score ?? 5); ?>" data-comentario="<?php echo e($miResena->comentario ?? ''); ?>" class="inline-flex items-center gap-2 rounded-full bg-primary text-white px-5 py-2 text-sm font-bold shadow-sm hover:brightness-110 transition-all">
+                                <span class="material-symbols-outlined text-sm">edit</span> Editar mi reseña
+                            </button>
+                        <?php else: ?>
+                            <button id="leaveReviewBtn" class="inline-flex items-center gap-2 rounded-full bg-primary text-white px-5 py-2 text-sm font-bold shadow-sm hover:brightness-110 transition-all">
+                                <span class="material-symbols-outlined text-sm">rate_review</span> Dejar reseña
+                            </button>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
                 <div class="md:col-span-2">
                     <h2 class="mb-4 text-xl font-bold">Menú</h2>
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        <?php $__empty_1 = true; $__currentLoopData = $productos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $p): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                        <div class="flex items-center gap-4 rounded-2xl bg-surface-container-lowest p-4 ring-1 ring-stone-100">
-                            <div class="h-20 w-20 overflow-hidden rounded-xl bg-stone-100">
-                                <img src="<?php echo e(media_url($p->foto) ?: 'https://via.placeholder.com/240x160?text=Plato'); ?>" class="h-full w-full object-cover" alt="<?php echo e($p->nombre); ?>" />
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex items-start justify-between gap-4">
-                                    <h3 class="font-bold text-on-surface"><?php echo e($p->nombre); ?></h3>
-                                    <span class="font-black text-on-surface"><?php echo e($p->precio); ?> Bs.</span>
+                        <?php $__empty_1 = true; $__currentLoopData = $menus; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $menu): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                        <div class="flex flex-col gap-3 rounded-2xl bg-surface-container-lowest p-4 ring-1 ring-stone-100" data-menu-name="<?php echo e($menu->nombre); ?>">
+                            <div class="flex items-center gap-4">
+                                <div class="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-stone-100">
+                                    <img src="<?php echo e(media_url($menu->foto_plato) ?: 'https://via.placeholder.com/240x160?text=Plato'); ?>" class="h-full w-full object-cover" alt="<?php echo e($menu->nombre); ?>" />
                                 </div>
-                                <p class="mt-1 text-sm text-stone-500"><?php echo e(\Illuminate\Support\Str::limit($p->descripcion, 80)); ?></p>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <h3 class="font-bold text-on-surface truncate"><?php echo e($menu->nombre); ?></h3>
+                                        <span class="shrink-0 font-black text-on-surface"><?php echo e($menu->precio); ?> Bs.</span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-stone-500"><?php echo e(\Illuminate\Support\Str::limit($menu->descripcion, 80)); ?></p>
+                                </div>
                             </div>
+                            <?php if(auth()->guard('comensal')->check()): ?>
+                            <div class="flex justify-end">
+                                <?php $menuResena = $miResenaPlatos->get($menu->id); ?>
+                                <?php if($menuResena): ?>
+                                    <button type="button" class="menu-review-btn inline-flex items-center gap-1.5 rounded-full border border-amber-300 bg-amber-50 px-3.5 py-1.5 text-xs font-bold text-amber-700 transition-colors hover:bg-amber-100" data-menu-id="<?php echo e($menu->id); ?>" data-score="<?php echo e($menuResena->score); ?>" data-comentario="<?php echo e($menuResena->comentario ?? ''); ?>" data-has-review="true">
+                                        <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1;">star</span> Editar reseña
+                                    </button>
+                                <?php else: ?>
+                                    <button type="button" class="menu-review-btn inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3.5 py-1.5 text-xs font-bold text-stone-600 transition-colors hover:border-primary/30 hover:text-primary" data-menu-id="<?php echo e($menu->id); ?>" data-score="5" data-comentario="" data-has-review="false">
+                                        <span class="material-symbols-outlined text-sm">rate_review</span> Reseñar plato
+                                    </button>
+                                <?php endif; ?>
+                            </div>
+                            <?php endif; ?>
                         </div>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <div class="rounded-2xl border border-dashed border-stone-200 bg-stone-50 px-5 py-8 text-center text-sm text-stone-500 md:col-span-2">
@@ -234,6 +277,98 @@
                     <?php endif; ?>
                 </aside>
             </div>
+
+            
+            <div class="mt-8">
+                <h2 class="mb-4 text-xl font-bold">Reseñas</h2>
+                <?php if($resenasRecientes->count() > 0): ?>
+                    <div class="space-y-4">
+                        <?php $__currentLoopData = $resenasRecientes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $resena): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <div class="rounded-2xl bg-white p-4 ring-1 ring-stone-100">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-primary text-sm">person</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-bold text-on-surface"><?php echo e($resena->comensal->nombre ?? 'Comensal'); ?></p>
+                                            <p class="text-[10px] text-stone-400"><?php echo e($resena->created_at->diffForHumans()); ?></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-0.5">
+                                        <?php for($i = 1; $i <= 5; $i++): ?>
+                                            <span class="material-symbols-outlined text-sm <?php echo e($i <= $resena->score ? 'text-amber-400' : 'text-stone-200'); ?>" style="font-variation-settings: 'FILL' 1;">star</span>
+                                        <?php endfor; ?>
+                                    </div>
+                                </div>
+                                <?php if($resena->comentario): ?>
+                                    <p class="text-sm text-stone-600 leading-relaxed"><?php echo e($resena->comentario); ?></p>
+                                <?php endif; ?>
+                                <?php if($resena->menu_id && $resena->menu): ?>
+                                    <p class="mt-2 text-xs text-stone-400 italic">Reseñó el plato: <?php echo e($resena->menu->nombre); ?></p>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </div>
+                <?php else: ?>
+                    <div class="rounded-2xl border border-dashed border-stone-200 bg-stone-50 px-5 py-8 text-center text-sm text-stone-500">
+                        Aún no hay reseñas para este restaurante.
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            
+            <?php if(auth()->guard('comensal')->check()): ?>
+            <div id="reviewModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50"
+                 data-title-edit="Editar mi reseña"
+                 data-title-new="Dejar reseña"
+                 data-title-dish-edit="Editar reseña del plato"
+                 data-title-dish-new="Reseñar plato"
+                 data-subtitle-restaurant="Califica tu experiencia en <?php echo e($restaurante->nombre); ?>."
+                 data-subtitle-restaurant="Califica tu experiencia en <?php echo e($restaurante->nombre); ?>.">
+                <div class="bg-white rounded-xl p-6 w-11/12 max-w-md">
+                    <h3 id="reviewModalTitle" class="font-headline font-extrabold text-lg mb-1"><?php echo e($miResena ? 'Editar mi reseña' : 'Dejar reseña'); ?></h3>
+                    <p id="reviewModalSubtitle" class="text-xs text-stone-500 mb-4">Califica tu experiencia en <?php echo e($restaurante->nombre); ?>.</p>
+                    <form method="POST" action="<?php echo e(route('comensal.resena.save', $restaurante->id)); ?>">
+                        <?php echo csrf_field(); ?>
+                        <input type="hidden" name="menu_id" id="reviewMenuId" value="">
+                        <div class="mb-4">
+                            <label class="text-sm font-bold block mb-2">Puntuación</label>
+                            <div class="flex gap-2" id="reviewStarPicker">
+                                <?php for($i = 1; $i <= 5; $i++): ?>
+                                    <button type="button" class="review-star material-symbols-outlined text-3xl text-stone-300 hover:text-amber-400 transition-colors" data-value="<?php echo e($i); ?>" style="font-variation-settings: 'FILL' 1;">star</button>
+                                <?php endfor; ?>
+                            </div>
+                            <input type="hidden" name="score" id="reviewScore" value="5">
+                            <?php $__errorArgs = ['score'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <p class="text-red-500 text-xs mt-1"><?php echo e($message); ?></p> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                        </div>
+                        <div class="mb-4">
+                            <label class="text-sm font-bold block mb-2">Comentario <span class="text-stone-400 font-normal">(opcional)</span></label>
+                            <textarea name="comentario" id="reviewComentario" rows="4" class="w-full bg-stone-100 border-0 rounded-lg p-3 text-sm resize-none" placeholder="Cuenta tu experiencia..." maxlength="1000"></textarea>
+                            <?php $__errorArgs = ['comentario'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <p class="text-red-500 text-xs mt-1"><?php echo e($message); ?></p> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                        </div>
+                        <div class="flex justify-end gap-2">
+                            <button type="button" id="closeReviewModal" class="px-4 py-2 rounded-full text-sm font-bold text-stone-500 hover:bg-stone-100 transition-colors">Cancelar</button>
+                            <button type="submit" class="px-6 py-2 rounded-full bg-primary text-white text-sm font-bold shadow-sm hover:brightness-110 transition-all">Guardar reseña</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <?php endif; ?>
 
             <?php if($hasCoordinates): ?>
                 <?php if (isset($component)) { $__componentOriginal9f64f32e90b9102968f2bc548315018c = $component; } ?>
@@ -813,6 +948,116 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 <?php endif; ?>
+
+<?php if(auth()->guard('comensal')->check()): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('reviewModal');
+    const closeBtn = document.getElementById('closeReviewModal');
+    const stars = document.querySelectorAll('.review-star');
+    const scoreInput = document.getElementById('reviewScore');
+    const menuIdInput = document.getElementById('reviewMenuId');
+    const comentarioInput = document.getElementById('reviewComentario');
+    const modalTitle = document.getElementById('reviewModalTitle');
+    const modalSubtitle = document.getElementById('reviewModalSubtitle');
+    const restaurantName = <?php echo json_encode($restaurante->nombre, 15, 512) ?>;
+
+    function openReviewModal(menuId, score, comentario, hasReview, menuName) {
+        menuIdInput.value = menuId || '';
+        scoreInput.value = score || 5;
+
+        stars.forEach((st, i) => {
+            const val = Number(scoreInput.value);
+            if (i < val) {
+                st.classList.add('text-amber-400');
+                st.classList.remove('text-stone-300');
+            } else {
+                st.classList.remove('text-amber-400');
+                st.classList.add('text-stone-300');
+            }
+        });
+
+        comentarioInput.value = comentario || '';
+
+        if (menuId) {
+            modalTitle.textContent = hasReview ? modal.dataset.titleDishEdit : modal.dataset.titleDishNew;
+            modalSubtitle.textContent = 'Califica ' + (menuName || 'este plato') + ' en ' + restaurantName + '.';
+        } else {
+            modalTitle.textContent = hasReview ? modal.dataset.titleEdit : modal.dataset.titleNew;
+            modalSubtitle.textContent = modal.dataset.subtitleRestaurant;
+        }
+
+        modal.classList.remove('hidden');
+    }
+
+    // Restaurant review buttons
+    const leaveBtn = document.getElementById('leaveReviewBtn');
+    const editBtn = document.getElementById('editReviewBtn');
+    if (leaveBtn) {
+        leaveBtn.addEventListener('click', () => openReviewModal('', 5, '', false, ''));
+    }
+    if (editBtn) {
+        editBtn.addEventListener('click', () => {
+            const score = Number(editBtn.dataset.score) || 5;
+            const comentario = editBtn.dataset.comentario || '';
+            openReviewModal('', score, comentario, true, '');
+        });
+    }
+
+    // Dish review buttons
+    document.querySelectorAll('.menu-review-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const menuId = btn.dataset.menuId;
+            const score = Number(btn.dataset.score) || 5;
+            const comentario = btn.dataset.comentario || '';
+            const hasReview = btn.dataset.hasReview === 'true';
+            const menuName = btn.closest('[data-menu-name]')?.dataset.menuName || '';
+            openReviewModal(menuId, score, comentario, hasReview, menuName);
+        });
+    });
+
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+    }
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.add('hidden');
+        });
+    }
+
+    stars.forEach(s => {
+        s.addEventListener('click', () => {
+            const val = Number(s.dataset.value);
+            scoreInput.value = val;
+            stars.forEach((st, i) => {
+                if (i < val) {
+                    st.classList.add('text-amber-400');
+                    st.classList.remove('text-stone-300');
+                } else {
+                    st.classList.remove('text-amber-400');
+                    st.classList.add('text-stone-300');
+                }
+            });
+        });
+        s.addEventListener('mouseenter', () => {
+            const val = Number(s.dataset.value);
+            stars.forEach((st, i) => {
+                if (i < val) {
+                    st.classList.add('text-amber-300');
+                    st.classList.remove('text-stone-300');
+                } else {
+                    st.classList.remove('text-amber-300');
+                }
+            });
+        });
+        s.addEventListener('mouseleave', () => {
+            stars.forEach(st => st.classList.remove('text-amber-300'));
+        });
+    });
+});
+</script>
+<?php endif; ?>
+
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\yovan\Proyecto-restaurant\src\resources\views/restaurante/detalle.blade.php ENDPATH**/ ?>

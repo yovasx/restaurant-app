@@ -224,7 +224,10 @@ class RestaurantDashboardService
 
         $menuIds = Menu::whereIn('restaurante_id', $ids)->pluck('id');
 
-        $resenasQuery = Resena::whereIn('menu_id', $menuIds)
+        $resenasQuery = Resena::where(function ($q) use ($menuIds, $ids) {
+                $q->whereIn('menu_id', $menuIds)
+                  ->orWhereIn('restaurante_id', $ids);
+            })
             ->whereBetween('created_at', [$from, $to]);
 
         $resenas = (clone $resenasQuery)->count();
@@ -308,7 +311,10 @@ class RestaurantDashboardService
         }
 
         $menuIds = Menu::whereIn('restaurante_id', $ids)->pluck('id');
-        $resenasCount = Resena::whereIn('menu_id', $menuIds)
+        $resenasCount = Resena::where(function ($q) use ($menuIds, $ids) {
+                $q->whereIn('menu_id', $menuIds)
+                  ->orWhereIn('restaurante_id', $ids);
+            })
             ->where('created_at', '>=', $since)->count();
         if ($resenasCount === 0) {
             $alerts[] = ['type' => 'sin_resenas', 'label' => 'Sin reseñas en 30 días', 'count' => 1, 'severity' => 'info'];
@@ -320,7 +326,10 @@ class RestaurantDashboardService
     private function latestReviews(array $ids): array
     {
         $menuIds = Menu::whereIn('restaurante_id', $ids)->pluck('id');
-        return Resena::whereIn('menu_id', $menuIds)
+        return Resena::where(function ($q) use ($menuIds, $ids) {
+                $q->whereIn('menu_id', $menuIds)
+                  ->orWhereIn('restaurante_id', $ids);
+            })
             ->with(['comensal:id,nombre,apellido_paterno', 'menu:id,nombre'])
             ->latest()->limit(5)->get()->toArray();
     }
@@ -329,7 +338,10 @@ class RestaurantDashboardService
     {
         $menuIds = Menu::whereIn('restaurante_id', $ids)->pluck('id');
         $scores = DB::table('resenas')
-            ->whereIn('menu_id', $menuIds)
+            ->where(function ($q) use ($menuIds, $ids) {
+                $q->whereIn('menu_id', $menuIds)
+                  ->orWhereIn('restaurante_id', $ids);
+            })
             ->whereBetween('created_at', [$from, $to])
             ->selectRaw('score, COUNT(*) as total')
             ->groupBy('score')->orderBy('score')
@@ -370,7 +382,10 @@ class RestaurantDashboardService
     {
         $menuIds = Menu::whereIn('restaurante_id', $ids)->pluck('id');
         return DB::table('resenas')
-            ->whereIn('menu_id', $menuIds)
+            ->where(function ($q) use ($menuIds, $ids) {
+                $q->whereIn('menu_id', $menuIds)
+                  ->orWhereIn('restaurante_id', $ids);
+            })
             ->whereBetween('created_at', [$from, $to])
             ->selectRaw('DATE(created_at) as fecha, COUNT(*) as total')
             ->groupByRaw('DATE(created_at)')->orderBy('fecha')
@@ -381,7 +396,10 @@ class RestaurantDashboardService
     {
         $menuIds = Menu::whereIn('restaurante_id', $ids)->pluck('id');
         return DB::table('resenas')
-            ->whereIn('menu_id', $menuIds)
+            ->where(function ($q) use ($menuIds, $ids) {
+                $q->whereIn('menu_id', $menuIds)
+                  ->orWhereIn('restaurante_id', $ids);
+            })
             ->whereBetween('created_at', [$from, $to])
             ->selectRaw('DATE(created_at) as fecha, ROUND(AVG(score), 1) as total')
             ->groupByRaw('DATE(created_at)')->orderBy('fecha')
@@ -438,13 +456,16 @@ class RestaurantDashboardService
     {
         $menuIds = Menu::whereIn('restaurante_id', $ids)->pluck('id');
 
-        $recentResenas = Resena::whereIn('menu_id', $menuIds)
+        $recentResenas = Resena::where(function ($q) use ($menuIds, $ids) {
+                $q->whereIn('menu_id', $menuIds)
+                  ->orWhereIn('restaurante_id', $ids);
+            })
             ->with(['menu:id,nombre', 'comensal:id,nombre,apellido_paterno'])
             ->latest()->limit(5)->get()
             ->map(fn($r) => [
                 'type' => 'resena',
                 'label' => "Nueva reseña de {$r->comensal->nombre}",
-                'detail' => "{$r->score}★ · {$r->menu->nombre}",
+                'detail' => $r->menu_id ? "{$r->score}★ · {$r->menu->nombre}" : "{$r->score}★",
                 'icon' => 'rate_review',
                 'iconColor' => 'text-amber-500',
                 'time' => $r->created_at,

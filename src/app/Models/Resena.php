@@ -9,7 +9,7 @@ class Resena extends Model
     protected $table = 'resenas';
 
     protected $fillable = [
-        'comensal_id', 'menu_id', 'visita_id', 'score', 'comentario', 'respuesta_restaurante',
+        'comensal_id', 'menu_id', 'visita_id', 'restaurante_id', 'score', 'comentario', 'respuesta_restaurante',
     ];
 
     public function comensal()
@@ -20,5 +20,10 @@ class Resena extends Model
     public function menu()
     {
         return $this->belongsTo(Menu::class);
+    }
+
+    public function restaurante()
+    {
+        return $this->belongsTo(Restaurante::class);
     }
 }

@@ -89,6 +89,8 @@ Route::middleware('auth:comensal')->group(function () {
     
     Route::post('/perfil/update', [AuthController::class, 'updatePerfilComensal'])->name('comensal.perfil.update');
 
+    Route::post('/restaurante/{id}/resena', [ComensalController::class, 'saveResena'])->name('comensal.resena.save');
+
 });
 
 // Rutas de Restaurante
