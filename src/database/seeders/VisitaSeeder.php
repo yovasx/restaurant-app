@@ -78,6 +78,25 @@ class VisitaSeeder extends Seeder
             }
         }
 
+        // === Visitas extra para Wok Roll (principal + sucursal) ===
+        $wokRolls = Restaurante::whereHas('usuario', fn($q) => $q->where('email', 'contacto@wokroll.com'))->get();
+        foreach ($wokRolls as $wr) {
+            $extra = random_int(25, 40);
+            for ($i = 0; $i < $extra; $i++) {
+                $comensalId = $comensales[array_rand($comensales)];
+                $offset = random_int(0, 44);
+                $fecha = now()->subDays($offset)->toDateString();
+                $fechaVisita = now()->subDays($offset);
+                $createdAt = (clone $fechaVisita)->addHours(random_int(8, 22))->addMinutes(random_int(0, 59));
+                DB::table('visitas')->insert([
+                    'restaurante_id' => $wr->id, 'comensal_id' => $comensalId,
+                    'fecha_visita' => $fecha, 'metodo' => $metodos[array_rand($metodos)],
+                    'created_at' => $createdAt, 'updated_at' => $createdAt,
+                ]);
+                $total++;
+            }
+        }
+
         $this->command->info("$total visitas creadas correctamente.");
     }
 }

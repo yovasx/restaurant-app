@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Resena;
 use App\Models\Menu;
 use App\Models\Comensal;
+use App\Models\Restaurante;
 use Illuminate\Database\Seeder;
 
 class ResenaSeeder extends Seeder
@@ -106,6 +107,37 @@ class ResenaSeeder extends Seeder
                     'menu_id'     => $menu->id,
                     'score'       => $score,
                     'comentario'  => $comentario,
+                ]);
+                $resena->created_at = $createdAt;
+                $resena->updated_at = $createdAt;
+                $resena->save();
+                $total++;
+            }
+        }
+
+        // === Reseñas extra para Wok Roll ===
+        $wokIds = Restaurante::whereHas('usuario', fn($q) => $q->where('email', 'contacto@wokroll.com'))->pluck('id');
+        $wokMenus = Menu::whereIn('restaurante_id', $wokIds)->get();
+        foreach ($wokMenus->groupBy('restaurante_id') as $rid => $menus) {
+            $extra = random_int(6, 12);
+            $usedLocal = [];
+            for ($i = 0; $i < $extra; $i++) {
+                $available = array_diff($comensales, $usedLocal);
+                if (empty($available)) break;
+                $comensalId = $available[array_rand($available)];
+                $usedLocal[] = $comensalId;
+                $menu = $menus->random();
+                $score = $this->weightedScore();
+                $comentario = match (true) {
+                    $score >= 4 => $comentariosPositivos[array_rand($comentariosPositivos)],
+                    $score >= 3 => $comentariosNeutros[array_rand($comentariosNeutros)],
+                    default => $comentariosNegativos[array_rand($comentariosNegativos)],
+                };
+                $offset = random_int(0, 44);
+                $createdAt = now()->subDays($offset)->addHours(random_int(8, 22))->addMinutes(random_int(0, 59));
+                $resena = new Resena([
+                    'comensal_id' => $comensalId, 'menu_id' => $menu->id,
+                    'score' => $score, 'comentario' => $comentario,
                 ]);
                 $resena->created_at = $createdAt;
                 $resena->updated_at = $createdAt;

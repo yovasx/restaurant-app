@@ -314,6 +314,45 @@
     </div>
 </div>
 
+@php
+    $fs = $predicciones['forecast_summary'] ?? null;
+@endphp
+@if ($fs && ($fs['has_data'] ?? false))
+<div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-5 mb-8">
+    <div class="flex items-center justify-between mb-4">
+        <h4 class="font-headline text-base font-bold text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#C0392B] text-lg">insights</span>
+            Pronóstico de afluencia
+        </h4>
+        <a href="{{ route('restaurante.pronosticos.index') }}" class="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+            Ver pronóstico completo
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        @if ($fs['best_today'])
+        <div class="bg-stone-50 rounded-xl p-4 border border-stone-100">
+            <p class="text-[10px] font-bold text-stone-500 uppercase tracking-wider mb-1">Mejor hora hoy</p>
+            <p class="text-2xl font-black text-on-surface">{{ $fs['best_today']['hour_label'] }}</p>
+            <span class="text-xs font-bold text-green-600">{{ $fs['best_today']['pct'] }}% probabilidad</span>
+        </div>
+        @endif
+        @if ($fs['top_peak'])
+        <div class="bg-stone-50 rounded-xl p-4 border border-stone-100">
+            <p class="text-[10px] font-bold text-stone-500 uppercase tracking-wider mb-1">Pico semanal</p>
+            <p class="text-2xl font-black text-on-surface">{{ $fs['top_peak']['day_name'] }} {{ $fs['top_peak']['hour_label'] }}</p>
+            <span class="text-xs font-bold text-amber-600">{{ $fs['top_peak']['pct'] }}% · {{ ucfirst($fs['top_peak']['confidence']) }}</span>
+        </div>
+        @endif
+        <div class="bg-stone-50 rounded-xl p-4 border border-stone-100">
+            <p class="text-[10px] font-bold text-stone-500 uppercase tracking-wider mb-1">Confianza</p>
+            <p class="text-2xl font-black text-on-surface capitalize">{{ $fs['overall_confidence'] === 'alta' ? 'Alta' : ($fs['overall_confidence'] === 'media' ? 'Media' : 'Baja') }}</p>
+            <span class="text-xs font-bold text-stone-400">Basado en 84 días de historial</span>
+        </div>
+    </div>
+</div>
+@endif
+
 {{-- Timeline --}}
 @if (count($timeline ?? []) > 0)
 <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-5 mb-8">

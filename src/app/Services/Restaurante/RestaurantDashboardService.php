@@ -10,6 +10,7 @@ use App\Models\Menu;
 use App\Models\Restaurante;
 use App\Services\AnalyticsRangeService;
 use App\Services\TimeSeriesNormalizer;
+use App\Services\Restaurante\RestaurantForecastService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 
@@ -44,6 +45,8 @@ class RestaurantDashboardService
         $sparklines = $this->buildSparklines($seriesVisitas, $seriesResenas, $seriesScore);
         $insights = $this->buildInsights($kpis);
 
+        $predicciones = $this->predicciones($ids, $from, $to);
+
         return [
             'kpis' => $kpis,
             'range' => [
@@ -75,6 +78,7 @@ class RestaurantDashboardService
                 'productos_por_estado' => $this->productosPorEstado($ids),
             ],
             'timeline' => $this->timeline($ids),
+            'predicciones' => $predicciones,
         ];
     }
 
@@ -118,6 +122,9 @@ class RestaurantDashboardService
                 'productos_por_estado' => ['activos' => 0, 'inactivos' => 0, 'sin_stock' => 0],
             ],
             'timeline' => [],
+            'predicciones' => [
+                'forecast_summary' => null,
+            ],
         ];
     }
 
@@ -479,6 +486,15 @@ class RestaurantDashboardService
             ->toArray();
 
         return $combined;
+    }
+
+    private function predicciones(array $ids, Carbon $from, Carbon $to): array
+    {
+        $forecast = app(RestaurantForecastService::class)->summary($ids);
+
+        return [
+            'forecast_summary' => $forecast,
+        ];
     }
 
     private function productosPorEstado(array $ids): array

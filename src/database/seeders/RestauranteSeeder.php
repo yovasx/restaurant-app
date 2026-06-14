@@ -68,7 +68,42 @@ class RestauranteSeeder extends Seeder
             }
         }
 
-        $this->command->info('50 restaurantes sembrados correctamente.');
+        // === Sucursal Wok Roll Sopocachi ===
+        $wokUser = Usuario::where('email', 'contacto@wokroll.com')->first();
+        if ($wokUser) {
+            $wokPrincipal = Restaurante::where('usuario_id', $wokUser->id)->where('es_principal', true)->first();
+            if ($wokPrincipal) {
+                $branch = Restaurante::create([
+                    'usuario_id'             => $wokUser->id,
+                    'nombre'                 => 'Wok Roll Sopocachi',
+                    'descripcion'            => 'Sucursal Sopocachi del chifa fusión Wok Roll. Tallarines saltados, arroz chaufa, wantán frito y dim sum en un ambiente moderno y acogedor.',
+                    'direccion'              => 'Calle Capitán Ravelo Nro. 550, Sopocachi',
+                    'zona'                   => 'Sopocachi',
+                    'latitud'                => -16.5055,
+                    'longitud'               => -68.1290,
+                    'telefono'               => '72534151',
+                    'email_reservas'         => 'sopocachi@wokroll.com',
+                    'instagram'              => '@wokroll_sopocachi',
+                    'facebook_url'           => 'facebook.com/WokRollSopocachi',
+                    'horario_apertura'       => '12:00',
+                    'horario_cierre'         => '23:30',
+                    'hora_apertura_sabado'   => '12:00',
+                    'hora_cierre_sabado'     => '00:30',
+                    'hora_apertura_domingo'  => '13:00',
+                    'hora_cierre_domingo'    => '22:30',
+                    'foto_portada'           => 'https://images.unsplash.com/photo-1525755662778-989d0524087e?w=900',
+                    'logo_url'               => null,
+                    'fecha_registro'         => '2025-11-01',
+                    'estado'                 => 'activo',
+                    'es_principal'           => false,
+                ]);
+                if ($wokPrincipal->categorias->isNotEmpty()) {
+                    $branch->categorias()->attach($wokPrincipal->categorias->pluck('id')->toArray());
+                }
+            }
+        }
+
+        $this->command->info('51 restaurantes (incl. sucursal Wok Roll Sopocachi) sembrados correctamente.');
     }
 
     private function restaurantData(): array
@@ -815,13 +850,13 @@ class RestauranteSeeder extends Seeder
                 'fecha_registro' => '2025-07-20', 'categorias' => ['Comida Boliviana'],
             ],
             [
-                'nombre' => 'Wok & Roll',
-                'descripcion' => 'Chifa fusión con wok al momento. Tallarines saltados, arroz chaufa, wantán frito y dim sum tradicional.',
+                'nombre' => 'Wok Roll',
+                'descripcion' => 'Chifa fusión con wok al momento. Tallarines saltados, arroz chaufa, wantán frito, dim sum y lomo saltado. El auténtico sabor oriental en La Paz.',
                 'direccion' => 'Av. Ballivián Nro. 1000, San Miguel',
                 'zona' => 'Zona Sur',
                 'latitud' => -16.5470, 'longitud' => -68.0795,
-                'telefono' => '72534150', 'email_reservas' => 'pedidos@wokandroll.bo',
-                'instagram' => '@wokandroll_lpz', 'facebook_url' => 'facebook.com/WokAndRollLP',
+                'telefono' => '72534150', 'email_reservas' => 'contacto@wokroll.com',
+                'instagram' => '@wokroll_lpz', 'facebook_url' => 'facebook.com/WokRollLP',
                 'horario_apertura' => '11:30', 'horario_cierre' => '22:30',
                 'hora_apertura_sabado' => '11:30', 'hora_cierre_sabado' => '23:30',
                 'hora_apertura_domingo' => '12:00', 'hora_cierre_domingo' => '22:00',

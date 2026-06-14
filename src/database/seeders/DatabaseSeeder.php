@@ -35,5 +35,6 @@ class DatabaseSeeder extends Seeder
         $this->call(MenuSeeder::class);
         $this->call(VisitaSeeder::class);
         $this->call(ResenaSeeder::class);
+        $this->call(PedidoSeeder::class);
     }
 }

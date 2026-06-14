@@ -109,6 +109,8 @@ Route::middleware('auth:restaurante')->group(function () {
         ->except(['show']);
     // Reseñas
     Route::get('/restaurante/resenas', [\App\Http\Controllers\PromocionController::class, 'resenas'])->name('restaurante.resenas');
+    // Pronósticos
+    Route::get('/restaurante/pronosticos', [\App\Http\Controllers\RestaurantForecastController::class, 'index'])->name('restaurante.pronosticos.index');
     // Sucursales
     Route::get('/restaurante/sucursales', [RestauranteController::class, 'sucursalesIndex'])->name('restaurante.sucursales.index');
     Route::post('/restaurante/sucursales', [RestauranteController::class, 'storeSucursal'])->name('restaurante.sucursales.store');

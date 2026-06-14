@@ -13,6 +13,7 @@
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
     </style>
+    <?php echo $__env->yieldContent('page-theme'); ?>
 </head>
 <body class="min-h-screen bg-background text-on-background">
 <?php
@@ -25,9 +26,36 @@
     <?php echo $__env->make('partials.public-nav', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 <?php endif; ?>
 
-<main class="<?php echo e($flushContent ? '' : 'mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8'); ?>">
+<main class="<?php echo e($flushContent ? '' : 'mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8'); ?><?php echo e($isComensalRoute ? ' pb-24 lg:pb-0' : ''); ?>">
     <?php echo $__env->yieldContent('content'); ?>
 </main>
+
+<?php if($isComensalRoute && Auth::guard('comensal')->check()): ?>
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.05)] rounded-t-2xl safe-area-pb">
+    <div class="flex items-center justify-around overflow-x-auto px-1 py-2 gap-0.5">
+        <a href="<?php echo e(route('comensal.inicio')); ?>"
+           class="flex flex-col items-center px-2 py-0.5 shrink-0 <?php echo e($routeName === 'comensal.inicio' ? 'text-[#C0392B]' : 'text-stone-400'); ?>">
+            <span class="material-symbols-outlined text-xl">home</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Inicio</span>
+        </a>
+        <a href="<?php echo e(route('comensal.explorar')); ?>"
+           class="flex flex-col items-center px-2 py-0.5 shrink-0 <?php echo e($routeName === 'comensal.explorar' ? 'text-[#C0392B]' : 'text-stone-400'); ?>">
+            <span class="material-symbols-outlined text-xl">explore</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Explorar</span>
+        </a>
+        <a href="<?php echo e(route('comensal.inicio')); ?>#favoritos"
+           class="flex flex-col items-center px-2 py-0.5 shrink-0 text-stone-400">
+            <span class="material-symbols-outlined text-xl">favorite</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Favoritos</span>
+        </a>
+        <a href="<?php echo e(route('comensal.perfil')); ?>"
+           class="flex flex-col items-center px-2 py-0.5 shrink-0 <?php echo e($routeName === 'comensal.perfil' ? 'text-[#C0392B]' : 'text-stone-400'); ?>">
+            <span class="material-symbols-outlined text-xl">person</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Perfil</span>
+        </a>
+    </div>
+</nav>
+<?php endif; ?>
 
 <?php echo $__env->make('partials.screen-toast', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 </body>

@@ -13,6 +13,7 @@
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
     </style>
+    @yield('page-theme')
 </head>
 <body class="min-h-screen bg-background text-on-background">
 @php

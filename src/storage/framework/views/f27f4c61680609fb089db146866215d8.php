@@ -53,51 +53,42 @@
 <?php endif; ?>
 
 
-<?php
-    $kpiCards = [
-        ['key' => 'platosActivos', 'label' => 'Platos Activos', 'icon' => 'restaurant', 'color' => 'text-primary'],
-        ['key' => 'promocionesActivas', 'label' => 'Promociones', 'icon' => 'local_offer', 'color' => 'text-green-600'],
-        ['key' => 'visitas', 'label' => 'Visitas', 'icon' => 'footprint', 'color' => 'text-[#C0392B]'],
-        ['key' => 'resenas', 'label' => 'Reseñas', 'icon' => 'rate_review', 'color' => 'text-tertiary'],
-        ['key' => 'promedioScore', 'label' => 'Score Prom.', 'icon' => 'star', 'color' => 'text-amber-600'],
-        ['key' => 'sinStock', 'label' => 'Sin Stock', 'icon' => 'inventory_2', 'color' => 'text-red-500'],
-    ];
-    $temporalKeys = ['visitas', 'resenas', 'promedioScore'];
-?>
-
 <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
+    <?php
+        $kpiCards = [
+            ['key' => 'platosActivos', 'label' => 'Platos Activos', 'icon' => 'restaurant', 'color' => 'text-primary', 'temporal' => false],
+            ['key' => 'promocionesActivas', 'label' => 'Promociones', 'icon' => 'local_offer', 'color' => 'text-green-600', 'temporal' => false],
+            ['key' => 'visitas', 'label' => 'Visitas', 'icon' => 'footprint', 'color' => 'text-[#C0392B]', 'temporal' => true, 'sparklineColor' => '#6366f1'],
+            ['key' => 'resenas', 'label' => 'Reseñas', 'icon' => 'rate_review', 'color' => 'text-tertiary', 'temporal' => true, 'sparklineColor' => '#10b981'],
+            ['key' => 'promedioScore', 'label' => 'Score Prom.', 'icon' => 'star', 'color' => 'text-amber-600', 'temporal' => true, 'sparklineColor' => '#f59e0b'],
+            ['key' => 'sinStock', 'label' => 'Sin Stock', 'icon' => 'inventory_2', 'color' => 'text-red-500', 'temporal' => false],
+        ];
+    ?>
     <?php $__currentLoopData = $kpiCards; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $card): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-        <?php $k = $kpis[$card['key']]; ?>
-        <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-4 relative overflow-hidden group hover:shadow-md transition-all">
-            <div class="flex items-center justify-between mb-2">
-                <span class="material-symbols-outlined <?php echo e($card['color']); ?> text-lg"><?php echo e($card['icon']); ?></span>
-                <?php if(in_array($card['key'], $temporalKeys, true)): ?>
-                    <span class="text-xs font-bold <?php echo e($deltaClass($k['delta'])); ?> flex items-center gap-0.5">
-                        <span class="material-symbols-outlined text-sm"><?php echo e($deltaIcon($k['delta'])); ?></span>
-                        <?php echo e($k['delta'] >= 0 ? '+' : ''); ?><?php echo e($k['delta']); ?>%
-                    </span>
-                <?php endif; ?>
-            </div>
-            <p class="text-[10px] font-bold text-stone-500 uppercase tracking-wider"><?php echo e($card['label']); ?></p>
-            <h3 class="text-2xl font-black text-on-surface mt-0.5">
-                <?php if($card['key'] === 'promedioScore'): ?>
-                    <?php echo e(number_format($k['current'], 1)); ?>
-
-                <?php else: ?>
-                    <?php echo e(number_format($k['current'])); ?>
-
-                <?php endif; ?>
-            </h3>
-            <?php if(in_array($card['key'], $temporalKeys, true)): ?>
-                <?php $slKey = $card['key']; ?>
-                <?php if(count($sparklines[$slKey] ?? []) > 0): ?>
-                    <div class="mt-2 h-8 opacity-60 group-hover:opacity-100 transition-opacity"
-                         data-sparkline='<?php echo json_encode($sparklines[$slKey], 15, 512) ?>'
-                         data-color="<?php echo e(match($card['key']) { 'visitas' => '#6366f1', 'resenas' => '#10b981', 'promedioScore' => '#f59e0b', default => '#a1a1aa' }); ?>">
-                    </div>
-                <?php endif; ?>
-            <?php endif; ?>
-        </div>
+        <?php
+            $k = $kpis[$card['key']];
+            $value = $card['key'] === 'promedioScore' ? number_format($k['current'], 1) : number_format($k['current']);
+        ?>
+        <?php if (isset($component)) { $__componentOriginala4ae059936bc185e758290466e2179c1 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginala4ae059936bc185e758290466e2179c1 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.kpi-card','data' => ['label' => $card['label'],'value' => $value,'icon' => $card['icon'],'color' => $card['color'],'delta' => $card['temporal'] ? $k['delta'] : null,'sparkline' => $card['temporal'] && count($sparklines[$card['key']] ?? []) > 0 ? $sparklines[$card['key']] : null,'sparklineColor' => $card['sparklineColor'] ?? '#6366f1']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('kpi-card'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($card['label']),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($value),'icon' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($card['icon']),'color' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($card['color']),'delta' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($card['temporal'] ? $k['delta'] : null),'sparkline' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($card['temporal'] && count($sparklines[$card['key']] ?? []) > 0 ? $sparklines[$card['key']] : null),'sparklineColor' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($card['sparklineColor'] ?? '#6366f1')]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginala4ae059936bc185e758290466e2179c1)): ?>
+<?php $attributes = $__attributesOriginala4ae059936bc185e758290466e2179c1; ?>
+<?php unset($__attributesOriginala4ae059936bc185e758290466e2179c1); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginala4ae059936bc185e758290466e2179c1)): ?>
+<?php $component = $__componentOriginala4ae059936bc185e758290466e2179c1; ?>
+<?php unset($__componentOriginala4ae059936bc185e758290466e2179c1); ?>
+<?php endif; ?>
     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 </div>
 
@@ -109,7 +100,7 @@
                 <span class="material-symbols-outlined text-indigo-500 text-lg">monitoring</span>
                 <h4 class="font-headline text-base font-bold text-on-surface">Actividad</h4>
             </div>
-            <div class="flex gap-1" id="chartTabs">
+            <div class="flex gap-1" data-chart-tabs>
                 <button data-tab="actividad" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-100 text-indigo-700">Actividad</button>
                 <button data-tab="calidad" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-stone-100 text-stone-500 hover:bg-stone-200">Calidad</button>
             </div>
@@ -125,6 +116,8 @@
             $chartCategories = collect($series['visitas_por_dia'] ?? [])->pluck('fecha')->map(fn($d) => \Carbon\Carbon::parse($d)->format('d/m'))->toArray();
         ?>
         <div id="mainChart"
+             data-dashboard-chart
+             data-default-tab="actividad"
              data-series-actividad='<?php echo json_encode($chartSeriesActividad, 15, 512) ?>'
              data-series-calidad='<?php echo json_encode($chartSeriesCalidad, 15, 512) ?>'
              data-categories='<?php echo json_encode($chartCategories, 15, 512) ?>'
@@ -141,30 +134,59 @@
             <div class="space-y-3">
                 <?php $__currentLoopData = $alerts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $alert): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <?php
-                        $colorMap = ['warning' => ['icon' => 'error', 'text' => 'text-amber-700', 'bg' => 'bg-amber-50', 'badge' => 'bg-amber-200 text-amber-800'],
-                                      'info' => ['icon' => 'info', 'text' => 'text-blue-700', 'bg' => 'bg-blue-50', 'badge' => 'bg-blue-200 text-blue-800']];
-                        $style = $colorMap[$alert['severity']] ?? $colorMap['info'];
+                        $severityMap = ['warning' => 'warning', 'info' => 'info'];
+                        $alertUrl = match($alert['type']) {
+                            'sin_stock' => route('productos.index'),
+                            'promos_vencidas' => route('restaurante.promociones.index'),
+                            'perfil_incompleto' => route('restaurante.configuracion', ['#perfil']),
+                            'sin_visitas' => route('restaurante.reportes.index', ['range' => 30]),
+                            'sin_resenas' => route('restaurante.resenas'),
+                            default => null,
+                        };
                     ?>
-                    <div class="<?php echo e($style['bg']); ?> rounded-xl p-3">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold <?php echo e($style['text']); ?> flex items-center gap-1">
-                                <span class="material-symbols-outlined text-sm"><?php echo e($style['icon']); ?></span>
-                                <?php echo e($alert['label']); ?>
-
-                            </span>
-                            <?php if($alert['count'] > 1): ?>
-                                <span class="text-xs font-bold <?php echo e($style['badge']); ?> px-2 py-0.5 rounded-full"><?php echo e($alert['count']); ?></span>
-                            <?php endif; ?>
-                        </div>
-                    </div>
+                    <?php if (isset($component)) { $__componentOriginal1a6b64bf1fa3665d17f8d0e6fe46fbd8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal1a6b64bf1fa3665d17f8d0e6fe46fbd8 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.alert-chip','data' => ['label' => $alert['label'],'severity' => $severityMap[$alert['severity']] ?? 'info','count' => $alert['count'] > 1 ? $alert['count'] : null,'href' => $alertUrl]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('alert-chip'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($alert['label']),'severity' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($severityMap[$alert['severity']] ?? 'info'),'count' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($alert['count'] > 1 ? $alert['count'] : null),'href' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($alertUrl)]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal1a6b64bf1fa3665d17f8d0e6fe46fbd8)): ?>
+<?php $attributes = $__attributesOriginal1a6b64bf1fa3665d17f8d0e6fe46fbd8; ?>
+<?php unset($__attributesOriginal1a6b64bf1fa3665d17f8d0e6fe46fbd8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal1a6b64bf1fa3665d17f8d0e6fe46fbd8)): ?>
+<?php $component = $__componentOriginal1a6b64bf1fa3665d17f8d0e6fe46fbd8; ?>
+<?php unset($__componentOriginal1a6b64bf1fa3665d17f8d0e6fe46fbd8); ?>
+<?php endif; ?>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
         <?php else: ?>
-            <div class="flex flex-col items-center justify-center py-8 text-stone-400">
-                <span class="material-symbols-outlined text-4xl mb-2">check_circle</span>
-                <p class="text-sm font-medium">Sin novedades</p>
-                <p class="text-xs">Todo en orden.</p>
-            </div>
+            <?php if (isset($component)) { $__componentOriginal074a021b9d42f490272b5eefda63257c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal074a021b9d42f490272b5eefda63257c = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.empty-state','data' => ['icon' => 'check_circle','title' => 'Sin novedades','message' => 'Todo en orden.','iconSize' => 'text-4xl']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('empty-state'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['icon' => 'check_circle','title' => 'Sin novedades','message' => 'Todo en orden.','iconSize' => 'text-4xl']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal074a021b9d42f490272b5eefda63257c)): ?>
+<?php $attributes = $__attributesOriginal074a021b9d42f490272b5eefda63257c; ?>
+<?php unset($__attributesOriginal074a021b9d42f490272b5eefda63257c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal074a021b9d42f490272b5eefda63257c)): ?>
+<?php $component = $__componentOriginal074a021b9d42f490272b5eefda63257c; ?>
+<?php unset($__componentOriginal074a021b9d42f490272b5eefda63257c); ?>
+<?php endif; ?>
         <?php endif; ?>
     </div>
 </div>
@@ -333,6 +355,72 @@
         <?php endif; ?>
     </div>
 </div>
+
+<?php
+    $fs = $predicciones['forecast_summary'] ?? null;
+?>
+<?php if($fs && ($fs['has_data'] ?? false)): ?>
+<div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-5 mb-8">
+    <div class="flex items-center justify-between mb-4">
+        <h4 class="font-headline text-base font-bold text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#C0392B] text-lg">insights</span>
+            Pronóstico de afluencia
+        </h4>
+        <a href="<?php echo e(route('restaurante.pronosticos.index')); ?>" class="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+            Ver pronóstico completo
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <?php if($fs['best_today']): ?>
+        <div class="bg-stone-50 rounded-xl p-4 border border-stone-100">
+            <p class="text-[10px] font-bold text-stone-500 uppercase tracking-wider mb-1">Mejor hora hoy</p>
+            <p class="text-2xl font-black text-on-surface"><?php echo e($fs['best_today']['hour_label']); ?></p>
+            <span class="text-xs font-bold text-green-600"><?php echo e($fs['best_today']['pct']); ?>% probabilidad</span>
+        </div>
+        <?php endif; ?>
+        <?php if($fs['top_peak']): ?>
+        <div class="bg-stone-50 rounded-xl p-4 border border-stone-100">
+            <p class="text-[10px] font-bold text-stone-500 uppercase tracking-wider mb-1">Pico semanal</p>
+            <p class="text-2xl font-black text-on-surface"><?php echo e($fs['top_peak']['day_name']); ?> <?php echo e($fs['top_peak']['hour_label']); ?></p>
+            <span class="text-xs font-bold text-amber-600"><?php echo e($fs['top_peak']['pct']); ?>% · <?php echo e(ucfirst($fs['top_peak']['confidence'])); ?></span>
+        </div>
+        <?php endif; ?>
+        <div class="bg-stone-50 rounded-xl p-4 border border-stone-100">
+            <p class="text-[10px] font-bold text-stone-500 uppercase tracking-wider mb-1">Confianza</p>
+            <p class="text-2xl font-black text-on-surface capitalize"><?php echo e($fs['overall_confidence'] === 'alta' ? 'Alta' : ($fs['overall_confidence'] === 'media' ? 'Media' : 'Baja')); ?></p>
+            <span class="text-xs font-bold text-stone-400">Basado en 84 días de historial</span>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+
+<?php if(count($timeline ?? []) > 0): ?>
+<div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-5 mb-8">
+    <h4 class="font-headline text-base font-bold text-on-surface mb-4 flex items-center gap-2">
+        <span class="material-symbols-outlined text-stone-500 text-lg">timeline</span>
+        Actividad Reciente
+    </h4>
+    <div class="relative">
+        <div class="absolute left-4 top-2 bottom-2 w-0.5 bg-stone-200 rounded-full"></div>
+        <div class="space-y-4">
+            <?php $__currentLoopData = $timeline; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <div class="flex items-start gap-4 pl-0 relative">
+                    <div class="relative z-10 w-8 h-8 rounded-full bg-white border-2 border-stone-200 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-sm <?php echo e($event['iconColor']); ?>"><?php echo e($event['icon']); ?></span>
+                    </div>
+                    <div class="min-w-0 flex-1 pt-1">
+                        <p class="text-sm font-bold text-on-surface"><?php echo e($event['label']); ?></p>
+                        <p class="text-xs text-stone-500"><?php echo e($event['detail']); ?></p>
+                        <p class="text-[10px] text-stone-400 mt-0.5"><?php echo e(\Carbon\Carbon::parse($event['time'])->diffForHumans()); ?></p>
+                    </div>
+                </div>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
 
 
 <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-5 mb-8">

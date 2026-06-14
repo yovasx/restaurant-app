@@ -88,6 +88,11 @@
                 <span class="material-symbols-outlined shrink-0">star</span>
                 <span class="font-headline font-medium text-sm">Reseñas</span>
             </a>
+            <a href="{{ route('restaurante.pronosticos.index') }}"
+               class="{{ str_starts_with($route, 'restaurante.pronosticos') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
+                <span class="material-symbols-outlined shrink-0">insights</span>
+                <span class="font-headline font-medium text-sm">Pronósticos</span>
+            </a>
             <a href="{{ route('restaurante.reportes.index') }}"
                class="{{ str_starts_with($route, 'restaurante.reportes') ? 'bg-[#C0392B] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100 hover:text-[#C0392B]' }} flex items-center gap-3 rounded-2xl px-4 py-3 transition-all">
                 <span class="material-symbols-outlined shrink-0">bar_chart</span>
@@ -191,6 +196,11 @@
            class="flex flex-col items-center px-2 py-0.5 shrink-0 {{ Route::currentRouteName() === 'restaurante.resenas' ? 'text-[#C0392B]' : 'text-stone-400' }}">
             <span class="material-symbols-outlined text-xl">star</span>
             <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Reseñas</span>
+        </a>
+        <a href="{{ route('restaurante.pronosticos.index') }}"
+           class="flex flex-col items-center px-2 py-0.5 shrink-0 {{ str_starts_with(Route::currentRouteName(), 'restaurante.pronosticos') ? 'text-[#C0392B]' : 'text-stone-400' }}">
+            <span class="material-symbols-outlined text-xl">insights</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Pronóstico</span>
         </a>
         <a href="{{ route('restaurante.reportes.index') }}"
            class="flex flex-col items-center px-2 py-0.5 shrink-0 {{ str_starts_with(Route::currentRouteName(), 'restaurante.reportes') ? 'text-[#C0392B]' : 'text-stone-400' }}">

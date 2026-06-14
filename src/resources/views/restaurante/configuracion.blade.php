@@ -213,6 +213,64 @@
                         </div>
                     </div>
 
+                    <!-- Branding -->
+                    <div class="pt-6 border-t border-outline-variant/30" id="branding-section">
+                        <h4 class="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-4">Identidad Visual</h4>
+                        <p class="text-xs text-stone-500 mb-4">Personaliza los colores de tu página pública.</p>
+
+                        <label class="flex items-center gap-3 mb-4 cursor-pointer">
+                            <input type="hidden" name="brand_enabled" value="0">
+                            <input type="checkbox" name="brand_enabled" value="1" class="w-5 h-5 rounded border-stone-300 text-primary focus:ring-primary" {{ old('brand_enabled', $restaurante->brand_enabled ?? true) ? 'checked' : '' }} onchange="toggleBrandingPreview()">
+                            <span class="text-sm font-semibold">Personalizar colores</span>
+                        </label>
+
+                        <div id="branding-fields" class="space-y-3 {{ (old('brand_enabled', $restaurante->brand_enabled ?? true)) ? '' : 'opacity-50 pointer-events-none' }}">
+                            <div>
+                                <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Color Principal</label>
+                                <div class="flex items-center gap-2">
+                                    <input name="brand_primary_color" type="color" class="w-10 h-10 rounded-lg border-0 cursor-pointer" value="{{ old('brand_primary_color', $restaurante->brand_primary_color ?? '#9e2016') }}" oninput="updateBrandingPreview()">
+                                    <input name="brand_primary_color_hex" type="text" class="flex-1 bg-surface-container-highest border-0 rounded-lg p-2 text-sm font-mono uppercase" value="{{ old('brand_primary_color', $restaurante->brand_primary_color ?? '#9e2016') }}" oninput="syncColorInput(this, 'brand_primary_color')" placeholder="#9e2016" pattern="^#[0-9A-Fa-f]{6}$">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Color Secundario</label>
+                                <div class="flex items-center gap-2">
+                                    <input name="brand_secondary_color" type="color" class="w-10 h-10 rounded-lg border-0 cursor-pointer" value="{{ old('brand_secondary_color', $restaurante->brand_secondary_color ?? '#c0392b') }}" oninput="updateBrandingPreview()">
+                                    <input name="brand_secondary_color_hex" type="text" class="flex-1 bg-surface-container-highest border-0 rounded-lg p-2 text-sm font-mono uppercase" value="{{ old('brand_secondary_color', $restaurante->brand_secondary_color ?? '#c0392b') }}" oninput="syncColorInput(this, 'brand_secondary_color')" placeholder="#c0392b" pattern="^#[0-9A-Fa-f]{6}$">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Color de Acento</label>
+                                <div class="flex items-center gap-2">
+                                    <input name="brand_accent_color" type="color" class="w-10 h-10 rounded-lg border-0 cursor-pointer" value="{{ old('brand_accent_color', $restaurante->brand_accent_color ?? '#fc8f34') }}" oninput="updateBrandingPreview()">
+                                    <input name="brand_accent_color_hex" type="text" class="flex-1 bg-surface-container-highest border-0 rounded-lg p-2 text-sm font-mono uppercase" value="{{ old('brand_accent_color', $restaurante->brand_accent_color ?? '#fc8f34') }}" oninput="syncColorInput(this, 'brand_accent_color')" placeholder="#fc8f34" pattern="^#[0-9A-Fa-f]{6}$">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Preview -->
+                        <div class="mt-4 p-4 rounded-xl bg-white border border-stone-200" id="branding-preview">
+                            <p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-3">Vista previa</p>
+                            <div class="space-y-3">
+                                <div class="h-12 rounded-lg flex items-center justify-center text-white font-bold text-sm" id="preview-header" style="background-color:#9e2016">
+                                    {{ $restaurante->nombre ?? 'Mi Restaurante' }}
+                                </div>
+                                <div class="flex gap-2">
+                                    <span class="px-3 py-1 text-xs font-bold rounded-full text-white" id="preview-badge" style="background-color:#c0392b">Promoción</span>
+                                    <span class="px-3 py-1 text-xs font-bold rounded-full text-white" id="preview-badge-accent" style="background-color:#fc8f34">2x1</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="flex-1 py-2 rounded-lg text-white text-sm font-bold" id="preview-btn" style="background-color:#9e2016">Ver Menú</button>
+                                    <button class="flex-1 py-2 rounded-lg text-white text-sm font-bold" id="preview-btn-secondary" style="background-color:#c0392b">Reservar</button>
+                                </div>
+                                <div class="p-3 rounded-lg text-sm" id="preview-card" style="background-color:#fff8f2;border:1px solid #fc8f34">
+                                    <span class="font-bold" id="preview-card-title" style="color:#9e2016">Plato destacado</span>
+                                    <p class="text-xs text-stone-600">Descripción del plato</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <button type="submit" class="w-full mt-4 px-8 py-4 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all bg-gradient-to-br from-primary to-primary-container">
                         Guardar Cambios
                     </button>
@@ -256,6 +314,42 @@ function previewPortada(input) {
         };
         reader.readAsDataURL(input.files[0]);
     }
+}
+
+function syncColorInput(textInput, baseName) {
+    const val = textInput.value.trim();
+    if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+        document.querySelector(`input[name="${baseName}"]`).value = val;
+        updateBrandingPreview();
+    }
+}
+
+function toggleBrandingPreview() {
+    const enabled = document.querySelector('input[name="brand_enabled"]').checked;
+    const fields = document.getElementById('branding-fields');
+    fields.classList.toggle('opacity-50', !enabled);
+    fields.classList.toggle('pointer-events-none', !enabled);
+    updateBrandingPreview();
+}
+
+function updateBrandingPreview() {
+    const enabled = document.querySelector('input[name="brand_enabled"]').checked;
+    const primary = document.querySelector('input[name="brand_primary_color"]').value || '#9e2016';
+    const secondary = document.querySelector('input[name="brand_secondary_color"]').value || '#c0392b';
+    const accent = document.querySelector('input[name="brand_accent_color"]').value || '#fc8f34';
+
+    const p = enabled ? primary : '#9e2016';
+    const s = enabled ? secondary : '#c0392b';
+    const a = enabled ? accent : '#fc8f34';
+
+    document.getElementById('preview-header').style.backgroundColor = p;
+    document.getElementById('preview-btn').style.backgroundColor = p;
+    document.getElementById('preview-card-title').style.color = p;
+    document.getElementById('preview-badge').style.backgroundColor = s;
+    document.getElementById('preview-btn-secondary').style.backgroundColor = s;
+    document.getElementById('preview-badge-accent').style.backgroundColor = a;
+    document.getElementById('preview-card').style.backgroundColor = '#fff8f2';
+    document.getElementById('preview-card').style.borderColor = a;
 }
 </script>
 @endsection

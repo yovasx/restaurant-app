@@ -119,7 +119,6 @@ document.addEventListener('DOMContentLoaded', function(){
         if(!items || items.length === 0){ container.innerHTML = '<p class="text-sm text-stone-500">No se encontraron restaurantes.</p>'; return; }
         container.innerHTML = items.map(r => {
             const rating = r.avg_rating ? Number(r.avg_rating).toFixed(1) : '—';
-            const price = r.avg_price ? ('Bs ' + Number(r.avg_price).toFixed(0)) : '—';
             const dist = r.distance ? (Number(r.distance).toFixed(2) + ' km') : '—';
             const foto = r.foto_portada_url || 'https://via.placeholder.com/900x600?text=Restaurante';
             return `
@@ -130,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function(){
                         <div class="absolute bottom-4 left-4 flex gap-2"><span class="bg-green-500/90 text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md">${r.estado || 'Abierto'}</span><span class="bg-primary/90 text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md">${dist}</span></div>
                     </div>
                     <div class="p-4">
-                        <div class="flex justify-between items-start mb-1"><h3 class="font-headline text-lg font-extrabold">${r.nombre}</h3><span class="text-tertiary font-bold">${price}</span></div>
+                        <div class="mb-1"><h3 class="font-headline text-lg font-extrabold">${r.nombre}</h3></div>
                         <p class="text-on-surface-variant text-sm mb-3">${(r.descripcion||'').substring(0,80)}</p>
                         <div class="flex items-center justify-between pt-2">
                             <button data-id="${r.id}" class="open-detail text-primary font-bold text-sm">Ver restaurante</button>

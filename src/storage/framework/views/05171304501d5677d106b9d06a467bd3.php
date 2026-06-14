@@ -91,7 +91,7 @@
                 <span class="material-symbols-outlined text-indigo-500 text-lg">monitoring</span>
                 <h4 class="font-headline text-base font-bold text-on-surface">Actividad</h4>
             </div>
-            <div class="flex gap-1" id="chartTabs">
+            <div class="flex gap-1" data-chart-tabs>
                 <button data-tab="actividad" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-100 text-indigo-700">Actividad</button>
                 <button data-tab="crecimiento" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-stone-100 text-stone-500 hover:bg-stone-200">Crecimiento</button>
             </div>
@@ -108,6 +108,8 @@
             $chartCategories = collect($series['visitas_por_dia'] ?? [])->pluck('fecha')->map(fn($d) => \Carbon\Carbon::parse($d)->format('d/m'))->toArray();
         ?>
         <div id="mainChart"
+             data-dashboard-chart
+             data-default-tab="actividad"
              data-series-actividad='<?php echo json_encode($chartSeriesActividad, 15, 512) ?>'
              data-series-crecimiento='<?php echo json_encode($chartSeriesCrecimiento, 15, 512) ?>'
              data-categories='<?php echo json_encode($chartCategories, 15, 512) ?>'
@@ -127,13 +129,19 @@
                 'baneados' => ['label' => 'Restaurantes baneados', 'icon' => 'block', 'color' => 'text-stone-500', 'bg' => 'bg-stone-100'],
                 'sinVisitas' => ['label' => 'Sin visitas 30d', 'icon' => 'visibility_off', 'color' => 'text-blue-500', 'bg' => 'bg-blue-50'],
             ];
+            $alertUrls = ['baneados' => route('admin.restaurantes.index'), 'sinVisitas' => route('admin.reportes.index')];
             $hasAlerts = collect($alertBlocks)->contains(fn($cfg, $key) => ($alerts[$key]['total'] ?? 0) > 0);
         ?>
         <?php if($hasAlerts): ?>
             <div class="space-y-3">
                 <?php $__currentLoopData = $alertBlocks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $cfg): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <?php if(($alerts[$key]['total'] ?? 0) > 0): ?>
+                        <?php $url = $alertUrls[$key] ?? null; ?>
+                        <?php if($url): ?>
+                        <a href="<?php echo e($url); ?>" class="<?php echo e($cfg['bg']); ?> rounded-xl p-3 block hover:brightness-95 transition-all">
+                        <?php else: ?>
                         <div class="<?php echo e($cfg['bg']); ?> rounded-xl p-3">
+                        <?php endif; ?>
                             <div class="flex items-center justify-between mb-1">
                                 <span class="text-xs font-bold <?php echo e($cfg['color']); ?> flex items-center gap-1">
                                     <span class="material-symbols-outlined text-sm"><?php echo e($cfg['icon']); ?></span>
@@ -149,7 +157,11 @@
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </div>
                             <?php endif; ?>
+                        <?php if($url): ?>
+                        </a>
+                        <?php else: ?>
                         </div>
+                        <?php endif; ?>
                     <?php endif; ?>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
@@ -355,6 +367,58 @@
             </div>
         <?php else: ?>
             <p class="text-sm text-stone-400">Sin datos suficientes.</p>
+        <?php endif; ?>
+    </div>
+</div>
+
+
+<?php
+    $pendingRestaurantes ??= collect([]);
+    $pendingComensales ??= collect([]);
+?>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-5">
+        <h4 class="font-headline text-sm font-bold text-on-surface mb-3 flex items-center gap-2">
+            <span class="material-symbols-outlined text-orange-500 text-base">store</span>
+            Últimos Restaurantes Registrados
+        </h4>
+        <?php if(count($pendingRestaurantes) > 0): ?>
+            <div class="space-y-2">
+                <?php $__currentLoopData = $pendingRestaurantes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $r): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="flex items-center justify-between py-1.5 border-b border-stone-100 last:border-0">
+                        <div class="min-w-0 flex-1">
+                            <p class="text-sm font-bold text-on-surface truncate"><?php echo e($r->nombre); ?></p>
+                            <p class="text-[10px] text-stone-500"><?php echo e($r->email); ?> · <?php echo e($r->created_at->diffForHumans()); ?></p>
+                        </div>
+                        <a href="<?php echo e(route('admin.restaurantes.edit', $r->id)); ?>" class="text-xs font-bold text-primary hover:underline shrink-0 ml-2">Gestionar</a>
+                    </div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </div>
+            <a href="<?php echo e(route('admin.restaurantes.index')); ?>" class="mt-3 inline-block text-xs font-bold text-primary hover:underline">Ver todos →</a>
+        <?php else: ?>
+            <p class="text-sm text-stone-400 text-center py-6">Sin restaurantes registrados.</p>
+        <?php endif; ?>
+    </div>
+    <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-100/50 p-5">
+        <h4 class="font-headline text-sm font-bold text-on-surface mb-3 flex items-center gap-2">
+            <span class="material-symbols-outlined text-teal-500 text-base">group</span>
+            Últimos Comensales Registrados
+        </h4>
+        <?php if(count($pendingComensales ?? []) > 0): ?>
+            <div class="space-y-2">
+                <?php $__currentLoopData = $pendingComensales; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $c): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="flex items-center justify-between py-1.5 border-b border-stone-100 last:border-0">
+                        <div class="min-w-0 flex-1">
+                            <p class="text-sm font-bold text-on-surface truncate"><?php echo e($c->nombre_completo); ?></p>
+                            <p class="text-[10px] text-stone-500"><?php echo e($c->email); ?> · <?php echo e($c->created_at->diffForHumans()); ?></p>
+                        </div>
+                        <a href="<?php echo e(route('admin.comensales.edit', $c->id)); ?>" class="text-xs font-bold text-primary hover:underline shrink-0 ml-2">Gestionar</a>
+                    </div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </div>
+            <a href="<?php echo e(route('admin.comensales.index')); ?>" class="mt-3 inline-block text-xs font-bold text-primary hover:underline">Ver todos →</a>
+        <?php else: ?>
+            <p class="text-sm text-stone-400 text-center py-6">Sin comensales registrados.</p>
         <?php endif; ?>
     </div>
 </div>

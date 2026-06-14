@@ -34,6 +34,26 @@ class PromocionSeeder extends Seeder
             }
         }
 
+        // === Promociones sucursal Wok Roll Sopocachi ===
+        $sopocachi = Restaurante::where('email_reservas', 'sopocachi@wokroll.com')->first();
+        if ($sopocachi) {
+            $sopocachiPromos = [
+                ['After Office Wok: Tallarín + Cerveza 38Bs', 'descuento', 20, 'Válido de 18:00 a 20:00, de lunes a viernes', '2026-06-01', '2026-09-30'],
+                ['Combo Lomo Saltado + Wantán 55Bs', 'descuento', 15, 'Lomo saltado al wok con wantán frito (8uds)', '2026-06-01', '2026-08-31'],
+                ['2x1 en Aeropuerto Wok Roll', '2x1', 0, 'Compra un aeropuerto y llévate otro gratis', '2026-07-01', '2026-08-15'],
+            ];
+            foreach ($sopocachiPromos as $p) {
+                Promocion::create([
+                    'restaurante_id' => $sopocachi->id,
+                    'nombre' => $p[0], 'tipo' => $p[1], 'valor' => $p[2] ?? 0,
+                    'condicion' => $p[3] ?? '', 'estado' => 'activo',
+                    'fecha_inicio' => $p[4] ?? now()->toDateString(),
+                    'fecha_fin' => $p[5] ?? now()->addMonth()->toDateString(),
+                ]);
+                $count++;
+            }
+        }
+
         $this->command->info("{$count} promociones sembradas correctamente.");
     }
 
@@ -142,8 +162,10 @@ class PromocionSeeder extends Seeder
             'panartesano' => [
                 ['Croissant + Café Latte 28Bs', 'descuento', 22, 'Croissant de mantequilla con café latte artesanal', '2026-06-01', '2026-09-30'],
             ],
-            'wokandroll' => [
+            'wokroll' => [
                 ['Combo Tallarín Saltado + Wantán 42Bs', 'descuento', 20, 'Tallarín saltado mixto con wantán frito (8uds)', '2026-06-01', '2026-08-31'],
+                ['Arroz Chaufa Familiar + 4 Gaseosas 68Bs', 'descuento', 18, 'Arroz chaufa de la casa para 4 personas con 4 gaseosas', '2026-06-01', '2026-09-30'],
+                ['2x1 en Dim Sum (12uds)', '2x1', 0, 'Compra 6 dim sum y llévate 6 más', '2026-06-15', '2026-07-31'],
             ],
         ];
     }

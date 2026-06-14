@@ -85,9 +85,8 @@
                             <div class="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-white/90 px-3 py-1 shadow backdrop-blur"><span class="material-symbols-outlined text-sm text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span><span class="text-sm font-bold text-stone-800">{{ isset($r->avg_rating) ? number_format($r->avg_rating, 1) : '—' }}</span></div>
                         </div>
                         <div class="p-6">
-                            <div class="mb-2 flex items-start justify-between">
+                            <div class="mb-2">
                                 <h4 class="text-xl font-extrabold" style="font-family: 'Plus Jakarta Sans', sans-serif;">{{ $r->nombre }}</h4>
-                                <span class="font-bold text-[#9e2016]">$$</span>
                             </div>
                             <p class="mb-4 text-sm text-[#59413d]">{{ \Illuminate\Support\Str::limit($r->descripcion, 80) }} <span class="restaurant-distance" data-lat="{{ $r->latitud }}" data-lng="{{ $r->longitud }}">{{ $r->latitud && $r->longitud ? '• —' : '' }}</span></p>
                         </div>
@@ -135,9 +134,8 @@
                                         <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full flex items-center gap-1 shadow"><span class="material-symbols-outlined text-yellow-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span><span class="font-bold text-sm text-stone-800">${r.avg_rating ? Number(r.avg_rating).toFixed(1) : '—'}</span></div>
                                     </div>
                                     <div class="p-6">
-                                        <div class="flex justify-between items-start mb-2">
+                                        <div class="mb-2">
                                             <h4 class="text-xl font-extrabold" style="font-family: 'Plus Jakarta Sans', sans-serif;">${r.nombre}</h4>
-                                            <span class="text-[#9e2016] font-bold">$$</span>
                                         </div>
                                         <p class="text-[#59413d] text-sm mb-4">${descripcion} • <span>${dist}</span></p>
                                     </div>

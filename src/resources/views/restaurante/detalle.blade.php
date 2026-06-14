@@ -3,16 +3,31 @@
 @section('title', $restaurante->nombre)
 @section('layout-flush', 'true')
 
+@php $theme = $restaurante->resolvedTheme(); @endphp
+
+@section('page-theme')
+<style>
+    :root {
+        --brand-primary: {{ $theme['primary'] }};
+        --brand-secondary: {{ $theme['secondary'] }};
+        --brand-accent: {{ $theme['accent'] }};
+    }
+</style>
+@endsection
+
 @section('content')
 <section class="max-w-7xl mx-auto px-6 pb-12">
     <div class="mt-6 mb-6">
-        <a href="{{ auth()->guard('comensal')->check() ? route('comensal.inicio') : route('home') }}" class="inline-flex items-center gap-2 text-sm text-[#9e2016] font-bold hover:underline">
+        <a href="{{ auth()->guard('comensal')->check() ? route('comensal.inicio') : route('home') }}" class="inline-flex items-center gap-2 text-sm font-bold hover:underline" style="color:var(--brand-primary)">
             <span class="material-symbols-outlined">arrow_back</span> Volver
         </a>
     </div>
 
     <div class="bg-white rounded-xl overflow-hidden shadow-sm">
-        <div class="h-64 w-full overflow-hidden">
+        <div class="h-64 w-full overflow-hidden bg-stone-200 relative">
+            @if($restaurante->logo_url_resolved)
+            <img class="absolute top-4 left-4 h-16 w-16 object-contain rounded-xl bg-white/80 backdrop-blur-sm p-1 shadow-sm" src="{{ $restaurante->logo_url_resolved }}" alt="{{ $restaurante->nombre }}" />
+            @endif
             <img class="w-full h-full object-cover" src="{{ media_url($restaurante->foto_portada) ?: 'https://via.placeholder.com/1600x600?text=Restaurante' }}" alt="{{ $restaurante->nombre }}" />
         </div>
         <div class="p-8">
@@ -29,16 +44,16 @@
 
             <div class="flex flex-wrap gap-4 mb-6 text-sm text-stone-600">
                 @if($restaurante->telefono)
-                    <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[#9e2016] text-base">call</span> +591 {{ $restaurante->telefono }}</span>
+                    <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-base" style="color:var(--brand-primary)">call</span> +591 {{ $restaurante->telefono }}</span>
                 @endif
                 @if($restaurante->email_reservas)
-                    <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[#9e2016] text-base">mail</span> {{ $restaurante->email_reservas }}</span>
+                    <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-base" style="color:var(--brand-primary)">mail</span> {{ $restaurante->email_reservas }}</span>
                 @endif
                 @if($restaurante->instagram)
-                    <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[#9e2016] text-base">camera_alt</span> {{ $restaurante->instagram }}</span>
+                    <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-base" style="color:var(--brand-primary)">camera_alt</span> {{ $restaurante->instagram }}</span>
                 @endif
                 @if($restaurante->facebook_url)
-                    <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[#9e2016] text-base">language</span> {{ $restaurante->facebook_url }}</span>
+                    <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-base" style="color:var(--brand-primary)">language</span> {{ $restaurante->facebook_url }}</span>
                 @endif
             </div>
 

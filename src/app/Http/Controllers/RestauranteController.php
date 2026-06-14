@@ -96,6 +96,10 @@ class RestauranteController extends Controller
             'logo_url'                    => 'nullable|string|max:255',
             'password'                    => 'nullable|string|min:6',
             'nit'                         => 'required|string',
+            'brand_primary_color'         => 'nullable|string|regex:/^#[0-9A-Fa-f]{6}$/',
+            'brand_secondary_color'       => 'nullable|string|regex:/^#[0-9A-Fa-f]{6}$/',
+            'brand_accent_color'          => 'nullable|string|regex:/^#[0-9A-Fa-f]{6}$/',
+            'brand_enabled'               => 'nullable|boolean',
         ]);
 
         if ($request->email && $request->email !== $usuario->email) {
@@ -141,6 +145,10 @@ class RestauranteController extends Controller
             'facebook_url'         => $validated['facebook_url'],
             'foto_portada'         => $portadaPath,
             'logo_url'             => $validated['logo_url'] ?? $restaurante?->logo_url,
+            'brand_primary_color'  => $validated['brand_primary_color'] ?? $restaurante?->brand_primary_color,
+            'brand_secondary_color'=> $validated['brand_secondary_color'] ?? $restaurante?->brand_secondary_color,
+            'brand_accent_color'   => $validated['brand_accent_color'] ?? $restaurante?->brand_accent_color,
+            'brand_enabled'        => $request->has('brand_enabled') ? (bool) $request->brand_enabled : ($restaurante?->brand_enabled ?? true),
         ];
 
         if ($restaurante) {

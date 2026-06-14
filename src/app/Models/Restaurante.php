@@ -32,10 +32,15 @@ class Restaurante extends Model
         'fecha_registro',
         'estado',
         'es_principal',
+        'brand_primary_color',
+        'brand_secondary_color',
+        'brand_accent_color',
+        'brand_enabled',
     ];
 
     protected $casts = [
         'es_principal' => 'boolean',
+        'brand_enabled' => 'boolean',
     ];
 
     protected $appends = ['foto_portada_url', 'logo_url_resolved'];
@@ -77,5 +82,24 @@ class Restaurante extends Model
         return Attribute::make(
             get: fn () => media_url($this->logo_url),
         );
+    }
+
+    public function resolvedTheme(): array
+    {
+        if (!$this->brand_enabled) {
+            return [
+                'primary' => '#9e2016',
+                'secondary' => '#c0392b',
+                'accent' => '#fc8f34',
+                'enabled' => false,
+            ];
+        }
+
+        return [
+            'primary' => $this->brand_primary_color ?? '#9e2016',
+            'secondary' => $this->brand_secondary_color ?? '#c0392b',
+            'accent' => $this->brand_accent_color ?? '#fc8f34',
+            'enabled' => true,
+        ];
     }
 }

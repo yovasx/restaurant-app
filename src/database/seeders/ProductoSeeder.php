@@ -31,6 +31,26 @@ class ProductoSeeder extends Seeder
             }
         }
 
+        // === Clonar productos de Wok Roll San Miguel a Wok Roll Sopocachi ===
+        $wokPrincipal = Restaurante::whereHas('usuario', fn($q) => $q->where('email', 'contacto@wokroll.com'))->where('es_principal', true)->first();
+        $wokBranch = Restaurante::whereHas('usuario', fn($q) => $q->where('email', 'contacto@wokroll.com'))->where('es_principal', false)->first();
+        if ($wokPrincipal && $wokBranch) {
+            foreach (Producto::where('restaurante_id', $wokPrincipal->id)->get() as $pp) {
+                $stockAdjust = random_int(0, 4) === 0 ? random_int(0, 5) : max(0, $pp->stock + random_int(-5, 5));
+                Producto::create([
+                    'restaurante_id' => $wokBranch->id,
+                    'nombre'         => $pp->nombre,
+                    'precio'         => $pp->precio + random_int(-2, 3),
+                    'stock'          => $stockAdjust,
+                    'categoria_id'   => $pp->categoria_id,
+                    'descripcion'    => $pp->descripcion,
+                    'foto'           => $pp->foto,
+                    'activo'         => true,
+                ]);
+                $count++;
+            }
+        }
+
         $this->command->info("{$count} productos sembrados correctamente.");
     }
 
@@ -535,14 +555,23 @@ class ProductoSeeder extends Seeder
                 ['Refresco de Tamarindo', 12.00, 60, null, 'Refresco natural de tamarindo con hielo'],
             ],
 
-            // ============ Wok & Roll ============
-            'wokandroll' => [
-                ['Tallarín Saltado Mixto', 38.00, 30, null, 'Tallarines salteados con pollo, res, camarón y verduras'],
-                ['Arroz Chaufa de la Casa', 36.00, 30, null, 'Arroz frito con pollo, cerdo, huevo, cebollín y sillao'],
+            // ============ Wok Roll ============
+            'wokroll' => [
+                ['Tallarín Saltado Mixto', 38.00, 40, null, 'Tallarines salteados con pollo, res, camarón y verduras'],
+                ['Arroz Chaufa de la Casa', 36.00, 45, null, 'Arroz frito con pollo, cerdo, huevo, cebollín y sillao'],
                 ['Wantán Frito Mixto (8uds)', 30.00, 35, null, 'Wantanes fritos rellenos de carne y camarón'],
                 ['Sopa Wantán Picante', 24.00, 30, null, 'Sopa de wantán con vegetales y toque picante'],
-                ['Roll de Primavera (6uds)', 22.00, 40, null, 'Rolls de verduras frescos o fritos con salsa agridulce'],
+                ['Roll de Primavera Frito (6uds)', 22.00, 40, null, 'Rolls de primavera fritos con salsa agridulce'],
                 ['Dim Sum de Cerdo (6uds)', 32.00, 25, null, 'Dim sum al vapor rellenos de cerdo y jengibre'],
+                ['Pollo Ti Pa Kai', 42.00, 30, null, 'Pollo crujiente salteado con verduras y salsa de soja'],
+                ['Lomo Saltado al Wok', 48.00, 25, null, 'Lomo de res salteado al wok con cebolla, tomate y papas fritas'],
+                ['Arroz Frito Tres Delicias', 34.00, 35, null, 'Arroz salteado con camarón, pollo, cerdo, huevo y arvejas'],
+                ['Tallarín Saltado de Pollo', 32.00, 40, null, 'Tallarines salteados con pollo, verduras y sillao'],
+                ['Aeropuerto Wok Roll', 40.00, 25, null, 'Arroz chaufa mezclado con tallarín saltado y carne mixta'],
+                ['Sopa de Casa (2p)', 28.00, 20, null, 'Sopa oriental con pollo, verduras y fideos de arroz'],
+                ['Té de Jazmín', 10.00, 80, null, 'Té de jazmín natural, bien caliente'],
+                ['Helado de Té Verde (2 bolas)', 18.00, 30, null, 'Helado artesanal de té verde matcha'],
+                ['Gaseosa Inca Kola', 8.00, 100, null, 'Gaseosa peruano-boliviana bien fría'],
             ],
         ];
     }

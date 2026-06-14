@@ -237,11 +237,80 @@ function initDashboardCharts() {
     });
 }
 
+function initForecastCharts() {
+    document.querySelectorAll('[data-heatmap]').forEach(function(chartEl) {
+        var series;
+        try { series = JSON.parse(chartEl.dataset.heatmap); } catch(e) { series = []; }
+        if (series.length === 0) return;
+
+        var categories;
+        try { categories = JSON.parse(chartEl.dataset.categories); } catch(e) { categories = []; }
+
+        var totalCells = series.reduce(function(sum, s) { return sum + s.data.length; }, 0);
+        var showLabels = totalCells < 80;
+
+        var options = {
+            chart: { type: 'heatmap', height: 360, toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
+            series: series,
+            dataLabels: {
+                enabled: showLabels,
+                formatter: function(val) { return val > 0 ? Math.round(val * 100) + '%' : ''; },
+                style: { fontSize: '10px', fontWeight: 600, colors: ['#1e1b18'] }
+            },
+            plotOptions: {
+                heatmap: {
+                    radius: 4,
+                    enableShades: false,
+                    colorScale: {
+                        ranges: [
+                            { from: 0, to: 0.29, color: '#f5f5f4', name: 'Baja' },
+                            { from: 0.30, to: 0.59, color: '#fde68a', name: 'Media' },
+                            { from: 0.60, to: 1.0, color: '#22c55e', name: 'Alta' },
+                        ]
+                    }
+                }
+            },
+            tooltip: {
+                custom: function({ series, seriesIndex, dataPointIndex, w }) {
+                    var data = w.config.series[seriesIndex].data[dataPointIndex];
+                    var pct = Math.round(data.y * 100);
+                    var confMap = { alta: 'Alta', media: 'Media', baja: 'Baja' };
+                    var conf = confMap[data.confidence] || '—';
+                    var html = '<div class="p-2 text-sm">' +
+                        '<b>' + w.config.series[seriesIndex].name + ' ' + data.x + '</b><br/>' +
+                        'Probabilidad: <b>' + pct + '%</b><br/>' +
+                        'Confianza: ' + conf;
+                    if (data.observations) html += ' · ' + data.observations + ' muestras';
+                    html += '</div>';
+                    return html;
+                }
+            },
+            xaxis: {
+                categories: categories.length > 0 ? categories : undefined,
+                labels: {
+                    show: true,
+                    style: { fontSize: '10px', colors: '#a1a1aa' },
+                    rotate: categories.length > 10 ? -45 : 0,
+                },
+                axisBorder: { show: false },
+                axisTicks: { show: false }
+            },
+            yaxis: {
+                labels: { style: { fontSize: '10px', fontWeight: 600, colors: '#57534e' } }
+            },
+            grid: { show: false },
+            legend: { show: false },
+        };
+        new ApexCharts(chartEl, options).render();
+    });
+}
+
 function boot() {
     initDropzones();
     initModals();
     initToasts();
     initDashboardCharts();
+    initForecastCharts();
 }
 
 if (document.readyState === 'loading') {

@@ -211,9 +211,6 @@
                         <p class="text-stone-500 text-sm truncate">{{ \Illuminate\Support\Str::limit($r->descripcion, 60) }}</p>
                         <div class="flex items-center gap-2 mt-2">
                             <span class="text-xs text-stone-400 restaurant-distance" data-lat="{{ $r->latitud }}" data-lng="{{ $r->longitud }}">—</span>
-                            @if ($r->avg_price)
-                                <span class="text-xs font-bold text-primary">Bs {{ number_format($r->avg_price, 0) }}</span>
-                            @endif
                         </div>
                     </div>
                 </a>
@@ -251,7 +248,6 @@
                                             <p class="text-stone-500 text-sm truncate">${(r.descripcion||'').substring(0,60)}</p>
                                             <div class="flex items-center gap-2 mt-2">
                                                 <span class="text-xs text-stone-400">${dist}</span>
-                                                ${r.avg_price ? `<span class="text-xs font-bold text-primary">Bs ${Number(r.avg_price).toFixed(0)}</span>` : ''}
                                             </div>
                                         </div>
                                     </a>
